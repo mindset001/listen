@@ -1,0 +1,157 @@
+.wrap {
+  max-width: 760px;
+  padding: 40px 20px 160px;
+  animation: fadeUp 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+@media (min-width: 720px) {
+  .wrap {
+    padding: 40px 32px 160px;
+  }
+}
+
+.dropzone {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 44px 24px;
+  border-radius: var(--radius-card);
+  border: 1px dashed var(--line-strong);
+  background: var(--bg-elevated);
+  color: var(--fg-1);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  transition: background 150ms var(--ease-ui);
+}
+.dropzone:hover {
+  background: var(--bg-raised);
+}
+@media (min-width: 720px) {
+  .dropzone {
+    padding: 72px 24px;
+  }
+}
+
+.dropzoneTitle {
+  font-size: 16px;
+  font-weight: 600;
+}
+.dropzoneSub {
+  font-size: 14px;
+  color: var(--fg-2);
+}
+
+.recentLabel {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--fg-3);
+  margin: 32px 0 12px;
+}
+
+.recentList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.recentRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-radius: var(--radius-input);
+  border: 1px solid var(--line-quiet);
+  background: var(--bg-elevated);
+}
+.recentInfo {
+  flex: 1;
+  min-width: 0;
+}
+.recentName {
+  font-size: 14px;
+}
+.recentMeta {
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  color: var(--fg-3);
+  margin-top: 2px;
+}
+
+.busyCard {
+  padding: 32px;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--line-quiet);
+  background: var(--bg-elevated);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.busyTop {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.busyName {
+  flex: 1;
+  font-size: 15px;
+}
+.busyPct {
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  color: var(--fg-3);
+}
+.busyStatus {
+  font-size: 14px;
+  color: var(--fg-2);
+}
+
+.doneCard {
+  display: flex;
+  gap: 12px;
+  padding: 18px;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--success);
+  background: var(--bg-elevated);
+  margin-bottom: 16px;
+}
+.doneText {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--fg-2);
+}
+.doneText strong {
+  color: var(--fg-1);
+  font-weight: 500;
+}
+
+.openButton {
+  padding: 14px 20px;
+  border-radius: var(--radius-input);
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-family: var(--font-body), sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 150ms var(--ease-ui);
+}
+.openButton:hover {
+  background: var(--accent-hover);
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

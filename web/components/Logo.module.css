@@ -1,0 +1,24 @@
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--fg-1);
+}
+
+.bars {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.bar {
+  height: 3px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+
+.word {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}

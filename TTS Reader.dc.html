@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"><style>
+body{margin:0;background:#080B12;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#6366F1;text-decoration:none}a:hover{color:#7C7FF2}
+*{scrollbar-width:none}*::-webkit-scrollbar{display:none}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes barPulse{0%,100%{transform:scaleY(.35)}50%{transform:scaleY(1)}}
+@keyframes stoneIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@keyframes markIn{from{opacity:0;transform:translateY(6px) scale(.98)}to{opacity:1;transform:none}}
+@keyframes lineGrow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition-duration:.01ms!important}}
+</style></helmet>
+<svg aria-hidden="true" focusable="false" style="position:absolute;width:0;height:0;overflow:hidden"><defs><symbol id="i-audio-lines" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10v3"/><path d="M6 6v11"/><path d="M10 3v18"/><path d="M14 8v7"/><path d="M18 5v13"/><path d="M22 10v3"/></symbol><symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></symbol><symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></symbol><symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol><symbol id="i-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></symbol><symbol id="i-pen-line" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></symbol><symbol id="i-file-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v5h5"/><path d="M12 18v-6"/><path d="m9 15 3-3 3 3"/></symbol><symbol id="i-file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v5h5"/><path d="M9 13h6"/><path d="M9 17h6"/></symbol><symbol id="i-file-type-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v5h5"/><path d="M8 13h8"/><path d="M12 13v5"/></symbol><symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v5h5"/></symbol><symbol id="i-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 9 5-9 5-9-5 9-5Z"/><path d="m3 12 9 5 9-5"/><path d="m3 17 9 5 9-5"/></symbol><symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></symbol><symbol id="i-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M20.4 14.5a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-2.9 1.2V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-2.9-1.2l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 3.6 15a1.7 1.7 0 0 0-1.6-1.1H2a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-2.9l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9.5 3.6 1.7 1.7 0 0 0 10.6 2V2a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 2.9 1.5l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0 1.2 2.9H22a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1.17Z"/></symbol><symbol id="i-log-in" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/></symbol><symbol id="i-log-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></symbol><symbol id="i-layout-dashboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></symbol><symbol id="i-library" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 6 4 14"/><path d="M12 6v14"/><path d="M8 8v12"/><path d="M4 4v16"/></symbol><symbol id="i-disc-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="2"/><path d="M6 12a6 6 0 0 1 6-6"/><path d="M18 12a6 6 0 0 1-6 6"/></symbol><symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol><symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2"/></symbol><symbol id="i-save" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/></symbol><symbol id="i-trash-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M10 11v6"/><path d="M14 11v6"/></symbol><symbol id="i-pencil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></symbol><symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></symbol><symbol id="i-focus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/></symbol><symbol id="i-scan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/></symbol><symbol id="i-type" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></symbol><symbol id="i-unfold-vertical" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-6"/><path d="M12 8V2"/><path d="M4 12H2"/><path d="M10 12H8"/><path d="M16 12h-2"/><path d="M22 12h-2"/><path d="m15 19-3 3-3-3"/><path d="m15 5-3-3-3 3"/></symbol><symbol id="i-unfold-horizontal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 12h6"/><path d="M8 12H2"/><path d="M12 2v2"/><path d="M12 8v2"/><path d="M12 14v2"/><path d="M12 20v2"/><path d="m19 15 3-3-3-3"/><path d="m5 9-3 3 3 3"/></symbol><symbol id="i-rotate-ccw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></symbol><symbol id="i-alert-triangle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol><symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></symbol><symbol id="i-loader" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="m16.2 7.8 2.9-2.9"/><path d="M18 12h4"/><path d="m16.2 16.2 2.9 2.9"/><path d="M12 18v4"/><path d="m4.9 19.1 2.9-2.9"/><path d="M2 12h4"/><path d="m4.9 4.9 2.9 2.9"/></symbol><symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol><symbol id="i-play" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M7 4.5v15l12-7.5Z"/></symbol><symbol id="i-pause" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="6.5" y="4.5" width="4" height="15" rx="1"/><rect x="13.5" y="4.5" width="4" height="15" rx="1"/></symbol><symbol id="i-square" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="6" y="6" width="12" height="12" rx="2"/></symbol><symbol id="i-skip-back" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M18.5 5v14L9 12Z"/><rect x="5" y="5" width="2.4" height="14" rx="1"/></symbol><symbol id="i-skip-forward" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M5.5 5v14L15 12Z"/><rect x="16.6" y="5" width="2.4" height="14" rx="1"/></symbol><symbol id="i-heart" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></symbol></defs></svg>
+<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;gap:64px;padding:64px 32px;box-sizing:border-box;background:radial-gradient(circle at 50% 0%,#0F1524 0%,#080B12 60%)">
+<div style="display:flex;flex-direction:column;gap:24px;width:280px;flex:none">
+<div style="display:flex;align-items:center;gap:12px">
+<div style="width:32px;height:32px;border-radius:8px;background:#6366F1;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:18px;height:18px;color:#fff"><use href="#i-audio-lines"></use></svg></div>
+<div style="font-family:'Inter Tight',sans-serif;font-weight:600;font-size:20px;color:#E8EAF0;letter-spacing:-.01em">listen</div>
+</div>
+<div style="font-size:14px;line-height:1.6;color:#9BA3B4">Mobile prototype. Every control is live — navigate with the menu, generate speech, and watch the reader follow along sentence by sentence.</div>
+<div style="display:flex;flex-direction:column;gap:2px;border-top:1px solid #1F2638;padding-top:16px">
+<sc-for list="{{ navItems }}" as="item" hint-placeholder-count="8">
+<button onClick="{{ item.go }}" style="display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:6px;border:none;background:{{ item.bg }};color:{{ item.fg }};font-family:Inter,sans-serif;font-size:14px;text-align:left;cursor:pointer;transition:background 150ms cubic-bezier(.4,0,.2,1)" style-hover="background:#1A2235;color:#E8EAF0">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:16px;height:16px"><use href="{{ item.iconHref }}"></use></svg>{{ item.label }}</button>
+</sc-for>
+</div>
+<button onClick="{{ replaySplash }}" style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:6px;border:1px solid #1F2638;background:transparent;color:#9BA3B4;font-family:Inter,sans-serif;font-size:13px;cursor:pointer;transition:background 150ms" style-hover="background:#1A2235;color:#E8EAF0"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:15px;height:15px"><use href="#i-rotate-ccw"></use></svg>Replay splash</button>
+<div style="font-size:12px;line-height:1.5;color:#5C6478;border-top:1px solid #1F2638;padding-top:16px">Audio is simulated for the prototype: timings are estimated from word count and speed, so a real API's timestamps can drop straight in.</div>
+</div>
+<div style="flex:none">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+<div style="height:100%;position:relative;background:#0B0F19;display:flex;flex-direction:column;overflow:hidden;font-family:Inter,system-ui,sans-serif;color:#E8EAF0">
+
+<sc-if value="{{ showChrome }}" hint-placeholder-val="{{ true }}">
+<div style="flex:none;padding:62px 20px 12px;display:flex;align-items:center;gap:12px;background:#0B0F19;border-bottom:1px solid #1F2638">
+<button onClick="{{ toggleDrawer }}" aria-label="Open menu" style="width:36px;height:36px;border-radius:8px;border:1px solid #1F2638;background:#111727;color:#E8EAF0;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:18px;height:18px"><use href="#i-menu"></use></svg></button>
+<div style="flex:1;min-width:0;font-family:'Inter Tight',sans-serif;font-weight:600;font-size:17px;letter-spacing:-.01em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ screenTitle }}</div>
+<button onClick="{{ goNew }}" aria-label="New reading" style="width:36px;height:36px;border-radius:8px;border:none;background:#6366F1;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 150ms" style-hover="background:#7C7FF2"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:18px;height:18px"><use href="#i-plus"></use></svg></button>
+</div>
+</sc-if>
+
+<div ref="{{ scrollRef }}" style="flex:1;overflow-y:auto;overscroll-behavior:contain">
+
+<sc-if value="{{ isDashboard }}" hint-placeholder-val="{{ true }}">
+<div data-screen-label="Dashboard" style="padding:20px 20px 140px;animation:fadeUp 400ms cubic-bezier(.22,1,.36,1)">
+<div style="font-family:'Inter Tight',sans-serif;font-weight:600;font-size:26px;line-height:1.2;letter-spacing:-.02em;margin-bottom:6px">Welcome back, myvoice</div>
+<div style="font-size:15px;line-height:1.5;color:#9BA3B4;margin-bottom:24px">Pick up where you left off, or start something new.</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:32px">
+<button onClick="{{ goReader }}" style="grid-column:span 2;display:flex;align-items:center;gap:14px;padding:16px;border-radius:12px;border:none;background:#6366F1;color:#fff;text-align:left;cursor:pointer;font-family:Inter,sans-serif;transition:background 150ms" style-hover="background:#7C7FF2">
+<div style="width:44px;height:44px;border-radius:999px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;flex:none"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:20px;height:20px"><use href="#i-play"></use></svg></div>
+<div style="flex:1;min-width:0">
+<div style="font-size:15px;font-weight:600;margin-bottom:2px">Continue reading</div>
+<div style="font-size:13px;color:rgba(255,255,255,.75);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ currentDocTitle }} · {{ currentDocPct }}% through</div>
+</div>
+<svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:18px;height:18px;opacity:.8"><use href="#i-chevron-right"></use></svg>
+</button>
+<button onClick="{{ goNew }}" style="display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:12px;border:1px solid #1F2638;background:#111727;color:#E8EAF0;text-align:left;cursor:pointer;font-family:Inter,sans-serif;transition:background 150ms" style-hover="background:#1A2235">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:20px;height:20px;color:#9BA3B4"><use href="#i-pen-line"></use></svg>
+<div style="font-size:14px;font-weight:500">New reading</div>
+</button>
+<button onClick="{{ goUpload }}" style="display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:12px;border:1px solid #1F2638;background:#111727;color:#E8EAF0;text-align:left;cursor:pointer;font-family:Inter,sans-serif;transition:background 150ms" style-hover="background:#1A2235">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:20px;height:20px;color:#9BA3B4"><use href="#i-file-up"></use></svg>
+<div style="font-size:14px;font-weight:500">Upload document</div>
+</button>
+</div>
+
+<div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px">
+<div style="font-family:'Inter Tight',sans-serif;font-weight:600;font-size:18px;letter-spacing:-.01em">Recent reads</div>
+<button onClick="{{ goLibrary }}" style="border:none;background:none;color:#6366F1;font-family:Inter,sans-serif;font-size:13px;cursor:pointer;padding:0">See all</button>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;margin-bottom:32px">
+<sc-for list="{{ recent }}" as="doc" hint-placeholder-count="3">
+<button onClick="{{ doc.open }}" style="display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:12px;border:1px solid #1F2638;background:#111727;color:#E8EAF0;text-align:left;cursor:pointer;font-family:Inter,sans-serif;width:100%;box-sizing:border-box;transition:background 150ms" style-hover="background:#1A2235">
+<div style="display:flex;align-items:flex-start;gap:10px">
+<div style="flex:1;min-width:0">
+<div style="font-size:15px;font-weight:600;line-height:1.35;margin-bottom:4px">{{ doc.title }}</div>
+<div style="font-size:13px;line-height:1.45;color:#9BA3B4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">{{ doc.preview }}</div>
+</div>
+<sc-if value="{{ doc.fav }}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:15px;height:15px;color:#6366F1;flex:none;margin-top:2px"><use href="#i-heart"></use></svg></sc-if>
+</div>
+<div style="height:3px;border-radius:999px;background:#1F2638;overflow:hidden"><div style="height:100%;width:{{ doc.pctW }};background:#6366F1;border-radius:999px"></div></div>
+<div style="display:flex;align-items:center;gap:10px;font-size:12px;color:#5C6478;font-variant-numeric:tabular-nums">
+<span>{{ doc.pct }}%</span><span>·</span><span>{{ doc.duration }}</span><span>·</span><span>{{ doc.date }}</span>
+</div>
+</button>
+</sc-for>
+</div>
+
+<div style="font-family:'Inter Tight',sans-serif;font-weight:600;font-size:18px;letter-spacing:-.01em;margin-bottom:12px">This month</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+<div style="padding:16px;border-radius:12px;border:1px solid #1F2638;background:#111727">
+<div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.02em">14</div>
+<div style="font-size:12px;color:#9BA3B4;margin-top:4px">Documents</div>
+</div>
+<div style="padding:16px;border-radius:12px;border:1px solid #1F2638;background:#111727">
+<div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.02em">6h 42m</div>
+<div style="font-size:12px;color:#9BA3B4;margin-top:4px">Listening time</div>
+</div>
+<div style="padding:16px;border-radius:12px;border:1px solid #1F2638;background:#111727">
+<div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.02em">9</div>
+<div style="font-size:12px;color:#9BA3B4;margin-top:4px">Completed</div>
+</div>
+<div style="padding:16px;border-radius:12px;border:1px solid #1F2638;background:#111727">
+<div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.02em">128</div>
+<div style="font-size:12px;color:#9BA3B4;margin-top:4px">Pages read</div>
+</div>
+</div>
+<div style="padding:18px 16px 14px;border-radius:12px;border:1px solid #1F2638;background:#111727">
+<div style="font-size:13px;color:#9BA3B4;margin-bottom:14px">Minutes listened, last 14 days</div>
+<div style="display:flex;align-items:flex-end;gap:5px;height:64px">
+<sc-for list="{{ chart }}" as="bar" hint-placeholder-count="14">
+<div title="{{ bar.label }}" style="flex:1;height:{{ bar.h }};border-radius:3px;background:{{ bar.color }}"></div>
+</sc-for>
+</div>
+<div style="display:flex;justify-content:space-between;font-size:11px;color:#5C6478;margin-top:8px;font-variant-numeric:tabular-nums"><span>17 Jul</span><span>30 Jul</span></div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isSplash }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Splash" onClick="{{ skipSplash }}" style="position:absolute;inset:0;z-index:95;box-sizing:border-box;padding:0 32px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#0B0F19;cursor:pointer">
+<div style="display:flex;align-items:flex-end;justify-content:center;gap:5px;height:64px;margin-bottom:32px">
+<sc-for list="{{ splashBars }}" as="b" hint-placeholder-count="5">
+<div style="width:6px;border-radius:3px;background:{{ b.color }};height:{{ b.h }};opacity:{{ b.o }};transition:height 600ms cubic-bezier(.22,1,.36,1),opacity 400ms linear,background 400ms linear;transition-delay:{{ b.delay }}"></div>
+</sc-for>
+</div>
+<div style="font-family:'Inter Tight',sans-serif;font-weight:600;font-size:30px;letter-spacing:-.02em;color:#E8EAF0;margin-bottom:10px;opacity:{{ splashTextO }};transition:opacity 600ms cubic-bezier(.22,1,.36,1) 300ms">listen</div>
+<div style="font-size:15px;line-height:1.5;color:#9BA3B4;text-align:center;max-width:240px;opacity:{{ splashTextO }};transition:opacity 600ms cubic-bezier(.22,1,.36,1) 500ms">Your reading list, out loud.</div>
+<div style="position:absolute;left:32px;right:32px;bottom:56px;display:flex;flex-direction:column;align-items:center;gap:14px">
+<div style="width:112px;height:2px;border-radius:999px;background:#1F2638;overflow:hidden"><div style="height:100%;width:{{ splashProgress }};background:#6366F1;border-radius:999px;transition:width 300ms linear"></div></div>
+<div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:#5C6478">{{ splashStatus }}</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isAuth }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Sign in" style="min-height:100%;box-sizing:border-box;padding:110px 24px 40px;display:flex;flex-direction:column;animation:fadeUp 400ms cubic-bezier(.22,1,.36,1)">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:40px">
+<div style="width:32px;height:32px;border-radius:8px;background:#6366F1;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:18px;height:18px;color:#fff"><use href="#i-audio-lines"></use></svg></div>
+<div style="font-family:'Inter Tight',sans-serif;font-weight:600;font-size:19px;letter-spacing:-.01em">listen</div>
+</div>
+<div style="font-family:'Inter Tight',sans-serif;font-weight:600;font-size:28px;line-height:1.15;letter-spacing:-.02em;margin-bottom:8px">{{ authTitle }}</div>
+<div style="font-size:15px;line-height:1.5;color:#9BA3B4;margin-bottom:28px">{{ authSub }}</div>
+<div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px">
+<sc-if value="{{ isSignup }}" hint-placeholder-val="{{ false }}">
+<input placeholder="Your name" aria-label="Your name" style="width:100%;box-sizing:border-box;padding:14px;border-radius:8px;border:1px solid #1F2638;background:#111727;color:#E8EAF0;font-family:Inter,sans-serif;font-size:15px;outline:none" style-focus="border-color:#6366F1" />
+</sc-if>
+<input placeholder="Email address" aria-label="Email address" style="width:100%;box-sizing:border-box;padding:14px;border-radius:8px;border:1px solid #1F2638;background:#111727;color:#E8EAF0;font-family:Inter,sans-serif;font-size:15px;outline:none" style-focus="border-color:#6366F1" />
+<input type="password" placeholder="Password" aria-label="Password" style="width:100%;box-sizing:border-box;padding:14px;border-radius:8px;border:1px solid #1F2638;background:#111727;color:#E8EAF0;font-family:Inter,sans-serif;font-size:15px;outline:none" style-focus="border-color:#6366F1" />
+</div>
+<button onClick="{{ goDashboard }}" style="width:100%;padding:15px;border-radius:8px;border:none;background:#6366F1;color:#fff;font-family:Inter,sans-serif;font-size:15px;font-weight:600;cursor:pointer;margin-bottom:16px;transition:background 150ms" style-hover="background:#7C7FF2">{{ authCta }}</button>
+<button onClick="{{ forgot }}" style="border:none;background:none;color:#9BA3B4;font-family:Inter,sans-serif;font-size:13px;cursor:pointer;margin-bottom:32px" style-hover="color:#E8EAF0">Forgot your password?</button>
+<div style="flex:1"></div>
+<div style="display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;color:#9BA3B4">
+<span>{{ authSwitchLabel }}</span>
+<button onClick="{{ toggleAuth }}" style="border:none;background:none;color:#6366F1;font-family:Inter,sans-serif;font-size:13px;font-weight:500;cursor:pointer;padding:0">{{ authSwitchCta }}</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isUpload }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Upload" style="padding:20px 20px 40px;animation:fadeUp 400ms cubic-bezier(.22,1,.36,1)">
+<sc-if value="{{ uploadIdle }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ startUpload }}" style="width:100%;box-sizing:border-box;padding:44px 24px;border-radius:12px;border:1px dashed #2D3650;background:#111727;color:#E8EAF0;font-family:Inter,sans-serif;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:12px;transition:background 150ms" style-hover="background:#1A2235">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:26px;height:26px;color:#6366F1"><use href="#i-file-up"></use></svg>
+<div style="font-size:15px;font-weight:600">Choose a file</div>
+<div style="font-size:13px;color:#9BA3B4;line-height:1.5">TXT, PDF or DOCX · up to 20 MB</div>
+</button>
+<div style="margin-top:24px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:#5C6478;margin-bottom:10px">Recently uploaded</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<sc-for list="{{ uploads }}" as="f" hint-placeholder-count="3">
+<div style="display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:8px;border:1px solid #1F2638;background:#111727">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:17px;height:17px;color:#9BA3B4;flex:none"><use href="{{ f.iconHref }}"></use></svg>
+<div style="flex:1;min-width:0"><div style="font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ f.name }}</div><div style="font-size:12px;color:#5C6478;font-variant-numeric:tabular-nums">{{ f.meta }}</div></div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ uploadBusy }}" hint-placeholder-val="{{ false }}">
+<div style="padding:28px 20px;border-radius:12px;border:1px solid #1F2638;background:#111727;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;align-items:center;gap:12px">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:18px;height:18px;color:#9BA3B4"><use href="#i-file-text"></use></svg>
+<div style="flex:1;font-size:14px">attention-and-pacing.pdf</div>
+<div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#5C6478;font-variant-numeric:tabular-nums">{{ uploadPct }}%</div>
+</div>
+<div style="height:4px;border-radius:999px;background:#1F2638;overflow:hidden"><div style="height:100%;width:{{ uploadW }};background:#6366F1;transition:width 200ms linear"></div></div>
+<div style="font-size:13px;color:#9BA3B4">{{ uploadStatus }}</div>
+</div>
+</sc-if>
+<sc-if value="{{ uploadDone }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:10px;padding:14px;border-radius:12px;border:1px solid #10B981;background:#111727;margin-bottom:16px">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:16px;height:16px;color:#10B981;flex:none;margin-top:2px"><use href="#i-check"></use></svg>
+<div style="font-size:13px;line-height:1.5;color:#9BA3B4">Extracted <span style="color:#E8EAF0">4,180 words</span> from 9 pages. Review the text, then generate audio.</div>
+</div>
+<button onClick="{{ goNew }}" style="width:100%;padding:15px;border-radius:8px;border:none;background:#6366F1;color:#fff;font-family:Inter,sans-serif;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px" style-hover="background:#7C7FF2"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:18px;height:18px"><use href="#i-pen-line"></use></svg>Open in editor</button>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ isAudio }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Saved audio" style="padding:20px 20px 220px;animation:fadeUp 400ms cubic-bezier(.22,1,.36,1)">
+<div style="display:flex;flex-direction:column;gap:10px">
+<sc-for list="{{ savedAudio }}" as="a" hint-placeholder-count="4">
+<div style="display:flex;align-items:center;gap:12px;padding:14px;border-radius:12px;border:1px solid #1F2638;background:#111727;transition:background 150ms" style-hover="background:#1A2235">
+<button onClick="{{ a.play }}" aria-label="Play" style="width:38px;height:38px;border-radius:999px;border:1px solid #2D3650;background:transparent;color:#E8EAF0;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:16px;height:16px"><use href="#i-play"></use></svg></button>
+<div style="flex:1;min-width:0">
+<div style="font-size:14px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ a.title }}</div>
+<div style="font-size:12px;color:#5C6478;font-variant-numeric:tabular-nums">{{ a.meta }}</div>
+</div>
+<button onClick="{{ download }}" aria-label="Download" style="width:32px;height:32px;border-radius:6px;border:none;background:transparent;color:#9BA3B4;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="color:#E8EAF0"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:16px;height:16px"><use href="#i-download"></use></svg></button>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isSettings }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Settings" style="padding:20px 20px 40px;animation:fadeUp 400ms cubic-bezier(.22,1,.36,1)">
+<div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:#5C6478;margin-bottom:10px">Reading</div>
+<div style="border-radius:12px;border:1px solid #1F2638;background:#111727;overflow:hidden;margin-bottom:24px">
+<div style="padding:14px;border-bottom:1px solid #1F2638">
+<div style="display:flex;justify-content:space-between;margin-bottom:10px"><span style="font-size:14px">Text size</span><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#9BA3B4;font-variant-numeric:tabular-nums">{{ fontSize }}</span></div>
+<input type="range" min="14" max="26" step="2" value="{{ fontSizeRaw }}" onChange="{{ setFontSize }}" aria-label="Text size" style="width:100%;accent-color:#6366F1" />
+</div>
+<div style="padding:14px;border-bottom:1px solid #1F2638">
+<div style="display:flex;justify-content:space-between;margin-bottom:10px"><span style="font-size:14px">Line spacing</span><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#9BA3B4;font-variant-numeric:tabular-nums">{{ lineH }}</span></div>
+<input type="range" min="140" max="220" step="5" value="{{ lineHRaw }}" onChange="{{ setLineH }}" aria-label="Line spacing" style="width:100%;accent-color:#6366F1" />
+</div>
+<div style="padding:14px">
+<div style="display:flex;justify-content:space-between;margin-bottom:10px"><span style="font-size:14px">Reading width</span><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#9BA3B4;font-variant-numeric:tabular-nums">{{ measure }}</span></div>
+<input type="range" min="72" max="100" step="4" value="{{ measureRaw }}" onChange="{{ setMeasure }}" aria-label="Reading width" style="width:100%;accent-color:#6366F1" />
+</div>
+</div>
+
+<div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:#5C6478;margin-bottom:10px">Playback</div>
+<div style="border-radius:12px;border:1px solid #1F2638;background:#111727;overflow:hidden;margin-bottom:24px">
+<sc-for list="{{ toggles }}" as="t" hint-placeholder-count="4">
+<button onClick="{{ t.toggle }}" style="display:flex;align-items:center;gap:12px;width:100%;box-sizing:border-box;padding:14px;border:none;border-bottom:1px solid #1F2638;background:transparent;color:#E8EAF0;font-family:Inter,sans-serif;text-align:left;cursor:pointer">
+<div style="flex:1;min-width:0"><div style="font-size:14px">{{ t.label }}</div><div style="font-size:12px;color:#5C6478;line-height:1.45;margin-top:2px">{{ t.note }}</div></div>
+<div style="width:40px;height:24px;border-radius:999px;background:{{ t.trackBg }};padding:2px;box-sizing:border-box;flex:none;display:flex;justify-content:{{ t.justify }};transition:background 150ms">
+<div style="width:20px;height:20px;border-radius:999px;background:#E8EAF0"></div>
+</div>
+</button>
+</sc-for>
+</div>
+
+<div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:#5C6478;margin-bottom:10px">Account</div>
+<div style="border-radius:12px;border:1px solid #1F2638;background:#111727;padding:16px;display:flex;align-items:center;gap:12px;margin-bottom:12px">
+<div style="width:40px;height:40px;border-radius:999px;background:#1A2235;border:1px solid #2D3650;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;color:#9BA3B4">m</div>
+<div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:500">myvoice</div><div style="font-size:12px;color:#5C6478">myvoice@example.com</div></div>
+</div>
+<button onClick="{{ goAuth }}" style="width:100%;padding:13px;border-radius:8px;border:1px solid #1F2638;background:transparent;color:#EF4444;font-family:Inter,sans-serif;font-size:14px;cursor:pointer" style-hover="background:#1A2235">Log out</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ isNew }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="New reading" style="padding:20px 20px 40px;animation:fadeUp 400ms cubic-bezier(.22,1,.36,1)">
+<input value="{{ docTitle }}" onChange="{{ setTitle }}" placeholder="Enter document title" style="width:100%;box-sizing:border-box;padding:13px 14px;border-radius:8px;border:1px solid #1F2638;background:#111727;color:#E8EAF0;font-family:'Inter Tight',sans-serif;font-weight:600;font-size:16px;margin-bottom:10px;outline:none" style-focus="border-color:#6366F1" />
+<textarea value="{{ text }}" onChange="{{ setText }}" placeholder="Paste or type the text you want read aloud." style="width:100%;box-sizing:border-box;height:180px;resize:none;padding:14px;border-radius:8px;border:1px solid #1F2638;background:#111727;color:#E8EAF0;font-family:Inter,sans-serif;font-size:15px;line-height:1.6;outline:none" style-focus="border-color:#6366F1"></textarea>
+<div style="display:flex;align-items:center;gap:6px;margin:10px 0 24px">
+<div style="flex:1;font-family:'JetBrains Mono',monospace;font-size:12px;color:#5C6478;font-variant-numeric:tabular-nums">{{ chars }} characters · {{ words }} words</div>
+<button onClick="{{ copyText }}" aria-label="Copy text" style="width:32px;height:32px;border-radius:6px;border:1px solid #1F2638;background:#111727;color:#9BA3B4;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="background:#1A2235;color:#E8EAF0"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:15px;height:15px"><use href="#i-copy"></use></svg></button>
+<button onClick="{{ saveText }}" aria-label="Save to library" style="width:32px;height:32px;border-radius:6px;border:1px solid #1F2638;background:#111727;color:#9BA3B4;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="background:#1A2235;color:#E8EAF0"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:15px;height:15px"><use href="#i-save"></use></svg></button>
+<button onClick="{{ clearText }}" aria-label="Clear text" style="width:32px;height:32px;border-radius:6px;border:1px solid #1F2638;background:#111727;color:#9BA3B4;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="background:#1A2235;color:#EF4444"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:15px;height:15px"><use href="#i-trash-2"></use></svg></button>
+</div>
+
+<div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:#5C6478;margin-bottom:10px">Voice</div>
+<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:24px">
+<sc-for list="{{ voices }}" as="v" hint-placeholder-count="4">
+<button onClick="{{ v.select }}" style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:8px;border:1px solid {{ v.border }};background:{{ v.bg }};color:#E8EAF0;font-family:Inter,sans-serif;text-align:left;cursor:pointer;width:100%;box-sizing:border-box;transition:background 150ms">
+<div style="width:28px;height:28px;border-radius:999px;background:#1A2235;border:1px solid #2D3650;display:flex;align-items:center;justify-content:center;flex:none;font-size:12px;font-weight:600;color:#9BA3B4">{{ v.initial }}</div>
+<div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:500">{{ v.name }}</div><div style="font-size:12px;color:#5C6478">{{ v.note }}</div></div>
+<svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:16px;height:16px;color:{{ v.iconColor }}"><use href="{{ v.iconHref }}"></use></svg>
+</button>
+</sc-for>
+</div>
+
+<div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px">
+<div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:#5C6478">Speed</div>
+<div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#E8EAF0;font-variant-numeric:tabular-nums">{{ speedLabel }}</div>
+</div>
+<input type="range" min="0" max="6" step="1" value="{{ speedStep }}" onChange="{{ setSpeed }}" aria-label="Speech speed" style="width:100%;margin:0 0 6px;accent-color:#6366F1" />
+<div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;color:#5C6478;margin-bottom:24px"><span>0.5x</span><span>1x</span><span>2x</span></div>
+
+<div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:#5C6478;margin-bottom:10px">Tone</div>
+<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+<sc-for list="{{ tones }}" as="t" hint-placeholder-count="6">
+<button onClick="{{ t.select }}" style="padding:8px 14px;border-radius:999px;border:1px solid {{ t.border }};background:{{ t.bg }};color:{{ t.fg }};font-family:Inter,sans-serif;font-size:13px;cursor:pointer;transition:background 150ms">{{ t.name }}</button>
+</sc-for>
+</div>
+<div style="font-size:12px;line-height:1.5;color:#5C6478;margin-bottom:24px">Tone options come from the selected voice model. Voices the model does not support are hidden.</div>
+
+<sc-if value="{{ willChunk }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:10px;padding:14px;border-radius:12px;border:1px solid #2D3650;background:#111727;margin-bottom:16px">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:16px;height:16px;color:#9BA3B4;flex:none;margin-top:2px"><use href="#i-layers"></use></svg>
+<div style="font-size:13px;line-height:1.5;color:#9BA3B4">This text is longer than one request allows. It will be split into <span style="color:#E8EAF0">{{ chunkCount }} segments</span> at paragraph breaks and played back as one continuous session.</div>
+</div>
+</sc-if>
+
+<button onClick="{{ generate }}" disabled="{{ generating }}" style="width:100%;padding:15px;border-radius:8px;border:none;background:{{ generateBg }};color:#fff;font-family:Inter,sans-serif;font-size:15px;font-weight:600;cursor:{{ generateCursor }};opacity:{{ generateOpacity }};display:flex;align-items:center;justify-content:center;gap:10px;transition:background 150ms">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:18px;height:18px"><use href="{{ generateHref }}"></use></svg>{{ generateLabel }}</button>
+<sc-if value="{{ generating }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:14px;display:flex;flex-direction:column;gap:8px">
+<div style="height:10px;border-radius:6px;background:#111727;overflow:hidden"><div style="height:100%;width:{{ genProgress }};background:#6366F1;transition:width 200ms linear"></div></div>
+<div style="font-size:12px;color:#5C6478;font-variant-numeric:tabular-nums">{{ genStatus }}</div>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ isLibrary }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Library" style="padding:20px 20px 40px;animation:fadeUp 400ms cubic-bezier(.22,1,.36,1)">
+<div style="position:relative;margin-bottom:14px">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:16px;height:16px;color:#5C6478;position:absolute;left:13px;top:13px"><use href="#i-search"></use></svg>
+<input value="{{ query }}" onChange="{{ setQuery }}" placeholder="Search documents" aria-label="Search documents" style="width:100%;box-sizing:border-box;padding:12px 14px 12px 38px;border-radius:8px;border:1px solid #1F2638;background:#111727;color:#E8EAF0;font-family:Inter,sans-serif;font-size:14px;outline:none" style-focus="border-color:#6366F1" />
+</div>
+<div style="display:flex;gap:8px;overflow-x:auto;margin-bottom:16px;padding-bottom:2px">
+<sc-for list="{{ filters }}" as="f" hint-placeholder-count="5">
+<button onClick="{{ f.select }}" style="flex:none;padding:7px 14px;border-radius:999px;border:1px solid {{ f.border }};background:{{ f.bg }};color:{{ f.fg }};font-family:Inter,sans-serif;font-size:13px;cursor:pointer">{{ f.name }}</button>
+</sc-for>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px">
+<sc-for list="{{ library }}" as="doc" hint-placeholder-count="5">
+<div style="padding:16px;border-radius:12px;border:1px solid #1F2638;background:#111727;transition:background 150ms" style-hover="background:#1A2235">
+<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px">
+<div style="flex:1;min-width:0">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
+<span style="font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#5C6478;font-weight:500">{{ doc.tag }}</span>
+<sc-if value="{{ doc.audio }}" hint-placeholder-val="{{ true }}"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:13px;height:13px;color:#6366F1"><use href="#i-audio-lines"></use></svg></sc-if>
+</div>
+<div style="font-size:15px;font-weight:600;line-height:1.35;margin-bottom:4px">{{ doc.title }}</div>
+<div style="font-size:13px;line-height:1.45;color:#9BA3B4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">{{ doc.preview }}</div>
+</div>
+<button onClick="{{ doc.toggleFav }}" aria-label="Favourite" style="width:30px;height:30px;border-radius:6px;border:none;background:transparent;color:{{ doc.favColor }};display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:16px;height:16px"><use href="#i-heart"></use></svg></button>
+</div>
+<div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#5C6478;font-variant-numeric:tabular-nums;margin-bottom:12px">
+<span style="color:{{ doc.statusColor }}">{{ doc.statusLabel }}</span><span>·</span><span>{{ doc.duration }}</span><span>·</span><span>{{ doc.date }}</span>
+</div>
+<div style="display:flex;gap:8px">
+<button onClick="{{ doc.open }}" style="flex:1;padding:9px;border-radius:6px;border:1px solid #2D3650;background:transparent;color:#E8EAF0;font-family:Inter,sans-serif;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px" style-hover="background:#1A2235"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:14px;height:14px"><use href="#i-play"></use></svg>{{ doc.cta }}</button>
+<button onClick="{{ doc.rename }}" aria-label="Rename" style="width:36px;padding:9px 0;border-radius:6px;border:1px solid #1F2638;background:transparent;color:#9BA3B4;cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="color:#E8EAF0"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:14px;height:14px"><use href="#i-pencil"></use></svg></button>
+<button onClick="{{ doc.remove }}" aria-label="Delete" style="width:36px;padding:9px 0;border-radius:6px;border:1px solid #1F2638;background:transparent;color:#9BA3B4;cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="color:#EF4444"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:14px;height:14px"><use href="#i-trash-2"></use></svg></button>
+</div>
+</div>
+</sc-for>
+</div>
+<sc-if value="{{ libraryEmpty }}" hint-placeholder-val="{{ false }}">
+<div style="padding:48px 24px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px">
+<div style="display:flex;flex-direction:column;align-items:center;gap:4px;opacity:.6">
+<div style="width:38px;height:7px;border-radius:3px;background:#2D3650"></div>
+</div>
+<div style="font-size:14px;color:#9BA3B4;line-height:1.5;max-width:220px">Nothing here yet. Your first document goes here.</div>
+<button onClick="{{ resetFilters }}" style="padding:9px 16px;border-radius:6px;border:1px solid #2D3650;background:transparent;color:#E8EAF0;font-family:Inter,sans-serif;font-size:13px;cursor:pointer" style-hover="background:#1A2235">Clear filters</button>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ isReader }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Reader" style="padding:20px 20px 200px;animation:fadeUp 400ms cubic-bezier(.22,1,.36,1)">
+<sc-if value="{{ focus }}" hint-placeholder-val="{{ false }}"><div style="height:44px"></div></sc-if>
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:18px;font-size:12px;color:#5C6478;letter-spacing:.08em;text-transform:uppercase;font-weight:500">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:14px;height:14px"><use href="#i-audio-lines"></use></svg><span>{{ voiceName }}</span><span>·</span><span>{{ segLabel }}</span>
+</div>
+<div style="max-width:{{ measure }};display:flex;flex-direction:column;gap:6px">
+<sc-for list="{{ sentences }}" as="s" hint-placeholder-count="13">
+<div data-active="{{ s.active }}" onClick="{{ s.seek }}" style="position:relative;padding:6px 10px 6px 14px;border-radius:8px;background:{{ s.bg }};color:{{ s.color }};font-size:{{ fontSize }};line-height:{{ lineH }};cursor:pointer;transition:background 200ms cubic-bezier(.4,0,.2,1),color 200ms">
+<div style="position:absolute;left:0;top:6px;bottom:6px;width:2px;border-radius:2px;background:{{ s.bar }}"></div>{{ s.text }}</div>
+</sc-for>
+</div>
+<div style="margin-top:32px;display:flex;flex-wrap:wrap;gap:8px">
+<button onClick="{{ toggleFocus }}" style="display:flex;align-items:center;gap:7px;padding:8px 12px;border-radius:999px;border:1px solid #1F2638;background:#111727;color:#9BA3B4;font-family:Inter,sans-serif;font-size:13px;cursor:pointer" style-hover="background:#1A2235;color:#E8EAF0"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:15px;height:15px"><use href="#i-focus"></use></svg>Focus mode</button>
+<button onClick="{{ textSmaller }}" aria-label="Smaller text" style="padding:8px 12px;border-radius:999px;border:1px solid #1F2638;background:#111727;color:#9BA3B4;font-family:Inter,sans-serif;font-size:13px;cursor:pointer" style-hover="background:#1A2235;color:#E8EAF0">A−</button>
+<button onClick="{{ textBigger }}" aria-label="Larger text" style="padding:8px 12px;border-radius:999px;border:1px solid #1F2638;background:#111727;color:#9BA3B4;font-family:Inter,sans-serif;font-size:15px;cursor:pointer" style-hover="background:#1A2235;color:#E8EAF0">A+</button>
+<button onClick="{{ cycleLine }}" style="display:flex;align-items:center;gap:7px;padding:8px 12px;border-radius:999px;border:1px solid #1F2638;background:#111727;color:#9BA3B4;font-family:Inter,sans-serif;font-size:13px;cursor:pointer" style-hover="background:#1A2235;color:#E8EAF0"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:15px;height:15px"><use href="#i-unfold-vertical"></use></svg>Line spacing</button>
+<button onClick="{{ cycleMeasure }}" style="display:flex;align-items:center;gap:7px;padding:8px 12px;border-radius:999px;border:1px solid #1F2638;background:#111727;color:#9BA3B4;font-family:Inter,sans-serif;font-size:13px;cursor:pointer" style-hover="background:#1A2235;color:#E8EAF0"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:15px;height:15px"><use href="#i-unfold-horizontal"></use></svg>Width</button>
+</div>
+</div>
+</sc-if>
+
+</div>
+
+<sc-if value="{{ showPlayer }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:0;right:0;bottom:0;z-index:70;background:#111727;border-top:1px solid #1F2638;padding:14px 16px 34px">
+<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+<div style="width:38px;height:38px;border-radius:8px;background:#1A2235;border:1px solid #2D3650;display:flex;align-items:flex-end;justify-content:center;gap:2px;padding-bottom:11px;flex:none">
+<sc-for list="{{ bars }}" as="b" hint-placeholder-count="4">
+<div style="width:2.5px;height:14px;border-radius:2px;background:#6366F1;transform-origin:bottom;animation:barPulse 900ms {{ b.delay }} infinite ease-in-out;animation-play-state:{{ b.play }}"></div>
+</sc-for>
+</div>
+<div style="flex:1;min-width:0">
+<div style="font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ currentDocTitle }}</div>
+<div style="font-size:12px;color:#5C6478;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ voiceName }} · {{ segLabel }}</div>
+</div>
+<button onClick="{{ favCurrent }}" aria-label="Favourite" style="width:32px;height:32px;border-radius:6px;border:none;background:transparent;color:#9BA3B4;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="color:#E8EAF0"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:17px;height:17px"><use href="#i-heart"></use></svg></button>
+<button onClick="{{ download }}" aria-label="Download audio" style="width:32px;height:32px;border-radius:6px;border:none;background:transparent;color:#9BA3B4;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="color:#E8EAF0"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:17px;height:17px"><use href="#i-download"></use></svg></button>
+</div>
+<div onClick="{{ seekBar }}" style="height:14px;display:flex;align-items:center;cursor:pointer;margin-bottom:2px">
+<div style="height:4px;width:100%;border-radius:999px;background:#1F2638;overflow:hidden"><div style="height:100%;width:{{ progressW }};background:#6366F1;border-radius:999px"></div></div>
+</div>
+<div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;color:#5C6478;font-variant-numeric:tabular-nums;margin-bottom:10px"><span>{{ elapsedLabel }}</span><span>{{ totalLabel }}</span></div>
+<div style="display:flex;align-items:center;gap:8px">
+<button onClick="{{ cycleSpeed }}" aria-label="Playback speed" style="min-width:52px;padding:8px 10px;border-radius:999px;border:1px solid #1F2638;background:transparent;color:#9BA3B4;font-family:'JetBrains Mono',monospace;font-size:12px;font-variant-numeric:tabular-nums;cursor:pointer" style-hover="background:#1A2235;color:#E8EAF0">{{ speedLabel }}</button>
+<div style="flex:1"></div>
+<button onClick="{{ prev }}" aria-label="Previous sentence" style="width:40px;height:40px;border-radius:999px;border:none;background:transparent;color:#9BA3B4;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="color:#E8EAF0"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:19px;height:19px"><use href="#i-skip-back"></use></svg></button>
+<button onClick="{{ togglePlay }}" aria-label="{{ playLabel }}" style="width:56px;height:56px;border-radius:999px;border:none;background:#6366F1;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 150ms" style-hover="background:#7C7FF2"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:22px;height:22px"><use href="{{ playHref }}"></use></svg></button>
+<button onClick="{{ next }}" aria-label="Next sentence" style="width:40px;height:40px;border-radius:999px;border:none;background:transparent;color:#9BA3B4;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="color:#E8EAF0"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:19px;height:19px"><use href="#i-skip-forward"></use></svg></button>
+<div style="flex:1"></div>
+<button onClick="{{ stop }}" aria-label="Stop" style="width:40px;height:40px;border-radius:999px;border:1px solid #1F2638;background:transparent;color:#9BA3B4;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="background:#1A2235;color:#E8EAF0"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:16px;height:16px"><use href="#i-square"></use></svg></button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ drawer }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ toggleDrawer }}" style="position:absolute;inset:0;background:rgba(11,15,25,.9);z-index:80"></div>
+<div style="position:absolute;top:0;bottom:0;left:0;width:264px;background:#111727;border-right:1px solid #1F2638;z-index:81;display:flex;flex-direction:column;padding:62px 0 20px;animation:fadeUp 300ms cubic-bezier(.22,1,.36,1)">
+<div style="display:flex;align-items:center;gap:10px;padding:0 20px 20px">
+<div style="width:28px;height:28px;border-radius:7px;background:#6366F1;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:16px;height:16px;color:#fff"><use href="#i-audio-lines"></use></svg></div>
+<div style="font-family:'Inter Tight',sans-serif;font-weight:600;font-size:17px;letter-spacing:-.01em">listen</div>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:2px;padding:0 12px;overflow-y:auto">
+<sc-for list="{{ navItems }}" as="item" hint-placeholder-count="8">
+<button onClick="{{ item.go }}" style="display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:6px;border:none;background:{{ item.bg }};color:{{ item.fg }};font-family:Inter,sans-serif;font-size:14px;text-align:left;cursor:pointer;width:100%;box-sizing:border-box">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:17px;height:17px"><use href="{{ item.iconHref }}"></use></svg>{{ item.label }}</button>
+</sc-for>
+</div>
+<div style="border-top:1px solid #1F2638;margin-top:16px;padding:16px 20px 0;display:flex;align-items:center;gap:12px">
+<div style="width:34px;height:34px;border-radius:999px;background:#1A2235;border:1px solid #2D3650;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#9BA3B4">m</div>
+<div style="flex:1;min-width:0">
+<div style="font-size:14px;font-weight:500">myvoice</div>
+<div style="font-size:12px;color:#5C6478">Free plan</div>
+</div>
+<button onClick="{{ goAuth }}" aria-label="Log out" style="width:32px;height:32px;border-radius:6px;border:1px solid #1F2638;background:transparent;color:#9BA3B4;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:15px;height:15px"><use href="#i-log-out"></use></svg></button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:16px;right:16px;bottom:44px;z-index:90;display:flex;align-items:center;gap:10px;padding:13px 14px;border-radius:12px;background:#1A2235;border:1px solid {{ toastBorder }};animation:fadeUp 300ms cubic-bezier(.22,1,.36,1)">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:17px;height:17px;color:{{ toastColor }};flex:none"><use href="{{ toastHref }}"></use></svg>
+<div style="flex:1;font-size:13px;line-height:1.45;color:#E8EAF0">{{ toast }}</div>
+</div>
+</sc-if>
+
+</div>
+</x-import>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1180,&quot;height&quot;:1000}}">
+const SENTENCES = [
+  "There is a particular kind of tiredness that comes from reading on a screen all day.",
+  "It is not the tiredness of hard thinking. It is the tiredness of holding your eyes still.",
+  "Listening moves the work somewhere else. The words arrive at a steady pace, and your attention rides along with them instead of dragging itself forward.",
+  "This is why so many people who never finished a book on paper will finish four in a month once they start listening on the walk to work.",
+  "The interesting question is not whether listening counts as reading. It plainly does.",
+  "The interesting question is what changes about comprehension when the pace is set for you rather than by you.",
+  "Research on this is thinner than you would hope, and much of what circulates online is folklore.",
+  "What we can say with some confidence is that rereading is harder when listening, and that difficulty matters most for dense, technical material.",
+  "For narrative and argument, the difference all but disappears.",
+  "So the practical advice is unglamorous: listen to the things you would happily read on a train, and read the things you would need a pencil for.",
+  "Speed is the other lever. Most people settle somewhere between 1.2 and 1.5 times, and stay there.",
+  "Going faster feels productive for about a week, and then quietly stops working.",
+  "The point was never to get through more words. It was to get through the words without dreading them.",
+];
+const WPM = 165;
+const DOCS = [
+  { id: "d1", title: "The quiet case for listening", preview: "There is a particular kind of tiredness that comes from reading on a screen all day. It is not the tiredness of hard thinking.", pct: 62, duration: "8m 12s", date: "Today", fav: true, audio: true, tag: "Article" },
+  { id: "d2", title: "Attention and pacing — Q3 research notes", preview: "Summary of twelve studies on auditory comprehension, with notes on which findings replicate and which do not.", pct: 24, duration: "22m 40s", date: "Yesterday", fav: false, audio: true, tag: "Research" },
+  { id: "d3", title: "Chapter 4 — Cellular respiration", preview: "Glycolysis, the citric acid cycle, and oxidative phosphorylation, with the diagrams described in text.", pct: 100, duration: "31m 05s", date: "27 Jul", fav: false, audio: true, tag: "Textbook" },
+  { id: "d4", title: "Onboarding email drafts v3", preview: "Three variants of the welcome sequence. Read aloud to catch anything that sounds stiff.", pct: 0, duration: "4m 18s", date: "24 Jul", fav: true, audio: false, tag: "Draft" },
+  { id: "d5", title: "Lease agreement — 14 Marlow St", preview: "Sections 1 through 9, including the break clause and the deposit schedule.", pct: 88, duration: "19m 33s", date: "21 Jul", fav: false, audio: true, tag: "Document" },
+];
+const CHART = [12, 26, 0, 18, 34, 41, 22, 8, 0, 29, 47, 38, 55, 31];
+const VOICES = [
+  { id: "aria", name: "Aria", note: "Warm, neutral · en-GB" },
+  { id: "milo", name: "Milo", note: "Low, unhurried · en-GB" },
+  { id: "juno", name: "Juno", note: "Bright, quick · en-US" },
+  { id: "sol", name: "Sol", note: "Even, formal · en-US" },
+];
+const NAV = [
+  { key: "splash", label: "Splash", icon: "sparkle" },
+  { key: "dashboard", label: "Dashboard", icon: "layout-dashboard" },
+  { key: "new", label: "New reading", icon: "pen-line" },
+  { key: "library", label: "My library", icon: "library" },
+  { key: "upload", label: "Upload document", icon: "file-up" },
+  { key: "audio", label: "Saved audio", icon: "disc-3" },
+  { key: "settings", label: "Settings", icon: "settings" },
+  { key: "auth", label: "Sign in", icon: "log-in" },
+];
+
+class Component extends DCLogic {
+  state = {
+    screen: "splash", drawer: false, toast: null, toastKind: "info",
+    playing: false, elapsed: 37.4, speed: 1, voice: "aria", tone: "Friendly",
+    docTitle: "The quiet case for listening",
+    text: SENTENCES.join(" "),
+    generating: false, hasAudio: true, focus: false,
+    fontSize: 18, lineH: 1.75, measure: 92,
+    query: "", filter: "All", favs: { d1: true, d4: true },
+    uploadStage: 0, authMode: "login", volume: 0.8, segment: 1,
+    genPct: 0, deleted: {},
+  };
+
+  runSplash() {
+    clearInterval(this._sp);
+    this.setState({ screen: "splash", splashStep: 0, drawer: false });
+    this._sp = setInterval(() => {
+      this.setState((st) => {
+        const step = (st.splashStep || 0) + 1;
+        if (step > 5) { clearInterval(this._sp); return { screen: st.screen === "splash" ? "dashboard" : st.screen }; }
+        return { splashStep: step };
+      });
+    }, 420);
+  }
+
+  componentDidMount() {
+    this.runSplash();
+    this.timer = setInterval(() => {
+      if (!this.state.playing) return;
+      this.setState((s) => {
+        const next = s.elapsed + 0.1 * s.speed;
+        if (next >= this.total()) return { elapsed: this.total(), playing: false };
+        return { elapsed: next };
+      });
+    }, 100);
+    this.runSplash();
+  }
+  componentDidUpdate() {
+    if (this._prevScreen !== this.state.screen) {
+      this._prevScreen = this.state.screen;
+      if (this.scroll) this.scroll.scrollTop = 0;
+    }
+    const i = this.sentenceIndex();
+    if (i !== this._lastIdx) {
+      this._lastIdx = i;
+      const el = this.scroll && this.scroll.querySelector('[data-active="1"]');
+      if (el && this.state.screen === "reader" && this.state.playing) {
+        this.scroll.scrollTo({ top: Math.max(0, el.offsetTop - 200), behavior: "smooth" });
+      }
+    }
+  }
+  componentWillUnmount() { clearInterval(this.timer); clearInterval(this._splash); }
+  runSplash() {
+    clearInterval(this._splash);
+    this.setState({ screen: "splash", splashStep: 0 });
+    this._splash = setInterval(() => {
+      this.setState((st) => {
+        const step = (st.splashStep || 0) + 1;
+        if (step > 6) { clearInterval(this._splash); return st.screen === "splash" ? { screen: "dashboard", splashStep: step } : { splashStep: step }; }
+        return { splashStep: step };
+      });
+    }, 340);
+  }
+
+  durations() { return SENTENCES.map((s) => Math.max(1.6, (s.split(/\s+/).length / WPM) * 60)); }
+  total() { return this.durations().reduce((a, b) => a + b, 0); }
+  sentenceIndex() {
+    const d = this.durations(); let acc = 0;
+    for (let i = 0; i < d.length; i++) { acc += d[i]; if (this.state.elapsed < acc) return i; }
+    return d.length - 1;
+  }
+  fmt(t) {
+    t = Math.max(0, Math.round(t));
+    return String(Math.floor(t / 60)).padStart(2, "0") + ":" + String(t % 60).padStart(2, "0");
+  }
+  toast(msg, kind) {
+    clearTimeout(this._t);
+    this.setState({ toast: msg, toastKind: kind || "info" });
+    this._t = setTimeout(() => this.setState({ toast: null }), 3200);
+  }
+  go(screen) { this.setState({ screen, drawer: false }); }
+
+  renderVals() {
+    const s = this.state;
+    const idx = this.sentenceIndex();
+    const total = this.total();
+    const words = s.text.trim() ? s.text.trim().split(/\s+/).length : 0;
+    const chars = s.text.length;
+
+    const navItems = NAV.map((n) => ({
+      ...n,
+      iconHref: "#i-" + n.icon,
+      bg: s.screen === n.key ? "rgba(99,102,241,.10)" : "transparent",
+      fg: s.screen === n.key ? "#E8EAF0" : "#9BA3B4",
+      go: () => (n.key === "splash" ? this.runSplash() : this.go(n.key)),
+    }));
+
+    const decorate = (d) => ({
+      ...d,
+      fav: !!s.favs[d.id],
+      pctW: d.pct + "%",
+      open: () => this.setState({ screen: "reader", drawer: false, docTitle: d.title, elapsed: d.pct === 100 ? 0 : total * (d.pct / 100) }),
+      toggleFav: () => this.setState((st) => ({ favs: { ...st.favs, [d.id]: !st.favs[d.id] } })),
+      statusLabel: d.pct === 0 ? "Not started" : d.pct === 100 ? "Completed" : "In progress " + d.pct + "%",
+      statusColor: d.pct === 100 ? "#10B981" : d.pct === 0 ? "#5C6478" : "#9BA3B4",
+      favColor: s.favs[d.id] ? "#6366F1" : "#5C6478",
+      cta: d.pct === 0 ? "Listen" : d.pct === 100 ? "Listen again" : "Continue from " + d.pct + "%",
+      rename: () => this.toast("Renaming is stubbed in the prototype", "info"),
+      remove: () => this.setState((st) => ({ deleted: { ...st.deleted, [d.id]: true } }), () => this.toast("Document deleted", "info")),
+    });
+
+    const q = s.query.trim().toLowerCase();
+    const filtered = DOCS.filter((d) => {
+      if (s.deleted && s.deleted[d.id]) return false;
+      if (q && !(d.title + " " + d.preview).toLowerCase().includes(q)) return false;
+      if (s.filter === "Favourites") return !!s.favs[d.id];
+      if (s.filter === "Completed") return d.pct === 100;
+      if (s.filter === "In progress") return d.pct > 0 && d.pct < 100;
+      if (s.filter === "Recent") return ["Today", "Yesterday"].includes(d.date);
+      return true;
+    }).map(decorate);
+
+    const maxBar = Math.max(...CHART);
+    return {
+      navItems,
+      drawer: s.drawer,
+      toggleDrawer: () => this.setState({ drawer: !s.drawer }),
+      showChrome: !(s.focus && s.screen === "reader") && s.screen !== "auth" && s.screen !== "splash",
+      screenTitle: { dashboard: "Dashboard", new: "New reading", reader: s.docTitle, library: "My library", audio: "Saved audio", settings: "Settings", upload: "Upload document", auth: "Sign in" }[s.screen],
+      isDashboard: s.screen === "dashboard",
+      isNew: s.screen === "new",
+      isReader: s.screen === "reader",
+      isLibrary: s.screen === "library",
+      isAudio: s.screen === "audio",
+      isSettings: s.screen === "settings",
+      isUpload: s.screen === "upload",
+      isAuth: s.screen === "auth",
+      goNew: () => this.go("new"),
+      goReader: () => this.go("reader"),
+      goLibrary: () => this.go("library"),
+      goUpload: () => this.go("upload"),
+      goAuth: () => this.go("auth"),
+      goDashboard: () => this.go("dashboard"),
+      scrollRef: (el) => { this.scroll = el; },
+      recent: DOCS.slice(0, 3).map(decorate),
+      library: filtered,
+      libraryEmpty: filtered.length === 0,
+      currentDocTitle: s.docTitle,
+      currentDocPct: Math.round((s.elapsed / total) * 100),
+      chart: CHART.map((v, i) => ({ h: Math.max(4, Math.round((v / maxBar) * 64)) + "px", color: i === CHART.length - 1 ? "#6366F1" : v === 0 ? "#1F2638" : "#2D3650", label: v + " min" })),
+      sentences: SENTENCES.map((t, i) => ({
+        text: t,
+        active: i === idx ? "1" : "0",
+        color: i === idx ? "#E8EAF0" : i < idx ? "#5C6478" : "#9BA3B4",
+        bg: i === idx ? "rgba(99,102,241,.10)" : "transparent",
+        bar: i === idx ? "#6366F1" : "transparent",
+        seek: () => { const d = this.durations(); let a = 0; for (let k = 0; k < i; k++) a += d[k]; this.setState({ elapsed: a + 0.01 }); },
+      })),
+      playing: s.playing,
+      playHref: s.playing ? "#i-pause" : "#i-play",
+      playLabel: s.playing ? "Pause" : "Play",
+      togglePlay: () => this.setState({ playing: !s.playing }),
+      stop: () => this.setState({ playing: false, elapsed: 0 }),
+      prev: () => { const d = this.durations(); let a = 0; const t = Math.max(0, idx - 1); for (let k = 0; k < t; k++) a += d[k]; this.setState({ elapsed: a + 0.01 }); },
+      next: () => { const d = this.durations(); let a = 0; const t = Math.min(d.length - 1, idx + 1); for (let k = 0; k < t; k++) a += d[k]; this.setState({ elapsed: a + 0.01 }); },
+      elapsedLabel: this.fmt(s.elapsed),
+      totalLabel: this.fmt(total),
+      progressW: (s.elapsed / total) * 100 + "%",
+      speedLabel: s.speed.toFixed(2).replace(/0$/, "") + "x",
+      cycleSpeed: () => { const opts = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]; this.setState({ speed: opts[(opts.indexOf(s.speed) + 1) % opts.length] }); },
+      seekBar: (e) => { const r = e.currentTarget.getBoundingClientRect(); this.setState({ elapsed: total * Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)) }); },
+      focus: s.focus,
+      toggleFocus: () => this.setState({ focus: !s.focus }),
+      showPlayer: (s.screen === "reader" || s.screen === "audio") && s.hasAudio,
+      bars: [0, 1, 2, 3].map((i) => ({ delay: i * 130 + "ms", play: s.playing ? "running" : "paused" })),
+      textSmaller: () => this.setState({ fontSize: Math.max(14, s.fontSize - 2) }),
+      textBigger: () => this.setState({ fontSize: Math.min(26, s.fontSize + 2) }),
+      cycleLine: () => this.setState({ lineH: s.lineH >= 2.1 ? 1.45 : Math.round((s.lineH + 0.2) * 100) / 100 }),
+      cycleMeasure: () => this.setState({ measure: s.measure >= 100 ? 72 : s.measure + 14 }),
+      fontSize: s.fontSize + "px",
+      lineH: String(s.lineH),
+      measure: s.measure + "%",
+      voiceName: (VOICES.find((v) => v.id === s.voice) || VOICES[0]).name,
+      segLabel: "Segment " + s.segment + " of 3",
+      download: () => this.toast("Audio saved to your device", "success"),
+      favCurrent: () => this.toast("Added to favourites", "success"),
+      toast: s.toast,
+      toastHref: s.toastKind === "error" ? "#i-alert-triangle" : s.toastKind === "success" ? "#i-check" : "#i-info",
+      toastColor: s.toastKind === "error" ? "#F59E0B" : s.toastKind === "success" ? "#10B981" : "#9BA3B4",
+      toastBorder: s.toastKind === "error" ? "#F59E0B" : s.toastKind === "success" ? "#10B981" : "#2D3650",
+      text: s.text,
+      docTitle: s.docTitle,
+      setTitle: (e) => this.setState({ docTitle: e.target.value }),
+      setText: (e) => this.setState({ text: e.target.value }),
+      copyText: () => this.toast("Text copied", "success"),
+      saveText: () => this.toast("Saved to your library", "success"),
+      clearText: () => this.setState({ text: "" }, () => this.toast("Editor cleared", "info")),
+      voices: VOICES.map((v) => ({
+        ...v, initial: v.name[0],
+        select: () => this.setState({ voice: v.id }),
+        bg: s.voice === v.id ? "rgba(99,102,241,.10)" : "#111727",
+        border: s.voice === v.id ? "#6366F1" : "#1F2638",
+        iconColor: s.voice === v.id ? "#6366F1" : "#5C6478",
+      })),
+      speedStep: [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2].indexOf(s.speed),
+      setSpeed: (e) => this.setState({ speed: [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2][+e.target.value] }),
+      tones: ["Professional", "Friendly", "Calm", "Energetic", "Storytelling", "Educational"].map((t) => ({
+        name: t, select: () => this.setState({ tone: t }),
+        bg: s.tone === t ? "rgba(99,102,241,.10)" : "transparent",
+        border: s.tone === t ? "#6366F1" : "#1F2638",
+        fg: s.tone === t ? "#E8EAF0" : "#9BA3B4",
+      })),
+      willChunk: chars > 900,
+      chunkCount: Math.max(2, Math.ceil(chars / 900)),
+      generating: s.generating,
+      generateLabel: s.generating ? "Generating your audio" : "Generate speech",
+      generateHref: s.generating ? "#i-loader" : "#i-audio-lines",
+      generateBg: s.generating ? "#2D3650" : "#6366F1",
+      generateCursor: s.generating ? "default" : "pointer",
+      generateOpacity: s.generating ? "0.7" : "1",
+      genProgress: s.genPct ? s.genPct + "%" : "0%",
+      genStatus: "Segment " + Math.min(3, Math.ceil((s.genPct || 0) / 34) + 1) + " of 3 · " + (s.genPct || 0) + "%",
+      generate: () => {
+        if (s.generating) return;
+        if (!s.text.trim()) return this.toast("Add some text before generating audio", "error");
+        if (chars > 20000) return this.toast("That is over the 20,000 character limit for one document", "error");
+        this.setState({ generating: true, genPct: 0 });
+        clearInterval(this._gen);
+        this._gen = setInterval(() => {
+          this.setState((st) => {
+            const p = st.genPct + 7;
+            if (p >= 100) {
+              clearInterval(this._gen);
+              setTimeout(() => { this.setState({ generating: false, hasAudio: true, screen: "reader", elapsed: 0, playing: true }); this.toast("Audio ready", "success"); }, 250);
+              return { genPct: 100 };
+            }
+            return { genPct: p };
+          });
+        }, 130);
+      },
+      isSplash: s.screen === "splash",
+      skipSplash: () => { clearInterval(this._splash); this.setState({ screen: "dashboard" }); },
+      replaySplash: () => this.runSplash(),
+      splashBars: [10, 30, 52, 30, 16].map((h, i) => {
+        const on = (s.splashStep || 0) > i;
+        return { h: (on ? h : 6) + "px", o: on ? "1" : "0.25", color: i === 2 ? "#6366F1" : "#2D3650", delay: i * 90 + "ms" };
+      }),
+      splashTextO: (s.splashStep || 0) >= 4 ? "1" : "0",
+      splashProgress: Math.min(100, (s.splashStep || 0) * 20) + "%",
+      splashStatus: (s.splashStep || 0) < 3 ? "Loading voices" : (s.splashStep || 0) < 5 ? "Restoring your place" : "Ready",
+      uploadIdle: s.uploadStage === 0,
+      uploadBusy: s.uploadStage === 1,
+      uploadDone: s.uploadStage === 2,
+      uploadPct: s.uploadPct || 0,
+      uploadW: (s.uploadPct || 0) + "%",
+      uploadStatus: (s.uploadPct || 0) < 55 ? "Uploading file" : "Extracting text from 9 pages",
+      startUpload: () => {
+        this.setState({ uploadStage: 1, uploadPct: 0 });
+        clearInterval(this._up);
+        this._up = setInterval(() => this.setState((st) => {
+          const p = st.uploadPct + 9;
+          if (p >= 100) { clearInterval(this._up); setTimeout(() => this.setState({ uploadStage: 2 }), 300); return { uploadPct: 100 }; }
+          return { uploadPct: p };
+        }), 120);
+      },
+      uploads: [
+        { name: "attention-and-pacing.pdf", meta: "PDF · 9 pages · 4,180 words", iconHref: "#i-file-text" },
+        { name: "chapter-4-respiration.docx", meta: "DOCX · 22 pages · 9,640 words", iconHref: "#i-file-type-2" },
+        { name: "onboarding-drafts.txt", meta: "TXT · 1,120 words", iconHref: "#i-file" },
+      ],
+      savedAudio: DOCS.filter((d) => d.audio).map((d) => ({
+        title: d.title,
+        meta: d.duration + " · " + (VOICES.find((v) => v.id === s.voice) || VOICES[0]).name + " · " + d.date,
+        play: () => this.setState({ screen: "reader", docTitle: d.title, elapsed: 0, playing: true }),
+      })),
+      fontSizeRaw: s.fontSize,
+      setFontSize: (e) => this.setState({ fontSize: +e.target.value }),
+      lineHRaw: Math.round(s.lineH * 100),
+      setLineH: (e) => this.setState({ lineH: +e.target.value / 100 }),
+      measureRaw: s.measure,
+      setMeasure: (e) => this.setState({ measure: +e.target.value }),
+      toggles: [
+        { key: "autoContinue", label: "Continue to next segment", note: "Long documents play straight through without a tap." },
+        { key: "followText", label: "Scroll to the active sentence", note: "The reader keeps the spoken line in view." },
+        { key: "resume", label: "Remember where you stopped", note: "Reopening a document picks up at the last sentence." },
+        { key: "wifi", label: "Download over Wi-Fi only", note: "Generated audio waits for a Wi-Fi connection." },
+      ].map((t) => {
+        const on = s.switches ? s.switches[t.key] !== false : t.key !== "wifi";
+        return { ...t, toggle: () => this.setState((st) => ({ switches: { ...(st.switches || { autoContinue: true, followText: true, resume: true, wifi: false }), [t.key]: !on } })), trackBg: on ? "#6366F1" : "#2D3650", justify: on ? "flex-end" : "flex-start" };
+      }),
+      isSignup: s.authMode === "signup",
+      authTitle: s.authMode === "signup" ? "Create your account" : "Welcome back",
+      authSub: s.authMode === "signup" ? "Your documents, audio and progress stay on your account." : "Sign in to pick up where you left off.",
+      authCta: s.authMode === "signup" ? "Create account" : "Sign in",
+      authSwitchLabel: s.authMode === "signup" ? "Already have an account?" : "New here?",
+      authSwitchCta: s.authMode === "signup" ? "Sign in" : "Create an account",
+      toggleAuth: () => this.setState({ authMode: s.authMode === "signup" ? "login" : "signup" }),
+      forgot: () => this.toast("Reset link sent to myvoice@example.com", "success"),
+      query: s.query,
+      setQuery: (e) => this.setState({ query: e.target.value }),
+      filters: ["All", "Recent", "Favourites", "In progress", "Completed"].map((f) => ({
+        name: f, select: () => this.setState({ filter: f }),
+        bg: s.filter === f ? "rgba(99,102,241,.10)" : "transparent",
+        border: s.filter === f ? "#6366F1" : "#1F2638",
+        fg: s.filter === f ? "#E8EAF0" : "#9BA3B4",
+      })),
+      resetFilters: () => this.setState({ filter: "All", query: "" }),
+      words: words.toLocaleString(),
+      chars: chars.toLocaleString(),
+      idx, total,
+    };
+  }
+}
+</script>
+</body>
+</html>

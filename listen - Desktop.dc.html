@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"><style>
+body{margin:0;background:#0B0F19;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;color:#E8EAF0}
+a{color:#6366F1;text-decoration:none}a:hover{color:#7C7FF2}
+*{scrollbar-width:thin;scrollbar-color:#1F2638 transparent}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes barPulse{0%,100%{transform:scaleY(.3)}50%{transform:scaleY(1)}}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition-duration:.01ms!important}}
+</style></helmet>
+<svg aria-hidden="true" focusable="false" style="position:absolute;width:0;height:0;overflow:hidden"><defs><symbol id="i-audio-lines" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10v3"/><path d="M6 6v11"/><path d="M10 3v18"/><path d="M14 8v7"/><path d="M18 5v13"/><path d="M22 10v3"/></symbol><symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></symbol><symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></symbol><symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol><symbol id="i-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></symbol><symbol id="i-pen-line" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></symbol><symbol id="i-file-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v5h5"/><path d="M12 18v-6"/><path d="m9 15 3-3 3 3"/></symbol><symbol id="i-file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v5h5"/><path d="M9 13h6"/><path d="M9 17h6"/></symbol><symbol id="i-file-type-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v5h5"/><path d="M8 13h8"/><path d="M12 13v5"/></symbol><symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v5h5"/></symbol><symbol id="i-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 9 5-9 5-9-5 9-5Z"/><path d="m3 12 9 5 9-5"/><path d="m3 17 9 5 9-5"/></symbol><symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></symbol><symbol id="i-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M20.4 14.5a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-2.9 1.2V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-2.9-1.2l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 3.6 15a1.7 1.7 0 0 0-1.6-1.1H2a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-2.9l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9.5 3.6 1.7 1.7 0 0 0 10.6 2V2a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 2.9 1.5l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0 1.2 2.9H22a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1.17Z"/></symbol><symbol id="i-log-in" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/></symbol><symbol id="i-log-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></symbol><symbol id="i-layout-dashboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></symbol><symbol id="i-library" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 6 4 14"/><path d="M12 6v14"/><path d="M8 8v12"/><path d="M4 4v16"/></symbol><symbol id="i-disc-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="2"/><path d="M6 12a6 6 0 0 1 6-6"/><path d="M18 12a6 6 0 0 1-6 6"/></symbol><symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol><symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2"/></symbol><symbol id="i-save" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/></symbol><symbol id="i-trash-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M10 11v6"/><path d="M14 11v6"/></symbol><symbol id="i-pencil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></symbol><symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></symbol><symbol id="i-focus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/></symbol><symbol id="i-scan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/></symbol><symbol id="i-type" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></symbol><symbol id="i-unfold-vertical" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-6"/><path d="M12 8V2"/><path d="M4 12H2"/><path d="M10 12H8"/><path d="M16 12h-2"/><path d="M22 12h-2"/><path d="m15 19-3 3-3-3"/><path d="m15 5-3-3-3 3"/></symbol><symbol id="i-unfold-horizontal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 12h6"/><path d="M8 12H2"/><path d="M12 2v2"/><path d="M12 8v2"/><path d="M12 14v2"/><path d="M12 20v2"/><path d="m19 15 3-3-3-3"/><path d="m5 9-3 3 3 3"/></symbol><symbol id="i-rotate-ccw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></symbol><symbol id="i-alert-triangle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol><symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></symbol><symbol id="i-loader" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="m16.2 7.8 2.9-2.9"/><path d="M18 12h4"/><path d="m16.2 16.2 2.9 2.9"/><path d="M12 18v4"/><path d="m4.9 19.1 2.9-2.9"/><path d="M2 12h4"/><path d="m4.9 4.9 2.9 2.9"/></symbol><symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol><symbol id="i-play" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M7 4.5v15l12-7.5Z"/></symbol><symbol id="i-pause" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="6.5" y="4.5" width="4" height="15" rx="1"/><rect x="13.5" y="4.5" width="4" height="15" rx="1"/></symbol><symbol id="i-square" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="6" y="6" width="12" height="12" rx="2"/></symbol><symbol id="i-skip-back" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M18.5 5v14L9 12Z"/><rect x="5" y="5" width="2.4" height="14" rx="1"/></symbol><symbol id="i-skip-forward" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M5.5 5v14L15 12Z"/><rect x="16.6" y="5" width="2.4" height="14" rx="1"/></symbol><symbol id="i-heart" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></symbol><symbol id="i-apple" viewBox="0 0 24 24" fill="currentColor" stroke="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16.4 12.6c0-2.4 2-3.5 2.1-3.6-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.6.9-.7 0-1.9-.9-3.1-.8-1.6 0-3.1.9-3.9 2.4-1.7 2.9-.4 7.2 1.2 9.5.8 1.2 1.7 2.4 3 2.4 1.2 0 1.6-.8 3.1-.8 1.4 0 1.8.8 3.1.7 1.3 0 2.1-1.2 2.9-2.3.9-1.3 1.3-2.6 1.3-2.7-.1 0-2.6-1-2.6-3.8Z"/><path d="M14.2 5.6c.7-.8 1.1-1.9 1-3-.9 0-2.1.6-2.8 1.4-.6.7-1.1 1.9-1 2.9 1 .1 2.1-.5 2.8-1.3Z"/></symbol><symbol id="i-play-store" viewBox="0 0 24 24" fill="currentColor" stroke="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3.5v17a1 1 0 0 0 1.5.9l13-8.5a1 1 0 0 0 0-1.7l-13-8.5A1 1 0 0 0 4 3.5Z"/></symbol><symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol><symbol id="i-highlighter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 11-6 6v4h4l6-6"/><path d="m15 5 4 4"/><path d="M21 3a2.8 2.8 0 0 0-4 0l-9 9 4 4 9-9a2.8 2.8 0 0 0 0-4Z"/></symbol><symbol id="i-headphones" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14v-2a9 9 0 0 1 18 0v2"/><path d="M21 15a2 2 0 0 1-2 2h-1v-5h1a2 2 0 0 1 2 2Z"/><path d="M3 15a2 2 0 0 0 2 2h1v-5H5a2 2 0 0 0-2 2Z"/></symbol><symbol id="i-lock-keyhole" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="16" r="1"/><rect width="18" height="12" x="3" y="10" rx="2"/><path d="M7 10V7a5 5 0 0 1 10 0v3"/></symbol><symbol id="i-monitor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></symbol><symbol id="i-smartphone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="12" height="20" x="6" y="2" rx="2"/><path d="M11 18h2"/></symbol><symbol id="i-wifi-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h.01"/><path d="M8.5 16.4a5 5 0 0 1 7 0"/><path d="M5 12.9a10 10 0 0 1 5.2-2.7"/><path d="M2 8.8a15 15 0 0 1 4.2-2.6"/><path d="m2 2 20 20"/></symbol></defs></svg>
+<div style="position:relative;width:1440px;height:900px;display:flex;background:#0B0F19;overflow:hidden">
+
+<div style="width:248px;flex:none;background:#0B0F19;border-right:1px solid #1F2638;display:flex;flex-direction:column;padding:24px 0">
+<div style="display:flex;align-items:center;gap:10px;padding:0 20px 28px">
+<div style="display:flex;flex-direction:column;gap:2px">
+<div style="width:8px;height:3px;border-radius:2px;background:#6366F1"></div>
+<div style="width:14px;height:3px;border-radius:2px;background:#6366F1"></div>
+<div style="width:20px;height:3px;border-radius:2px;background:#6366F1"></div>
+</div>
+<div style="font-family:'Inter Tight',sans-serif;font-weight:600;font-size:19px;letter-spacing:-.01em">listen</div>
+</div>
+<button onClick="{{ goNew }}" style="margin:0 12px 20px;padding:11px 14px;border-radius:6px;border:none;background:#6366F1;color:#fff;font-family:Inter,sans-serif;font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:9px;transition:background 150ms cubic-bezier(.4,0,.2,1)" style-hover="background:#7C7FF2"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:16px;height:16px"><use href="#i-pen-line"></use></svg>New reading</button>
+<div style="flex:1;display:flex;flex-direction:column;gap:2px;padding:0 12px;overflow-y:auto">
+<sc-for list="{{ navItems }}" as="item" hint-placeholder-count="7">
+<button onClick="{{ item.go }}" style="display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:6px;border:none;background:{{ item.bg }};color:{{ item.fg }};font-family:Inter,sans-serif;font-size:14px;text-align:left;cursor:pointer;width:100%;box-sizing:border-box;transition:background 150ms cubic-bezier(.4,0,.2,1)" style-hover="background:#1A2235;color:#E8EAF0">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:16px;height:16px"><use href="{{ item.iconHref }}"></use></svg><span style="flex:1">{{ item.label }}</span>
+<sc-if value="{{ item.count }}" hint-placeholder-val="{{ false }}"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#5C6478;font-variant-numeric:tabular-nums">{{ item.count }}</span></sc-if>
+</button>
+</sc-for>
+</div>
+<div style="border-top:1px solid #1F2638;margin-top:16px;padding:16px 20px 0;display:flex;align-items:center;gap:11px">
+<div style="width:32px;height:32px;border-radius:999px;background:#1A2235;border:1px solid #2D3650;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#9BA3B4">m</div>
+<div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:500">myvoice</div><div style="font-size:12px;color:#5C6478">Free plan</div></div>
+<button onClick="{{ goSettings }}" aria-label="Settings" style="width:30px;height:30px;border-radius:6px;border:none;background:transparent;color:#5C6478;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="color:#E8EAF0"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:15px;height:15px"><use href="#i-settings"></use></svg></button>
+</div>
+</div>
+
+<div style="flex:1;min-width:0;display:flex;flex-direction:column">
+<div style="flex:none;height:60px;border-bottom:1px solid #1F2638;display:flex;align-items:center;gap:16px;padding:0 32px">
+<div style="font-family:'Inter Tight',sans-serif;font-weight:600;font-size:16px;letter-spacing:-.01em;flex:none">{{ screenTitle }}</div>
+<div style="flex:1"></div>
+<div style="position:relative;width:280px">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:15px;height:15px;color:#5C6478;position:absolute;left:12px;top:10px"><use href="#i-search"></use></svg>
+<input value="{{ query }}" onChange="{{ setQuery }}" placeholder="Search documents" aria-label="Search documents" style="width:100%;box-sizing:border-box;padding:9px 12px 9px 35px;border-radius:8px;border:1px solid #1F2638;background:#111727;color:#E8EAF0;font-family:Inter,sans-serif;font-size:13px;outline:none" style-focus="border-color:#6366F1" />
+</div>
+<button onClick="{{ goUpload }}" style="padding:9px 14px;border-radius:6px;border:1px solid #2D3650;background:transparent;color:#E8EAF0;font-family:Inter,sans-serif;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:8px;transition:background 150ms" style-hover="background:#1A2235"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:15px;height:15px"><use href="#i-file-up"></use></svg>Upload</button>
+</div>
+
+<div ref="{{ scrollRef }}" style="flex:1;overflow-y:auto">
+
+<sc-if value="{{ isDashboard }}" hint-placeholder-val="{{ true }}">
+<div data-screen-label="Dashboard" style="max-width:1120px;padding:40px 32px 140px;animation:fadeUp 400ms cubic-bezier(.22,1,.36,1)">
+<div style="font-family:'Inter Tight',sans-serif;font-weight:600;font-size:32px;line-height:1.2;letter-spacing:-.02em;margin-bottom:6px">Welcome back, myvoice</div>
+<div style="font-size:16px;line-height:1.5;color:#9BA3B4;margin-bottom:32px">Pick up where you left off, or start something new.</div>
+
+<div style="display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:16px;margin-bottom:48px">
+<button onClick="{{ goReader }}" style="display:flex;align-items:center;gap:16px;padding:24px;border-radius:12px;border:none;background:#6366F1;color:#fff;text-align:left;cursor:pointer;font-family:Inter,sans-serif;transition:background 150ms" style-hover="background:#7C7FF2">
+<div style="width:48px;height:48px;border-radius:999px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;flex:none"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:21px;height:21px"><use href="#i-play"></use></svg></div>
+<div style="flex:1;min-width:0">
+<div style="font-size:16px;font-weight:600;margin-bottom:3px">Continue reading</div>
+<div style="font-size:13px;color:rgba(255,255,255,.78);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ currentDocTitle }} · {{ currentDocPct }}% through</div>
+</div>
+</button>
+<button onClick="{{ goNew }}" style="display:flex;flex-direction:column;justify-content:space-between;gap:16px;padding:24px;border-radius:12px;border:1px solid #1F2638;background:#111727;color:#E8EAF0;text-align:left;cursor:pointer;font-family:Inter,sans-serif;transition:background 150ms" style-hover="background:#1A2235">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:21px;height:21px;color:#9BA3B4"><use href="#i-pen-line"></use></svg><div style="font-size:15px;font-weight:500">Paste or type text</div></button>
+<button onClick="{{ goUpload }}" style="display:flex;flex-direction:column;justify-content:space-between;gap:16px;padding:24px;border-radius:12px;border:1px solid #1F2638;background:#111727;color:#E8EAF0;text-align:left;cursor:pointer;font-family:Inter,sans-serif;transition:background 150ms" style-hover="background:#1A2235">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:21px;height:21px;color:#9BA3B4"><use href="#i-file-up"></use></svg><div style="font-size:15px;font-weight:500">Upload a document</div></button>
+</div>
+
+<div style="display:grid;grid-template-columns:1.5fr 1fr;gap:32px">
+<div>
+<div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px">
+<div style="font-family:'Inter Tight',sans-serif;font-weight:600;font-size:20px;letter-spacing:-.01em">Recent reads</div>
+<button onClick="{{ goLibrary }}" style="border:none;background:none;color:#6366F1;font-family:Inter,sans-serif;font-size:13px;cursor:pointer;padding:0">See all</button>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<sc-for list="{{ recent }}" as="doc" hint-placeholder-count="4">
+<button onClick="{{ doc.open }}" style="display:flex;align-items:center;gap:18px;padding:20px 24px;border-radius:12px;border:1px solid #1F2638;background:#111727;color:#E8EAF0;text-align:left;cursor:pointer;font-family:Inter,sans-serif;width:100%;box-sizing:border-box;transition:background 150ms" style-hover="background:#1A2235">
+<div style="flex:1;min-width:0">
+<div style="display:flex;align-items:center;gap:9px;margin-bottom:6px">
+<span style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#5C6478;font-weight:500">{{ doc.tag }}</span>
+<sc-if value="{{ doc.fav }}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:13px;height:13px;color:#6366F1"><use href="#i-heart"></use></svg></sc-if>
+</div>
+<div style="font-size:16px;font-weight:600;line-height:1.35;margin-bottom:5px">{{ doc.title }}</div>
+<div style="font-size:14px;line-height:1.5;color:#9BA3B4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ doc.preview }}</div>
+<div style="display:flex;align-items:center;gap:12px;margin-top:12px">
+<div style="flex:1;height:3px;border-radius:999px;background:#1F2638;overflow:hidden"><div style="height:100%;width:{{ doc.pctW }};background:#6366F1;border-radius:999px"></div></div>
+<div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#5C6478;font-variant-numeric:tabular-nums;flex:none">{{ doc.pct }}% · {{ doc.duration }}</div>
+</div>
+</div>
+<div style="width:38px;height:38px;border-radius:999px;border:1px solid #2D3650;display:flex;align-items:center;justify-content:center;flex:none"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:15px;height:15px;color:#E8EAF0"><use href="#i-play"></use></svg></div>
+</button>
+</sc-for>
+</div>
+</div>
+<div>
+<div style="font-family:'Inter Tight',sans-serif;font-weight:600;font-size:20px;letter-spacing:-.01em;margin-bottom:16px">This month</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+<sc-for list="{{ stats }}" as="st" hint-placeholder-count="4">
+<div style="padding:20px;border-radius:12px;border:1px solid #1F2638;background:#111727">
+<div style="font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.02em">{{ st.value }}</div>
+<div style="font-size:13px;color:#9BA3B4;margin-top:5px">{{ st.label }}</div>
+</div>
+</sc-for>
+</div>
+<div style="padding:20px;border-radius:12px;border:1px solid #1F2638;background:#111727">
+<div style="font-size:13px;color:#9BA3B4;margin-bottom:16px">Minutes listened, last 14 days</div>
+<div style="display:flex;align-items:flex-end;gap:6px;height:88px">
+<sc-for list="{{ chart }}" as="bar" hint-placeholder-count="14">
+<div title="{{ bar.label }}" style="flex:1;height:{{ bar.h }};border-radius:3px;background:{{ bar.color }}"></div>
+</sc-for>
+</div>
+<div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;color:#5C6478;margin-top:10px;font-variant-numeric:tabular-nums"><span>17 Jul</span><span>30 Jul</span></div>
+</div>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isReader }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Reader" style="display:flex;gap:32px;padding:40px 32px 160px;animation:fadeUp 400ms cubic-bezier(.22,1,.36,1)">
+<div style="flex:1;min-width:0;max-width:{{ measure }}">
+<div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:#5C6478;margin-bottom:14px">{{ voiceName }} · {{ segLabel }}</div>
+<div style="font-family:'Inter Tight',sans-serif;font-weight:600;font-size:30px;line-height:1.25;letter-spacing:-.02em;margin-bottom:32px">{{ currentDocTitle }}</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<sc-for list="{{ sentences }}" as="s" hint-placeholder-count="13">
+<div data-active="{{ s.active }}" onClick="{{ s.seek }}" style="position:relative;padding:8px 12px 8px 18px;border-radius:8px;background:{{ s.bg }};color:{{ s.color }};font-size:{{ fontSize }};line-height:{{ lineH }};cursor:pointer;transition:background 200ms cubic-bezier(.4,0,.2,1),color 200ms;text-wrap:pretty">
+<div style="position:absolute;left:0;top:8px;bottom:8px;width:2px;border-radius:2px;background:{{ s.bar }}"></div>{{ s.text }}</div>
+</sc-for>
+</div>
+</div>
+<sc-if value="{{ showReaderPanel }}" hint-placeholder-val="{{ true }}">
+<div style="width:264px;flex:none;display:flex;flex-direction:column;gap:12px;position:sticky;top:0">
+<div style="padding:20px;border-radius:12px;border:1px solid #1F2638;background:#111727">
+<div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:#5C6478;margin-bottom:16px">Display</div>
+<div style="display:flex;flex-direction:column;gap:16px">
+<div>
+<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:13px;color:#9BA3B4">Text size</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-variant-numeric:tabular-nums">{{ fontSize }}</span></div>
+<input type="range" min="15" max="26" step="1" value="{{ fontSizeRaw }}" onChange="{{ setFontSize }}" aria-label="Text size" style="width:100%;accent-color:#6366F1" />
+</div>
+<div>
+<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:13px;color:#9BA3B4">Line spacing</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-variant-numeric:tabular-nums">{{ lineH }}</span></div>
+<input type="range" min="140" max="220" step="5" value="{{ lineHRaw }}" onChange="{{ setLineH }}" aria-label="Line spacing" style="width:100%;accent-color:#6366F1" />
+</div>
+<div>
+<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:13px;color:#9BA3B4">Reading width</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-variant-numeric:tabular-nums">{{ measure }}</span></div>
+<input type="range" min="520" max="880" step="20" value="{{ measureRaw }}" onChange="{{ setMeasure }}" aria-label="Reading width" style="width:100%;accent-color:#6366F1" />
+</div>
+</div>
+</div>
+<div style="padding:20px;border-radius:12px;border:1px solid #1F2638;background:#111727">
+<div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:#5C6478;margin-bottom:14px">Segments</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<sc-for list="{{ segments }}" as="sg" hint-placeholder-count="3">
+<div style="display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:6px;background:{{ sg.bg }};border:1px solid {{ sg.border }}">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:14px;height:14px;color:{{ sg.iconColor }};flex:none"><use href="{{ sg.iconHref }}"></use></svg>
+<div style="flex:1;font-size:13px;color:{{ sg.fg }}">{{ sg.label }}</div>
+<div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#5C6478;font-variant-numeric:tabular-nums">{{ sg.dur }}</div>
+</div>
+</sc-for>
+</div>
+</div>
+<button onClick="{{ toggleFocus }}" style="padding:11px;border-radius:6px;border:1px solid #2D3650;background:transparent;color:#E8EAF0;font-family:Inter,sans-serif;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;transition:background 150ms" style-hover="background:#1A2235"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:15px;height:15px"><use href="#i-focus"></use></svg>Enter focus mode</button>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ isNew }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="New reading" style="display:flex;gap:32px;max-width:1200px;padding:40px 32px 160px;animation:fadeUp 400ms cubic-bezier(.22,1,.36,1)">
+<div style="flex:1;min-width:0">
+<input value="{{ docTitle }}" onChange="{{ setTitle }}" placeholder="Enter document title" style="width:100%;box-sizing:border-box;padding:14px 16px;border-radius:8px;border:1px solid #1F2638;background:#111727;color:#E8EAF0;font-family:'Inter Tight',sans-serif;font-weight:600;font-size:18px;margin-bottom:12px;outline:none" style-focus="border-color:#6366F1" />
+<textarea value="{{ text }}" onChange="{{ setText }}" placeholder="Paste or type the text you want read aloud." style="width:100%;box-sizing:border-box;height:380px;resize:none;padding:20px;border-radius:8px;border:1px solid #1F2638;background:#111727;color:#E8EAF0;font-family:Inter,sans-serif;font-size:15px;line-height:1.7;outline:none" style-focus="border-color:#6366F1"></textarea>
+<div style="display:flex;align-items:center;gap:8px;margin-top:12px">
+<div style="flex:1;font-family:'JetBrains Mono',monospace;font-size:12px;color:#5C6478;font-variant-numeric:tabular-nums">{{ chars }} characters · {{ words }} words</div>
+<button onClick="{{ copyText }}" style="padding:8px 13px;border-radius:6px;border:1px solid #1F2638;background:transparent;color:#9BA3B4;font-family:Inter,sans-serif;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:7px" style-hover="background:#1A2235;color:#E8EAF0"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:14px;height:14px"><use href="#i-copy"></use></svg>Copy</button>
+<button onClick="{{ saveText }}" style="padding:8px 13px;border-radius:6px;border:1px solid #1F2638;background:transparent;color:#9BA3B4;font-family:Inter,sans-serif;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:7px" style-hover="background:#1A2235;color:#E8EAF0"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:14px;height:14px"><use href="#i-save"></use></svg>Save</button>
+<button onClick="{{ clearText }}" style="padding:8px 13px;border-radius:6px;border:1px solid #1F2638;background:transparent;color:#9BA3B4;font-family:Inter,sans-serif;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:7px" style-hover="background:#1A2235;color:#EF4444"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:14px;height:14px"><use href="#i-trash-2"></use></svg>Clear</button>
+</div>
+<sc-if value="{{ willChunk }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:12px;padding:16px;border-radius:12px;border:1px solid #2D3650;background:#111727;margin-top:20px">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:16px;height:16px;color:#9BA3B4;flex:none;margin-top:2px"><use href="#i-layers"></use></svg>
+<div style="font-size:14px;line-height:1.55;color:#9BA3B4">Longer than one request allows. This will be split into <span style="color:#E8EAF0">{{ chunkCount }} segments</span> at paragraph breaks and played back as one continuous session.</div>
+</div>
+</sc-if>
+</div>
+<div style="width:300px;flex:none;display:flex;flex-direction:column;gap:20px">
+<div>
+<div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:#5C6478;margin-bottom:12px">Voice</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<sc-for list="{{ voices }}" as="v" hint-placeholder-count="4">
+<button onClick="{{ v.select }}" style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:8px;border:1px solid {{ v.border }};background:{{ v.bg }};color:#E8EAF0;font-family:Inter,sans-serif;text-align:left;cursor:pointer;width:100%;box-sizing:border-box;transition:background 150ms" style-hover="background:#1A2235">
+<div style="width:28px;height:28px;border-radius:999px;background:#1A2235;border:1px solid #2D3650;display:flex;align-items:center;justify-content:center;flex:none;font-size:12px;font-weight:600;color:#9BA3B4">{{ v.initial }}</div>
+<div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:500">{{ v.name }}</div><div style="font-size:12px;color:#5C6478">{{ v.note }}</div></div>
+<svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:15px;height:15px;color:{{ v.iconColor }}"><use href="{{ v.iconHref }}"></use></svg>
+</button>
+</sc-for>
+</div>
+</div>
+<div>
+<div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px">
+<div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:#5C6478">Speed</div>
+<div style="font-family:'JetBrains Mono',monospace;font-size:13px;font-variant-numeric:tabular-nums">{{ speedLabel }}</div>
+</div>
+<input type="range" min="0" max="6" step="1" value="{{ speedStep }}" onChange="{{ setSpeed }}" aria-label="Speech speed" style="width:100%;accent-color:#6366F1" />
+<div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;color:#5C6478;margin-top:4px"><span>0.5x</span><span>1x</span><span>2x</span></div>
+</div>
+<div>
+<div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:#5C6478;margin-bottom:12px">Tone</div>
+<div style="display:flex;flex-wrap:wrap;gap:8px">
+<sc-for list="{{ tones }}" as="t" hint-placeholder-count="6">
+<button onClick="{{ t.select }}" style="padding:8px 14px;border-radius:999px;border:1px solid {{ t.border }};background:{{ t.bg }};color:{{ t.fg }};font-family:Inter,sans-serif;font-size:13px;cursor:pointer;transition:background 150ms">{{ t.name }}</button>
+</sc-for>
+</div>
+</div>
+<button onClick="{{ generate }}" style="padding:15px;border-radius:8px;border:none;background:{{ generateBg }};color:#fff;font-family:Inter,sans-serif;font-size:15px;font-weight:600;cursor:{{ generateCursor }};opacity:{{ generateOpacity }};display:flex;align-items:center;justify-content:center;gap:10px;transition:background 150ms">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:18px;height:18px"><use href="{{ generateHref }}"></use></svg>{{ generateLabel }}</button>
+<sc-if value="{{ generating }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:8px;margin-top:-8px">
+<div style="height:4px;border-radius:999px;background:#1F2638;overflow:hidden"><div style="height:100%;width:{{ genProgress }};background:#6366F1;transition:width 200ms linear"></div></div>
+<div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#5C6478;font-variant-numeric:tabular-nums">{{ genStatus }}</div>
+</div>
+</sc-if>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isLibrary }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Library" style="max-width:1200px;padding:40px 32px 160px;animation:fadeUp 400ms cubic-bezier(.22,1,.36,1)">
+<div style="display:flex;gap:8px;margin-bottom:24px">
+<sc-for list="{{ filters }}" as="f" hint-placeholder-count="5">
+<button onClick="{{ f.select }}" style="padding:8px 15px;border-radius:999px;border:1px solid {{ f.border }};background:{{ f.bg }};color:{{ f.fg }};font-family:Inter,sans-serif;font-size:13px;cursor:pointer;transition:background 150ms">{{ f.name }}</button>
+</sc-for>
+</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+<sc-for list="{{ library }}" as="doc" hint-placeholder-count="5">
+<div style="display:flex;flex-direction:column;padding:24px;border-radius:12px;border:1px solid #1F2638;background:#111727;transition:background 150ms" style-hover="background:#1A2235">
+<div style="display:flex;align-items:center;gap:9px;margin-bottom:10px">
+<span style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#5C6478;font-weight:500">{{ doc.tag }}</span>
+<sc-if value="{{ doc.audio }}" hint-placeholder-val="{{ true }}"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:13px;height:13px;color:#6366F1"><use href="#i-audio-lines"></use></svg></sc-if>
+<div style="flex:1"></div>
+<button onClick="{{ doc.toggleFav }}" aria-label="Favourite" style="width:26px;height:26px;border-radius:6px;border:none;background:transparent;color:{{ doc.favColor }};display:flex;align-items:center;justify-content:center;cursor:pointer"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:15px;height:15px"><use href="#i-heart"></use></svg></button>
+</div>
+<div style="font-size:16px;font-weight:600;line-height:1.35;margin-bottom:8px">{{ doc.title }}</div>
+<div style="font-size:14px;line-height:1.5;color:#9BA3B4;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:16px;flex:1">{{ doc.preview }}</div>
+<div style="display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#5C6478;font-variant-numeric:tabular-nums;margin-bottom:16px">
+<span style="color:{{ doc.statusColor }}">{{ doc.statusLabel }}</span><span>·</span><span>{{ doc.duration }}</span>
+</div>
+<div style="display:flex;gap:8px">
+<button onClick="{{ doc.open }}" style="flex:1;padding:9px;border-radius:6px;border:1px solid #2D3650;background:transparent;color:#E8EAF0;font-family:Inter,sans-serif;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px" style-hover="background:#1A2235"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:14px;height:14px"><use href="#i-play"></use></svg>{{ doc.cta }}</button>
+<button onClick="{{ doc.remove }}" aria-label="Delete" style="width:34px;padding:9px 0;border-radius:6px;border:1px solid #1F2638;background:transparent;color:#9BA3B4;cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="color:#EF4444"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:14px;height:14px"><use href="#i-trash-2"></use></svg></button>
+</div>
+</div>
+</sc-for>
+</div>
+<sc-if value="{{ libraryEmpty }}" hint-placeholder-val="{{ false }}">
+<div style="padding:96px 24px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:16px">
+<div style="width:38px;height:6px;border-radius:3px;background:#2D3650"></div>
+<div style="font-size:15px;color:#9BA3B4;line-height:1.5;max-width:280px">Nothing matches that. Your first document goes here.</div>
+<button onClick="{{ resetFilters }}" style="padding:10px 18px;border-radius:6px;border:1px solid #2D3650;background:transparent;color:#E8EAF0;font-family:Inter,sans-serif;font-size:13px;cursor:pointer" style-hover="background:#1A2235">Clear filters</button>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ isAudio }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Saved audio" style="max-width:900px;padding:40px 32px 160px;animation:fadeUp 400ms cubic-bezier(.22,1,.36,1)">
+<div style="display:flex;flex-direction:column;gap:10px">
+<sc-for list="{{ savedAudio }}" as="a" hint-placeholder-count="4">
+<div style="display:flex;align-items:center;gap:16px;padding:18px 20px;border-radius:12px;border:1px solid #1F2638;background:#111727;transition:background 150ms" style-hover="background:#1A2235">
+<button onClick="{{ a.play }}" aria-label="Play" style="width:40px;height:40px;border-radius:999px;border:1px solid #2D3650;background:transparent;color:#E8EAF0;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:16px;height:16px"><use href="#i-play"></use></svg></button>
+<div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:500">{{ a.title }}</div><div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#5C6478;font-variant-numeric:tabular-nums;margin-top:3px">{{ a.meta }}</div></div>
+<button onClick="{{ download }}" aria-label="Download" style="width:34px;height:34px;border-radius:6px;border:none;background:transparent;color:#9BA3B4;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="color:#E8EAF0"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:16px;height:16px"><use href="#i-download"></use></svg></button>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isUpload }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Upload" style="max-width:760px;padding:40px 32px 160px;animation:fadeUp 400ms cubic-bezier(.22,1,.36,1)">
+<sc-if value="{{ uploadIdle }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ startUpload }}" style="width:100%;box-sizing:border-box;padding:72px 24px;border-radius:12px;border:1px dashed #2D3650;background:#111727;color:#E8EAF0;font-family:Inter,sans-serif;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:14px;transition:background 150ms" style-hover="background:#1A2235">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:28px;height:28px;color:#6366F1"><use href="#i-file-up"></use></svg>
+<div style="font-size:16px;font-weight:600">Drop a file here, or choose one</div>
+<div style="font-size:14px;color:#9BA3B4">TXT, PDF or DOCX · up to 20 MB</div>
+</button>
+<div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:#5C6478;margin:32px 0 12px">Recently uploaded</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<sc-for list="{{ uploads }}" as="f" hint-placeholder-count="3">
+<div style="display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:8px;border:1px solid #1F2638;background:#111727">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:17px;height:17px;color:#9BA3B4;flex:none"><use href="{{ f.iconHref }}"></use></svg>
+<div style="flex:1;min-width:0"><div style="font-size:14px">{{ f.name }}</div><div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#5C6478;margin-top:2px">{{ f.meta }}</div></div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ uploadBusy }}" hint-placeholder-val="{{ false }}">
+<div style="padding:32px;border-radius:12px;border:1px solid #1F2638;background:#111727;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;align-items:center;gap:14px">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:18px;height:18px;color:#9BA3B4"><use href="#i-file-text"></use></svg>
+<div style="flex:1;font-size:15px">attention-and-pacing.pdf</div>
+<div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#5C6478;font-variant-numeric:tabular-nums">{{ uploadPct }}%</div>
+</div>
+<div style="height:4px;border-radius:999px;background:#1F2638;overflow:hidden"><div style="height:100%;width:{{ uploadW }};background:#6366F1;transition:width 200ms linear"></div></div>
+<div style="font-size:14px;color:#9BA3B4">{{ uploadStatus }}</div>
+</div>
+</sc-if>
+<sc-if value="{{ uploadDone }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:12px;padding:18px;border-radius:12px;border:1px solid #10B981;background:#111727;margin-bottom:16px">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:17px;height:17px;color:#10B981;flex:none;margin-top:2px"><use href="#i-check"></use></svg>
+<div style="font-size:14px;line-height:1.55;color:#9BA3B4">Extracted <span style="color:#E8EAF0">4,180 words</span> from 9 pages. Review the text, then generate audio.</div>
+</div>
+<button onClick="{{ goNew }}" style="padding:14px 20px;border-radius:8px;border:none;background:#6366F1;color:#fff;font-family:Inter,sans-serif;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:10px" style-hover="background:#7C7FF2"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:17px;height:17px"><use href="#i-pen-line"></use></svg>Open in editor</button>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ isSettings }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Settings" style="max-width:700px;padding:40px 32px 160px;animation:fadeUp 400ms cubic-bezier(.22,1,.36,1)">
+<div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:#5C6478;margin-bottom:12px">Playback</div>
+<div style="border-radius:12px;border:1px solid #1F2638;background:#111727;overflow:hidden;margin-bottom:32px">
+<sc-for list="{{ toggles }}" as="t" hint-placeholder-count="4">
+<button onClick="{{ t.toggle }}" style="display:flex;align-items:center;gap:16px;width:100%;box-sizing:border-box;padding:18px 20px;border:none;border-bottom:1px solid #1F2638;background:transparent;color:#E8EAF0;font-family:Inter,sans-serif;text-align:left;cursor:pointer;transition:background 150ms" style-hover="background:#1A2235">
+<div style="flex:1;min-width:0"><div style="font-size:15px">{{ t.label }}</div><div style="font-size:13px;color:#5C6478;line-height:1.5;margin-top:3px">{{ t.note }}</div></div>
+<div style="width:42px;height:25px;border-radius:999px;background:{{ t.trackBg }};padding:2px;box-sizing:border-box;flex:none;display:flex;justify-content:{{ t.justify }};transition:background 150ms"><div style="width:21px;height:21px;border-radius:999px;background:#E8EAF0"></div></div>
+</button>
+</sc-for>
+</div>
+<div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:#5C6478;margin-bottom:12px">Account</div>
+<div style="border-radius:12px;border:1px solid #1F2638;background:#111727;padding:20px;display:flex;align-items:center;gap:14px;margin-bottom:12px">
+<div style="width:44px;height:44px;border-radius:999px;background:#1A2235;border:1px solid #2D3650;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#9BA3B4">m</div>
+<div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:500">myvoice</div><div style="font-size:13px;color:#5C6478">myvoice@example.com</div></div>
+<button onClick="{{ logout }}" style="padding:10px 16px;border-radius:6px;border:1px solid #1F2638;background:transparent;color:#EF4444;font-family:Inter,sans-serif;font-size:13px;cursor:pointer" style-hover="background:#1A2235">Log out</button>
+</div>
+</div>
+</sc-if>
+
+</div>
+</div>
+
+<sc-if value="{{ showPlayer }}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;left:248px;right:0;bottom:0;height:84px;background:#111727;border-top:1px solid #1F2638;display:flex;align-items:center;gap:24px;padding:0 32px;box-sizing:border-box;z-index:60">
+<div style="display:flex;align-items:center;gap:14px;width:280px;flex:none;min-width:0">
+<div style="width:44px;height:44px;border-radius:8px;background:#1A2235;border:1px solid #2D3650;display:flex;align-items:flex-end;justify-content:center;gap:2.5px;padding-bottom:13px;flex:none">
+<sc-for list="{{ bars }}" as="b" hint-placeholder-count="4">
+<div style="width:2.5px;height:16px;border-radius:2px;background:#6366F1;transform-origin:bottom;animation:barPulse 900ms {{ b.delay }} infinite ease-in-out;animation-play-state:{{ b.play }}"></div>
+</sc-for>
+</div>
+<div style="flex:1;min-width:0">
+<div style="font-size:14px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ currentDocTitle }}</div>
+<div style="font-size:12px;color:#5C6478;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ voiceName }} · {{ segLabel }}</div>
+</div>
+</div>
+
+<div style="display:flex;align-items:center;gap:6px;flex:none">
+<button onClick="{{ prev }}" aria-label="Previous sentence" style="width:36px;height:36px;border-radius:999px;border:none;background:transparent;color:#9BA3B4;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="color:#E8EAF0"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:18px;height:18px"><use href="#i-skip-back"></use></svg></button>
+<button onClick="{{ togglePlay }}" aria-label="{{ playLabel }}" style="width:44px;height:44px;border-radius:999px;border:none;background:#6366F1;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 150ms" style-hover="background:#7C7FF2"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:19px;height:19px"><use href="{{ playHref }}"></use></svg></button>
+<button onClick="{{ next }}" aria-label="Next sentence" style="width:36px;height:36px;border-radius:999px;border:none;background:transparent;color:#9BA3B4;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="color:#E8EAF0"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:18px;height:18px"><use href="#i-skip-forward"></use></svg></button>
+<button onClick="{{ stop }}" aria-label="Stop" style="width:36px;height:36px;border-radius:999px;border:none;background:transparent;color:#9BA3B4;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="color:#E8EAF0"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:15px;height:15px"><use href="#i-square"></use></svg></button>
+</div>
+
+<div style="flex:1;display:flex;align-items:center;gap:12px;min-width:0">
+<div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#5C6478;font-variant-numeric:tabular-nums;flex:none">{{ elapsedLabel }}</div>
+<div onClick="{{ seekBar }}" style="flex:1;height:14px;display:flex;align-items:center;cursor:pointer">
+<div style="height:4px;width:100%;border-radius:999px;background:#1F2638;overflow:hidden"><div style="height:100%;width:{{ progressW }};background:#6366F1;border-radius:999px"></div></div>
+</div>
+<div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#5C6478;font-variant-numeric:tabular-nums;flex:none">{{ totalLabel }}</div>
+</div>
+
+<div style="display:flex;align-items:center;gap:8px;flex:none">
+<button onClick="{{ cycleSpeed }}" aria-label="Playback speed" style="min-width:52px;padding:8px 10px;border-radius:999px;border:1px solid #1F2638;background:transparent;color:#9BA3B4;font-family:'JetBrains Mono',monospace;font-size:12px;font-variant-numeric:tabular-nums;cursor:pointer" style-hover="background:#1A2235;color:#E8EAF0">{{ speedLabel }}</button>
+<button onClick="{{ favCurrent }}" aria-label="Favourite" style="width:34px;height:34px;border-radius:6px;border:none;background:transparent;color:#9BA3B4;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="color:#E8EAF0"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:16px;height:16px"><use href="#i-heart"></use></svg></button>
+<button onClick="{{ download }}" aria-label="Download audio" style="width:34px;height:34px;border-radius:6px;border:none;background:transparent;color:#9BA3B4;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="color:#E8EAF0"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:16px;height:16px"><use href="#i-download"></use></svg></button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ focus }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:70;background:#0B0F19;display:flex;flex-direction:column;align-items:center;overflow-y:auto;padding:80px 32px 140px;box-sizing:border-box">
+<button onClick="{{ toggleFocus }}" aria-label="Exit focus mode" style="position:absolute;top:24px;right:32px;width:36px;height:36px;border-radius:6px;border:1px solid #1F2638;background:transparent;color:#9BA3B4;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="background:#1A2235;color:#E8EAF0"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:17px;height:17px"><use href="#i-x"></use></svg></button>
+<div style="width:{{ measure }};max-width:100%;display:flex;flex-direction:column;gap:8px">
+<sc-for list="{{ sentences }}" as="s" hint-placeholder-count="13">
+<div data-active="{{ s.active }}" onClick="{{ s.seek }}" style="padding:8px 12px;border-radius:8px;background:{{ s.bg }};color:{{ s.color }};font-size:{{ fontSize }};line-height:{{ lineH }};cursor:pointer;transition:background 200ms,color 200ms;text-wrap:pretty">{{ s.text }}</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;right:32px;bottom:104px;z-index:90;display:flex;align-items:center;gap:11px;padding:14px 16px;border-radius:12px;background:#1A2235;border:1px solid {{ toastBorder }};animation:fadeUp 300ms cubic-bezier(.22,1,.36,1);max-width:380px">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:17px;height:17px;color:{{ toastColor }};flex:none"><use href="{{ toastHref }}"></use></svg>
+<div style="font-size:14px;line-height:1.45">{{ toast }}</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isLanding }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Landing" style="position:absolute;inset:0;z-index:92;background:#0B0F19;overflow-y:auto">
+<div style="position:sticky;top:0;z-index:5;height:68px;background:#0B0F19;border-bottom:1px solid #1F2638;display:flex;align-items:center;padding:0 48px">
+<div style="display:flex;align-items:center;gap:10px">
+<div style="display:flex;flex-direction:column;gap:2px">
+<div style="width:8px;height:3px;border-radius:2px;background:#6366F1"></div>
+<div style="width:14px;height:3px;border-radius:2px;background:#6366F1"></div>
+<div style="width:20px;height:3px;border-radius:2px;background:#6366F1"></div>
+</div>
+<div style="font-family:'Inter Tight',sans-serif;font-weight:600;font-size:19px;letter-spacing:-.01em">listen</div>
+</div>
+<div style="flex:1;display:flex;justify-content:center;gap:32px">
+<a href="#how" style="font-size:14px;color:#9BA3B4" style-hover="color:#E8EAF0">How it works</a>
+<a href="#features" style="font-size:14px;color:#9BA3B4" style-hover="color:#E8EAF0">Features</a>
+<a href="#apps" style="font-size:14px;color:#9BA3B4" style-hover="color:#E8EAF0">Apps</a>
+</div>
+<div style="display:flex;align-items:center;gap:10px">
+<button onClick="{{ goLogin }}" style="padding:9px 16px;border-radius:6px;border:1px solid #2D3650;background:transparent;color:#E8EAF0;font-family:Inter,sans-serif;font-size:14px;cursor:pointer;transition:background 150ms cubic-bezier(.4,0,.2,1)" style-hover="background:#1A2235">Sign in</button>
+<button onClick="{{ goSignup }}" style="padding:9px 16px;border-radius:6px;border:none;background:#6366F1;color:#fff;font-family:Inter,sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:background 150ms cubic-bezier(.4,0,.2,1)" style-hover="background:#7C7FF2">Create account</button>
+</div>
+</div>
+
+<div style="max-width:1200px;margin:0 auto;padding:96px 48px 0;display:grid;grid-template-columns:1.05fr .95fr;gap:64px;align-items:center">
+<div>
+<div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:#5C6478;margin-bottom:24px">Text to speech, built for long reading</div>
+<div style="font-family:'Inter Tight',sans-serif;font-weight:600;font-size:56px;line-height:1.08;letter-spacing:-.03em;margin-bottom:24px;text-wrap:pretty">The reading you keep meaning to do, read aloud.</div>
+<div style="font-size:19px;line-height:1.6;color:#9BA3B4;margin-bottom:32px;max-width:520px;text-wrap:pretty">Paste an article, upload a paper, or drop in a chapter. listen turns it into natural speech, follows along sentence by sentence, and remembers exactly where you stopped.</div>
+<div style="display:flex;gap:12px;margin-bottom:24px">
+<button onClick="{{ goSignup }}" style="padding:14px 22px;border-radius:6px;border:none;background:#6366F1;color:#fff;font-family:Inter,sans-serif;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:10px;transition:background 150ms cubic-bezier(.4,0,.2,1)" style-hover="background:#7C7FF2">Start listening free<svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:17px;height:17px"><use href="#i-arrow-right"></use></svg></button>
+<button onClick="{{ goDemo }}" style="padding:14px 22px;border-radius:6px;border:1px solid #2D3650;background:transparent;color:#E8EAF0;font-family:Inter,sans-serif;font-size:15px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:background 150ms cubic-bezier(.4,0,.2,1)" style-hover="background:#1A2235"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:16px;height:16px"><use href="#i-play"></use></svg>Try the demo</button>
+</div>
+<div style="font-size:13px;color:#5C6478">Free for the first 20,000 characters a month. No card.</div>
+</div>
+
+<div style="border-radius:12px;border:1px solid #1F2638;background:#111727;padding:28px 28px 24px">
+<div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:#5C6478;margin-bottom:20px">Now playing</div>
+<div style="display:flex;flex-direction:column;gap:10px;margin-bottom:24px">
+<div style="font-size:16px;line-height:1.7;color:#5C6478">It is not the tiredness of hard thinking. It is the tiredness of holding your eyes still.</div>
+<div style="font-size:16px;line-height:1.7;color:#E8EAF0;background:rgba(99,102,241,.10);border-left:2px solid #6366F1;padding:6px 10px;margin:0 -10px;border-radius:8px">Listening moves the work somewhere else. The words arrive at a steady pace, and your attention rides along with them.</div>
+<div style="font-size:16px;line-height:1.7;color:#9BA3B4">This is why so many people who never finished a book on paper will finish four in a month.</div>
+</div>
+<div style="display:flex;align-items:center;gap:14px;padding-top:20px;border-top:1px solid #1F2638">
+<div style="width:40px;height:40px;border-radius:999px;background:#6366F1;display:flex;align-items:center;justify-content:center;flex:none"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:17px;height:17px;color:#fff"><use href="#i-pause"></use></svg></div>
+<div style="flex:1">
+<div style="height:4px;border-radius:999px;background:#1F2638;overflow:hidden;margin-bottom:8px"><div style="height:100%;width:38%;background:#6366F1;border-radius:999px"></div></div>
+<div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;color:#5C6478;font-variant-numeric:tabular-nums"><span>03:07</span><span>08:12</span></div>
+</div>
+<div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#9BA3B4;font-variant-numeric:tabular-nums;flex:none">1.25x</div>
+</div>
+</div>
+</div>
+
+<div id="how" style="max-width:1200px;margin:0 auto;padding:96px 48px 0">
+<div style="font-family:'Inter Tight',sans-serif;font-weight:600;font-size:36px;letter-spacing:-.02em;margin-bottom:12px">Three steps, then you stop looking at the screen.</div>
+<div style="font-size:16px;line-height:1.6;color:#9BA3B4;margin-bottom:48px;max-width:600px">No setup, no library to organise first. Paste something and press play.</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+<sc-for list="{{ steps }}" as="st" hint-placeholder-count="3">
+<div style="padding:28px 24px;border-radius:12px;border:1px solid #1F2638;background:#111727">
+<div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#6366F1;font-variant-numeric:tabular-nums;margin-bottom:20px">{{ st.n }}</div>
+<div style="font-family:'Inter Tight',sans-serif;font-weight:600;font-size:19px;letter-spacing:-.01em;margin-bottom:10px">{{ st.title }}</div>
+<div style="font-size:15px;line-height:1.6;color:#9BA3B4;text-wrap:pretty">{{ st.body }}</div>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div id="features" style="max-width:1200px;margin:0 auto;padding:96px 48px 0">
+<div style="font-family:'Inter Tight',sans-serif;font-weight:600;font-size:36px;letter-spacing:-.02em;margin-bottom:48px">Built for documents that are actually long.</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+<sc-for list="{{ features }}" as="ft" hint-placeholder-count="6">
+<div style="padding:28px 24px;border-radius:12px;border:1px solid #1F2638;background:#111727;transition:background 150ms cubic-bezier(.4,0,.2,1)" style-hover="background:#1A2235">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:20px;height:20px;color:#9BA3B4;margin-bottom:18px"><use href="{{ ft.iconHref }}"></use></svg>
+<div style="font-size:16px;font-weight:600;margin-bottom:8px">{{ ft.title }}</div>
+<div style="font-size:15px;line-height:1.6;color:#9BA3B4;text-wrap:pretty">{{ ft.body }}</div>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div id="apps" style="max-width:1200px;margin:0 auto;padding:96px 48px 0">
+<div style="border-radius:16px;border:1px solid #1F2638;background:#111727;padding:48px;display:grid;grid-template-columns:1fr auto;gap:48px;align-items:center">
+<div>
+<div style="font-family:'Inter Tight',sans-serif;font-weight:600;font-size:32px;letter-spacing:-.02em;margin-bottom:12px">Start on your desk, finish on the walk home.</div>
+<div style="font-size:16px;line-height:1.6;color:#9BA3B4;max-width:520px;text-wrap:pretty">Your place, your speed and your voice follow you across devices. Generated audio downloads for offline listening.</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<button onClick="{{ storeApple }}" style="display:flex;align-items:center;gap:14px;padding:12px 22px;border-radius:8px;border:1px solid #2D3650;background:transparent;color:#E8EAF0;font-family:Inter,sans-serif;cursor:pointer;text-align:left;min-width:236px;transition:background 150ms cubic-bezier(.4,0,.2,1)" style-hover="background:#1A2235">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:24px;height:24px"><use href="#i-apple"></use></svg>
+<div><div style="font-size:11px;color:#9BA3B4">Download on the</div><div style="font-family:'Inter Tight',sans-serif;font-weight:600;font-size:17px;letter-spacing:-.01em">App Store</div></div>
+</button>
+<button onClick="{{ storeGoogle }}" style="display:flex;align-items:center;gap:14px;padding:12px 22px;border-radius:8px;border:1px solid #2D3650;background:transparent;color:#E8EAF0;font-family:Inter,sans-serif;cursor:pointer;text-align:left;min-width:236px;transition:background 150ms cubic-bezier(.4,0,.2,1)" style-hover="background:#1A2235">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:22px;height:22px"><use href="#i-play-store"></use></svg>
+<div><div style="font-size:11px;color:#9BA3B4">Get it on</div><div style="font-family:'Inter Tight',sans-serif;font-weight:600;font-size:17px;letter-spacing:-.01em">Google Play</div></div>
+</button>
+</div>
+</div>
+</div>
+
+<div style="max-width:1200px;margin:0 auto;padding:96px 48px;text-align:center">
+<div style="font-family:'Inter Tight',sans-serif;font-weight:600;font-size:36px;letter-spacing:-.02em;margin-bottom:16px">Give your eyes the afternoon off.</div>
+<div style="font-size:17px;line-height:1.6;color:#9BA3B4;margin-bottom:32px">Free for the first 20,000 characters a month.</div>
+<button onClick="{{ goSignup }}" style="padding:15px 26px;border-radius:6px;border:none;background:#6366F1;color:#fff;font-family:Inter,sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:background 150ms cubic-bezier(.4,0,.2,1)" style-hover="background:#7C7FF2">Create your account</button>
+</div>
+
+<div style="border-top:1px solid #1F2638">
+<div style="max-width:1200px;margin:0 auto;padding:32px 48px;display:flex;align-items:center;gap:24px">
+<div style="font-size:13px;color:#5C6478">listen — a text-to-speech reader</div>
+<div style="flex:1"></div>
+<a href="#how" style="font-size:13px;color:#5C6478" style-hover="color:#9BA3B4">Privacy</a>
+<a href="#how" style="font-size:13px;color:#5C6478" style-hover="color:#9BA3B4">Terms</a>
+<a href="#how" style="font-size:13px;color:#5C6478" style-hover="color:#9BA3B4">Support</a>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isAuth }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Auth" style="position:absolute;inset:0;z-index:93;background:#0B0F19;display:grid;grid-template-columns:1fr 1fr">
+<div style="display:flex;flex-direction:column;justify-content:center;padding:0 96px;overflow-y:auto">
+<button onClick="{{ goLanding }}" style="display:flex;align-items:center;gap:10px;border:none;background:none;padding:0;margin-bottom:48px;cursor:pointer;align-self:flex-start">
+<div style="display:flex;flex-direction:column;gap:2px">
+<div style="width:8px;height:3px;border-radius:2px;background:#6366F1"></div>
+<div style="width:14px;height:3px;border-radius:2px;background:#6366F1"></div>
+<div style="width:20px;height:3px;border-radius:2px;background:#6366F1"></div>
+</div>
+<div style="font-family:'Inter Tight',sans-serif;font-weight:600;font-size:19px;letter-spacing:-.01em;color:#E8EAF0">listen</div>
+</button>
+<div style="font-family:'Inter Tight',sans-serif;font-weight:600;font-size:36px;line-height:1.15;letter-spacing:-.02em;margin-bottom:10px">{{ authTitle }}</div>
+<div style="font-size:16px;line-height:1.5;color:#9BA3B4;margin-bottom:32px">{{ authSub }}</div>
+
+<div style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px;max-width:400px">
+<sc-if value="{{ isSignup }}" hint-placeholder-val="{{ false }}">
+<div>
+<div style="font-size:13px;color:#9BA3B4;margin-bottom:7px">Name</div>
+<input value="{{ formName }}" onChange="{{ setFormName }}" placeholder="Your name" aria-label="Your name" style="width:100%;box-sizing:border-box;padding:13px 14px;border-radius:8px;border:1px solid #1F2638;background:#111727;color:#E8EAF0;font-family:Inter,sans-serif;font-size:15px;outline:none" style-focus="border-color:#6366F1" />
+</div>
+</sc-if>
+<div>
+<div style="font-size:13px;color:#9BA3B4;margin-bottom:7px">Email</div>
+<input value="{{ formEmail }}" onChange="{{ setFormEmail }}" placeholder="you@example.com" aria-label="Email address" style="width:100%;box-sizing:border-box;padding:13px 14px;border-radius:8px;border:1px solid {{ emailBorder }};background:#111727;color:#E8EAF0;font-family:Inter,sans-serif;font-size:15px;outline:none" style-focus="border-color:#6366F1" />
+<sc-if value="{{ emailError }}" hint-placeholder-val="{{ false }}"><div style="font-size:13px;color:#F59E0B;margin-top:7px">{{ emailError }}</div></sc-if>
+</div>
+<sc-if value="{{ showPassword }}" hint-placeholder-val="{{ true }}">
+<div>
+<div style="display:flex;justify-content:space-between;margin-bottom:7px">
+<span style="font-size:13px;color:#9BA3B4">Password</span>
+<sc-if value="{{ isLogin }}" hint-placeholder-val="{{ true }}"><button onClick="{{ goForgot }}" style="border:none;background:none;color:#6366F1;font-family:Inter,sans-serif;font-size:13px;cursor:pointer;padding:0">Forgot?</button></sc-if>
+</div>
+<input type="password" value="{{ formPass }}" onChange="{{ setFormPass }}" placeholder="{{ passPlaceholder }}" aria-label="Password" style="width:100%;box-sizing:border-box;padding:13px 14px;border-radius:8px;border:1px solid #1F2638;background:#111727;color:#E8EAF0;font-family:Inter,sans-serif;font-size:15px;outline:none" style-focus="border-color:#6366F1" />
+</div>
+</sc-if>
+</div>
+
+<button onClick="{{ submitAuth }}" style="max-width:400px;padding:14px;border-radius:6px;border:none;background:#6366F1;color:#fff;font-family:Inter,sans-serif;font-size:15px;font-weight:600;cursor:pointer;margin-bottom:16px;transition:background 150ms cubic-bezier(.4,0,.2,1)" style-hover="background:#7C7FF2">{{ authCta }}</button>
+
+<sc-if value="{{ showSocial }}" hint-placeholder-val="{{ true }}">
+<div style="max-width:400px;display:flex;align-items:center;gap:14px;margin:8px 0 16px"><div style="flex:1;height:1px;background:#1F2638"></div><div style="font-size:12px;color:#5C6478">or</div><div style="flex:1;height:1px;background:#1F2638"></div></div>
+<button onClick="{{ ssoStub }}" style="max-width:400px;padding:13px;border-radius:6px;border:1px solid #2D3650;background:transparent;color:#E8EAF0;font-family:Inter,sans-serif;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:24px;transition:background 150ms cubic-bezier(.4,0,.2,1)" style-hover="background:#1A2235"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:16px;height:16px"><use href="#i-apple"></use></svg>Continue with Apple</button>
+</sc-if>
+
+<div style="max-width:400px;display:flex;align-items:center;gap:7px;font-size:14px;color:#9BA3B4">
+<span>{{ authSwitchLabel }}</span>
+<button onClick="{{ toggleAuthMode }}" style="border:none;background:none;color:#6366F1;font-family:Inter,sans-serif;font-size:14px;font-weight:500;cursor:pointer;padding:0">{{ authSwitchCta }}</button>
+</div>
+<sc-if value="{{ isSignup }}" hint-placeholder-val="{{ false }}">
+<div style="max-width:400px;font-size:13px;line-height:1.5;color:#5C6478;margin-top:24px">By creating an account you agree to the terms and the privacy policy. listen does not sell your documents or use them for training.</div>
+</sc-if>
+</div>
+
+<div style="background:#111727;border-left:1px solid #1F2638;display:flex;flex-direction:column;justify-content:center;padding:0 80px">
+<div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:#5C6478;margin-bottom:28px">What your account holds</div>
+<div style="display:flex;flex-direction:column;gap:24px;margin-bottom:48px">
+<sc-for list="{{ authPoints }}" as="p" hint-placeholder-count="4">
+<div style="display:flex;gap:14px;align-items:flex-start">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:18px;height:18px;color:#6366F1;margin-top:2px"><use href="{{ p.iconHref }}"></use></svg>
+<div>
+<div style="font-size:15px;font-weight:500;margin-bottom:4px">{{ p.title }}</div>
+<div style="font-size:14px;line-height:1.55;color:#9BA3B4;text-wrap:pretty">{{ p.body }}</div>
+</div>
+</div>
+</sc-for>
+</div>
+<div style="padding-top:32px;border-top:1px solid #1F2638;display:flex;gap:12px">
+<button onClick="{{ storeApple }}" style="flex:1;display:flex;align-items:center;justify-content:center;gap:9px;padding:11px;border-radius:8px;border:1px solid #2D3650;background:transparent;color:#9BA3B4;font-family:Inter,sans-serif;font-size:13px;cursor:pointer;transition:background 150ms" style-hover="background:#1A2235;color:#E8EAF0"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:16px;height:16px"><use href="#i-apple"></use></svg>iOS</button>
+<button onClick="{{ storeGoogle }}" style="flex:1;display:flex;align-items:center;justify-content:center;gap:9px;padding:11px;border-radius:8px;border:1px solid #2D3650;background:transparent;color:#9BA3B4;font-family:Inter,sans-serif;font-size:13px;cursor:pointer;transition:background 150ms" style-hover="background:#1A2235;color:#E8EAF0"><svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none;width:15px;height:15px"><use href="#i-play-store"></use></svg>Android</button>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isSplash }}" hint-placeholder-val="{{ true }}">
+<div data-screen-label="Splash" onClick="{{ skipSplash }}" style="position:absolute;inset:0;z-index:95;background:#0B0F19;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer">
+<div style="display:flex;align-items:flex-end;justify-content:center;gap:7px;height:88px;margin-bottom:40px">
+<sc-for list="{{ splashBars }}" as="b" hint-placeholder-count="5">
+<div style="width:8px;border-radius:4px;background:{{ b.color }};height:{{ b.h }};opacity:{{ b.o }};transition:height 600ms cubic-bezier(.22,1,.36,1),opacity 400ms linear;transition-delay:{{ b.delay }}"></div>
+</sc-for>
+</div>
+<div style="font-family:'Inter Tight',sans-serif;font-weight:600;font-size:40px;letter-spacing:-.02em;margin-bottom:12px;opacity:{{ splashTextO }};transition:opacity 600ms cubic-bezier(.22,1,.36,1) 300ms">listen</div>
+<div style="font-size:16px;line-height:1.5;color:#9BA3B4;opacity:{{ splashTextO }};transition:opacity 600ms cubic-bezier(.22,1,.36,1) 500ms">Your reading list, out loud.</div>
+<div style="position:absolute;left:0;right:0;bottom:72px;display:flex;flex-direction:column;align-items:center;gap:16px">
+<div style="width:140px;height:2px;border-radius:999px;background:#1F2638;overflow:hidden"><div style="height:100%;width:{{ splashProgress }};background:#6366F1;transition:width 300ms linear"></div></div>
+<div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:#5C6478">{{ splashStatus }}</div>
+</div>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900}}">
+const SENTENCES = [
+  "There is a particular kind of tiredness that comes from reading on a screen all day.",
+  "It is not the tiredness of hard thinking. It is the tiredness of holding your eyes still.",
+  "Listening moves the work somewhere else. The words arrive at a steady pace, and your attention rides along with them instead of dragging itself forward.",
+  "This is why so many people who never finished a book on paper will finish four in a month once they start listening on the walk to work.",
+  "The interesting question is not whether listening counts as reading. It plainly does.",
+  "The interesting question is what changes about comprehension when the pace is set for you rather than by you.",
+  "Research on this is thinner than you would hope, and much of what circulates online is folklore.",
+  "What we can say with some confidence is that rereading is harder when listening, and that difficulty matters most for dense, technical material.",
+  "For narrative and argument, the difference all but disappears.",
+  "So the practical advice is unglamorous: listen to the things you would happily read on a train, and read the things you would need a pencil for.",
+  "Speed is the other lever. Most people settle somewhere between 1.2 and 1.5 times, and stay there.",
+  "Going faster feels productive for about a week, and then quietly stops working.",
+  "The point was never to get through more words. It was to get through the words without dreading them.",
+];
+const WPM = 165;
+const DOCS = [
+  { id: "d1", title: "The quiet case for listening", preview: "There is a particular kind of tiredness that comes from reading on a screen all day. It is not the tiredness of hard thinking.", pct: 62, duration: "8m 12s", date: "Today", audio: true, tag: "Article" },
+  { id: "d2", title: "Attention and pacing — Q3 research notes", preview: "Summary of twelve studies on auditory comprehension, with notes on which findings replicate and which do not.", pct: 24, duration: "22m 40s", date: "Yesterday", audio: true, tag: "Research" },
+  { id: "d3", title: "Chapter 4 — Cellular respiration", preview: "Glycolysis, the citric acid cycle, and oxidative phosphorylation, with the diagrams described in text.", pct: 100, duration: "31m 05s", date: "27 Jul", audio: true, tag: "Textbook" },
+  { id: "d4", title: "Onboarding email drafts v3", preview: "Three variants of the welcome sequence. Read aloud to catch anything that sounds stiff.", pct: 0, duration: "4m 18s", date: "24 Jul", audio: false, tag: "Draft" },
+  { id: "d5", title: "Lease agreement — 14 Marlow St", preview: "Sections 1 through 9, including the break clause and the deposit schedule.", pct: 88, duration: "19m 33s", date: "21 Jul", audio: true, tag: "Document" },
+  { id: "d6", title: "Field notes — coastal erosion survey", preview: "Transect measurements from the March visit, plus the revised sampling plan for autumn.", pct: 41, duration: "12m 50s", date: "18 Jul", audio: true, tag: "Research" },
+];
+const CHART = [12, 26, 0, 18, 34, 41, 22, 8, 0, 29, 47, 38, 55, 31];
+const VOICES = [
+  { id: "aria", name: "Aria", note: "Warm, neutral · en-GB" },
+  { id: "milo", name: "Milo", note: "Low, unhurried · en-GB" },
+  { id: "juno", name: "Juno", note: "Bright, quick · en-US" },
+  { id: "sol", name: "Sol", note: "Even, formal · en-US" },
+];
+const NAV = [
+  { key: "dashboard", label: "Dashboard", icon: "layout-dashboard" },
+  { key: "library", label: "My library", icon: "library", count: 6 },
+  { key: "audio", label: "Saved audio", icon: "disc-3", count: 5 },
+  { key: "upload", label: "Upload", icon: "file-up" },
+  { key: "settings", label: "Settings", icon: "settings" },
+];
+const SPEEDS = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
+
+class Component extends DCLogic {
+  state = {
+    screen: "dashboard", splashStep: 0, toast: null, toastKind: "info",
+    playing: false, elapsed: 37.4, speed: 1, voice: "aria", tone: "Friendly",
+    docTitle: "The quiet case for listening", text: SENTENCES.join(" "),
+    generating: false, genPct: 0, hasAudio: true, focus: false,
+    fontSize: 18, lineH: 1.75, measure: 680,
+    query: "", filter: "All", favs: { d1: true, d4: true }, deleted: {},
+    uploadStage: 0, uploadPct: 0, switches: null,
+  };
+
+  componentDidMount() {
+    this.timer = setInterval(() => {
+      if (!this.state.playing) return;
+      this.setState((s) => {
+        const next = s.elapsed + 0.1 * s.speed;
+        return next >= this.total() ? { elapsed: this.total(), playing: false } : { elapsed: next };
+      });
+    }, 100);
+    this.runSplash();
+  }
+  componentDidUpdate(pp, ps) {
+    if (this.state.screen !== ps.screen && this.scroll) this.scroll.scrollTop = 0;
+    const i = this.sentenceIndex();
+    if (i !== this._lastIdx) {
+      this._lastIdx = i;
+      if (this.state.playing) {
+        const el = document.querySelector('[data-active="1"]');
+        if (el) {
+          const sc = this.state.focus ? el.parentElement.parentElement : this.scroll;
+          if (sc && sc.scrollTo) sc.scrollTo({ top: Math.max(0, el.offsetTop - sc.clientHeight / 2.5), behavior: "smooth" });
+        }
+      }
+    }
+  }
+  componentWillUnmount() { clearInterval(this.timer); clearInterval(this._splash); clearInterval(this._gen); clearInterval(this._up); }
+  runSplash() {
+    clearInterval(this._splash);
+    this.setState({ screen: "splash", splashStep: 0 });
+    this._splash = setInterval(() => this.setState((st) => {
+      const step = st.splashStep + 1;
+      if (step > 6) { clearInterval(this._splash); return st.screen === "splash" ? { screen: "landing", splashStep: step } : { splashStep: step }; }
+      return { splashStep: step };
+    }), 320);
+  }
+  durations() { return SENTENCES.map((s) => Math.max(1.6, (s.split(/\s+/).length / WPM) * 60)); }
+  total() { return this.durations().reduce((a, b) => a + b, 0); }
+  sentenceIndex() {
+    const d = this.durations(); let acc = 0;
+    for (let i = 0; i < d.length; i++) { acc += d[i]; if (this.state.elapsed < acc) return i; }
+    return d.length - 1;
+  }
+  startOf(i) { const d = this.durations(); let a = 0; for (let k = 0; k < i; k++) a += d[k]; return a; }
+  fmt(t) { t = Math.max(0, Math.round(t)); return String(Math.floor(t / 60)).padStart(2, "0") + ":" + String(t % 60).padStart(2, "0"); }
+  toast(msg, kind) {
+    clearTimeout(this._t);
+    this.setState({ toast: msg, toastKind: kind || "info" });
+    this._t = setTimeout(() => this.setState({ toast: null }), 3200);
+  }
+  go(screen) { this.setState({ screen }); }
+
+  renderVals() {
+    const s = this.state;
+    const idx = this.sentenceIndex();
+    const total = this.total();
+    const words = s.text.trim() ? s.text.trim().split(/\s+/).length : 0;
+    const chars = s.text.length;
+    const seg = idx < 5 ? 1 : idx < 9 ? 2 : 3;
+
+    const decorate = (d) => ({
+      ...d,
+      fav: !!s.favs[d.id],
+      favColor: s.favs[d.id] ? "#6366F1" : "#5C6478",
+      pctW: d.pct + "%",
+      cta: d.pct === 0 ? "Listen" : d.pct === 100 ? "Listen again" : "Continue " + d.pct + "%",
+      statusLabel: d.pct === 0 ? "Not started" : d.pct === 100 ? "Completed" : "In progress " + d.pct + "%",
+      statusColor: d.pct === 100 ? "#10B981" : d.pct === 0 ? "#5C6478" : "#9BA3B4",
+      open: () => this.setState({ screen: "reader", docTitle: d.title, elapsed: d.pct === 100 ? 0 : total * (d.pct / 100), playing: true }),
+      toggleFav: () => this.setState((st) => ({ favs: { ...st.favs, [d.id]: !st.favs[d.id] } })),
+      remove: () => this.setState((st) => ({ deleted: { ...st.deleted, [d.id]: true } }), () => this.toast("Document deleted", "info")),
+    });
+
+    const q = s.query.trim().toLowerCase();
+    const filtered = DOCS.filter((d) => {
+      if (s.deleted[d.id]) return false;
+      if (q && !(d.title + " " + d.preview).toLowerCase().includes(q)) return false;
+      if (s.filter === "Favourites") return !!s.favs[d.id];
+      if (s.filter === "Completed") return d.pct === 100;
+      if (s.filter === "In progress") return d.pct > 0 && d.pct < 100;
+      if (s.filter === "Recent") return ["Today", "Yesterday"].includes(d.date);
+      return true;
+    }).map(decorate);
+
+    const maxBar = Math.max(...CHART);
+    const on = (k, dflt) => (s.switches ? s.switches[k] : dflt);
+
+    return {
+      navItems: NAV.map((n) => ({ ...n, iconHref: "#i-" + n.icon, bg: s.screen === n.key ? "rgba(99,102,241,.10)" : "transparent", fg: s.screen === n.key ? "#E8EAF0" : "#9BA3B4", go: () => this.go(n.key) })),
+      screenTitle: { dashboard: "Dashboard", new: "New reading", reader: s.docTitle, library: "My library", audio: "Saved audio", settings: "Settings", upload: "Upload document", splash: "" }[s.screen],
+      isDashboard: s.screen === "dashboard", isNew: s.screen === "new", isReader: s.screen === "reader",
+      isLibrary: s.screen === "library", isAudio: s.screen === "audio", isSettings: s.screen === "settings",
+      isUpload: s.screen === "upload", isSplash: s.screen === "splash",
+      isLanding: s.screen === "landing",
+      isAuth: s.screen === "login" || s.screen === "signup" || s.screen === "forgot",
+      isLogin: s.screen === "login", isSignup: s.screen === "signup",
+      goLanding: () => this.go("landing"), goLogin: () => this.go("login"), goSignup: () => this.go("signup"),
+      goForgot: () => this.go("forgot"),
+      goDemo: () => this.setState({ screen: "reader", playing: true, elapsed: 0 }),
+      storeApple: () => this.toast("The iOS build ships alongside the web app", "info"),
+      storeGoogle: () => this.toast("The Android build ships alongside the web app", "info"),
+      ssoStub: () => this.toast("Apple sign-in is stubbed in the prototype", "info"),
+      steps: [
+        { n: "01", title: "Bring the text", body: "Paste it, type it, or upload a TXT, PDF or DOCX. Long files are split into segments automatically." },
+        { n: "02", title: "Pick a voice", body: "Four voices, seven speeds, six tones. Change any of them mid-document without losing your place." },
+        { n: "03", title: "Press play", body: "The reader highlights the sentence being spoken and scrolls with it. Stop anywhere and it remembers." },
+      ],
+      features: [
+        { iconHref: "#i-highlighter", title: "Follows the sentence", body: "The line being spoken stays highlighted and in view. Click any sentence to jump the audio there." },
+        { iconHref: "#i-layers", title: "Handles long documents", body: "A 40-page paper is split at paragraph breaks, generated as segments, and played as one session." },
+        { iconHref: "#i-clock", title: "Remembers your place", body: "Come back a week later and the document opens at the sentence you stopped on, not the top." },
+        { iconHref: "#i-headphones", title: "Real audio files", body: "Download what you generate as audio and keep listening in any player, offline." },
+        { iconHref: "#i-focus", title: "Focus mode", body: "Hides the sidebar, the player and everything else. Just the text and the voice." },
+        { iconHref: "#i-type", title: "Set for your eyes", body: "Text size, line spacing and reading width are yours to set, and they stick." },
+      ],
+      authPoints: [
+        { iconHref: "#i-library", title: "Your library", body: "Everything you have pasted or uploaded, searchable and filterable." },
+        { iconHref: "#i-clock", title: "Reading progress", body: "Position and percentage per document, synced across your devices." },
+        { iconHref: "#i-disc-3", title: "Generated audio", body: "Every file you have made, ready to replay or download again." },
+        { iconHref: "#i-lock-keyhole", title: "Private by default", body: "Documents are never sold and never used for model training." },
+      ],
+      showPassword: s.screen !== "forgot",
+      showSocial: s.screen !== "forgot",
+      authTitle: s.screen === "signup" ? "Create your account" : s.screen === "forgot" ? "Reset your password" : "Welcome back",
+      authSub: s.screen === "signup" ? "Twenty thousand characters a month, free. No card needed." : s.screen === "forgot" ? "Enter your email and we will send you a reset link." : "Sign in to pick up where you left off.",
+      authCta: s.screen === "signup" ? "Create account" : s.screen === "forgot" ? "Send reset link" : "Sign in",
+      authSwitchLabel: s.screen === "signup" ? "Already have an account?" : s.screen === "forgot" ? "Remembered it?" : "New here?",
+      authSwitchCta: s.screen === "signup" ? "Sign in" : s.screen === "forgot" ? "Back to sign in" : "Create an account",
+      toggleAuthMode: () => this.go(s.screen === "signup" ? "login" : s.screen === "forgot" ? "login" : "signup"),
+      passPlaceholder: s.screen === "signup" ? "At least 8 characters" : "Your password",
+      formName: s.formName || "", formEmail: s.formEmail || "", formPass: s.formPass || "",
+      setFormName: (e) => this.setState({ formName: e.target.value }),
+      setFormEmail: (e) => this.setState({ formEmail: e.target.value, emailError: null }),
+      setFormPass: (e) => this.setState({ formPass: e.target.value }),
+      emailError: s.emailError,
+      emailBorder: s.emailError ? "#F59E0B" : "#1F2638",
+      submitAuth: () => {
+        const email = (s.formEmail || "").trim();
+        if (!email) return this.setState({ emailError: "Enter your email address" });
+        if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return this.setState({ emailError: "That does not look like an email address" });
+        if (s.screen === "forgot") { this.go("login"); return this.toast("Reset link sent to " + email, "success"); }
+        if (s.screen === "signup" && (s.formPass || "").length < 8) return this.toast("Passwords need at least 8 characters", "error");
+        this.setState({ screen: "dashboard", emailError: null });
+        this.toast(s.screen === "signup" ? "Account created — welcome" : "Signed in", "success");
+      },
+      goNew: () => this.go("new"), goReader: () => this.go("reader"), goLibrary: () => this.go("library"),
+      goUpload: () => this.go("upload"), goSettings: () => this.go("settings"),
+      logout: () => { this.setState({ screen: "landing", playing: false }); this.toast("Signed out", "info"); },
+      scrollRef: (el) => { this.scroll = el; },
+      recent: DOCS.slice(0, 4).map(decorate),
+      library: filtered,
+      libraryEmpty: filtered.length === 0,
+      currentDocTitle: s.docTitle,
+      currentDocPct: Math.round((s.elapsed / total) * 100),
+      stats: [
+        { value: "14", label: "Documents" }, { value: "6h 42m", label: "Listening time" },
+        { value: "9", label: "Completed" }, { value: "128", label: "Pages read" },
+      ],
+      chart: CHART.map((v, i) => ({ h: Math.max(4, Math.round((v / maxBar) * 88)) + "px", color: i === CHART.length - 1 ? "#6366F1" : v === 0 ? "#1F2638" : "#2D3650", label: v + " min" })),
+
+      sentences: SENTENCES.map((t, i) => ({
+        text: t, active: i === idx ? "1" : "0",
+        color: i === idx ? "#E8EAF0" : i < idx ? "#5C6478" : "#9BA3B4",
+        bg: i === idx ? "rgba(99,102,241,.10)" : "transparent",
+        bar: i === idx ? "#6366F1" : "transparent",
+        seek: () => this.setState({ elapsed: this.startOf(i) + 0.01 }),
+      })),
+      segments: [1, 2, 3].map((n) => ({
+        label: "Segment " + n, dur: ["3m 04s", "2m 41s", "2m 27s"][n - 1],
+        bg: n === seg ? "rgba(99,102,241,.10)" : "transparent",
+        border: n === seg ? "#6366F1" : "#1F2638",
+        fg: n === seg ? "#E8EAF0" : "#9BA3B4",
+        iconHref: n < seg ? "#i-check" : n === seg ? "#i-audio-lines" : "#i-clock",
+        iconColor: n < seg ? "#10B981" : n === seg ? "#6366F1" : "#5C6478",
+      })),
+      segLabel: "Segment " + seg + " of 3",
+      showReaderPanel: !s.focus,
+
+      showPlayer: (s.screen === "reader" || s.screen === "audio" || s.screen === "dashboard") && s.hasAudio && !s.focus,
+      bars: [0, 1, 2, 3].map((i) => ({ delay: i * 130 + "ms", play: s.playing ? "running" : "paused" })),
+      playing: s.playing, playHref: s.playing ? "#i-pause" : "#i-play", playLabel: s.playing ? "Pause" : "Play",
+      togglePlay: () => this.setState({ playing: !s.playing }),
+      stop: () => this.setState({ playing: false, elapsed: 0 }),
+      prev: () => this.setState({ elapsed: this.startOf(Math.max(0, idx - 1)) + 0.01 }),
+      next: () => this.setState({ elapsed: this.startOf(Math.min(SENTENCES.length - 1, idx + 1)) + 0.01 }),
+      elapsedLabel: this.fmt(s.elapsed), totalLabel: this.fmt(total),
+      progressW: (s.elapsed / total) * 100 + "%",
+      speedLabel: String(s.speed) + "x",
+      cycleSpeed: () => this.setState({ speed: SPEEDS[(SPEEDS.indexOf(s.speed) + 1) % SPEEDS.length] }),
+      seekBar: (e) => { const r = e.currentTarget.getBoundingClientRect(); this.setState({ elapsed: total * Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)) }); },
+      download: () => this.toast("Audio saved to your downloads", "success"),
+      favCurrent: () => this.toast("Added to favourites", "success"),
+      voiceName: (VOICES.find((v) => v.id === s.voice) || VOICES[0]).name,
+
+      focus: s.focus, toggleFocus: () => this.setState({ focus: !s.focus }),
+      fontSize: s.fontSize + "px", fontSizeRaw: s.fontSize,
+      setFontSize: (e) => this.setState({ fontSize: +e.target.value }),
+      lineH: String(s.lineH), lineHRaw: Math.round(s.lineH * 100),
+      setLineH: (e) => this.setState({ lineH: +e.target.value / 100 }),
+      measure: s.measure + "px", measureRaw: s.measure,
+      setMeasure: (e) => this.setState({ measure: +e.target.value }),
+
+      text: s.text, docTitle: s.docTitle,
+      setTitle: (e) => this.setState({ docTitle: e.target.value }),
+      setText: (e) => this.setState({ text: e.target.value }),
+      copyText: () => this.toast("Text copied", "success"),
+      saveText: () => this.toast("Saved to your library", "success"),
+      clearText: () => this.setState({ text: "" }, () => this.toast("Editor cleared", "info")),
+      chars: chars.toLocaleString(), words: words.toLocaleString(),
+      voices: VOICES.map((v) => ({
+        ...v, initial: v.name[0], select: () => this.setState({ voice: v.id }),
+        iconHref: s.voice === v.id ? "#i-check" : "#i-play",
+        bg: s.voice === v.id ? "rgba(99,102,241,.10)" : "#111727",
+        border: s.voice === v.id ? "#6366F1" : "#1F2638",
+        iconColor: s.voice === v.id ? "#6366F1" : "#5C6478",
+      })),
+      speedStep: SPEEDS.indexOf(s.speed),
+      setSpeed: (e) => this.setState({ speed: SPEEDS[+e.target.value] }),
+      tones: ["Professional", "Friendly", "Calm", "Energetic", "Storytelling", "Educational"].map((t) => ({
+        name: t, select: () => this.setState({ tone: t }),
+        bg: s.tone === t ? "rgba(99,102,241,.10)" : "transparent",
+        border: s.tone === t ? "#6366F1" : "#1F2638",
+        fg: s.tone === t ? "#E8EAF0" : "#9BA3B4",
+      })),
+      willChunk: chars > 900,
+      chunkCount: Math.max(2, Math.ceil(chars / 900)),
+      generating: s.generating,
+      generateLabel: s.generating ? "Generating your audio" : "Generate speech",
+      generateHref: s.generating ? "#i-loader" : "#i-audio-lines",
+      generateBg: s.generating ? "#2D3650" : "#6366F1",
+      generateCursor: s.generating ? "default" : "pointer",
+      generateOpacity: s.generating ? "0.7" : "1",
+      genProgress: s.genPct + "%",
+      genStatus: "Segment " + Math.min(3, Math.floor(s.genPct / 34) + 1) + " of 3 · " + s.genPct + "%",
+      generate: () => {
+        if (s.generating) return;
+        if (!s.text.trim()) return this.toast("Add some text before generating audio", "error");
+        if (chars > 20000) return this.toast("That is over the 20,000 character limit for one document", "error");
+        this.setState({ generating: true, genPct: 0 });
+        clearInterval(this._gen);
+        this._gen = setInterval(() => this.setState((st) => {
+          const p = st.genPct + 7;
+          if (p >= 100) {
+            clearInterval(this._gen);
+            setTimeout(() => { this.setState({ generating: false, hasAudio: true, screen: "reader", elapsed: 0, playing: true }); this.toast("Audio ready", "success"); }, 250);
+            return { genPct: 100 };
+          }
+          return { genPct: p };
+        }), 130);
+      },
+
+      query: s.query,
+      setQuery: (e) => { const v = e.target.value; this.setState(v.trim() ? { query: v, screen: "library" } : { query: v }); },
+      filters: ["All", "Recent", "Favourites", "In progress", "Completed"].map((f) => ({
+        name: f, select: () => this.setState({ filter: f }),
+        bg: s.filter === f ? "rgba(99,102,241,.10)" : "transparent",
+        border: s.filter === f ? "#6366F1" : "#1F2638",
+        fg: s.filter === f ? "#E8EAF0" : "#9BA3B4",
+      })),
+      resetFilters: () => this.setState({ filter: "All", query: "" }),
+
+      savedAudio: DOCS.filter((d) => d.audio && !s.deleted[d.id]).map((d) => ({
+        title: d.title,
+        meta: d.duration + " · " + (VOICES.find((v) => v.id === s.voice) || VOICES[0]).name + " · " + d.date,
+        play: () => this.setState({ screen: "reader", docTitle: d.title, elapsed: 0, playing: true }),
+      })),
+      uploadIdle: s.uploadStage === 0, uploadBusy: s.uploadStage === 1, uploadDone: s.uploadStage === 2,
+      uploadPct: s.uploadPct, uploadW: s.uploadPct + "%",
+      uploadStatus: s.uploadPct < 55 ? "Uploading file" : "Extracting text from 9 pages",
+      startUpload: () => {
+        this.setState({ uploadStage: 1, uploadPct: 0 });
+        clearInterval(this._up);
+        this._up = setInterval(() => this.setState((st) => {
+          const p = st.uploadPct + 9;
+          if (p >= 100) { clearInterval(this._up); setTimeout(() => this.setState({ uploadStage: 2 }), 300); return { uploadPct: 100 }; }
+          return { uploadPct: p };
+        }), 120);
+      },
+      uploads: [
+        { name: "attention-and-pacing.pdf", meta: "PDF · 9 pages · 4,180 words", iconHref: "#i-file-text" },
+        { name: "chapter-4-respiration.docx", meta: "DOCX · 22 pages · 9,640 words", iconHref: "#i-file-type-2" },
+        { name: "onboarding-drafts.txt", meta: "TXT · 1,120 words", iconHref: "#i-file" },
+      ],
+      toggles: [
+        { key: "autoContinue", label: "Continue to next segment", note: "Long documents play straight through without a click.", dflt: true },
+        { key: "followText", label: "Scroll to the active sentence", note: "The reader keeps the spoken line in view.", dflt: true },
+        { key: "resume", label: "Remember where you stopped", note: "Reopening a document picks up at the last sentence.", dflt: true },
+        { key: "wifi", label: "Download over Wi-Fi only", note: "Generated audio waits for a Wi-Fi connection.", dflt: false },
+      ].map((t) => {
+        const v = on(t.key, t.dflt);
+        return { ...t, toggle: () => this.setState((st) => ({ switches: { ...(st.switches || { autoContinue: true, followText: true, resume: true, wifi: false }), [t.key]: !v } })), trackBg: v ? "#6366F1" : "#2D3650", justify: v ? "flex-end" : "flex-start" };
+      }),
+
+      splashBars: [14, 42, 72, 42, 22].map((h, i) => {
+        const lit = s.splashStep > i;
+        return { h: (lit ? h : 8) + "px", o: lit ? "1" : "0.25", color: i === 2 ? "#6366F1" : "#2D3650", delay: i * 80 + "ms" };
+      }),
+      splashTextO: s.splashStep >= 4 ? "1" : "0",
+      splashProgress: Math.min(100, s.splashStep * 20) + "%",
+      splashStatus: s.splashStep < 3 ? "Loading voices" : s.splashStep < 5 ? "Restoring your place" : "Ready",
+      skipSplash: () => { clearInterval(this._splash); this.setState({ screen: "landing" }); },
+
+      toast: s.toast,
+      toastHref: s.toastKind === "error" ? "#i-alert-triangle" : s.toastKind === "success" ? "#i-check" : "#i-info",
+      toastColor: s.toastKind === "error" ? "#F59E0B" : s.toastKind === "success" ? "#10B981" : "#9BA3B4",
+      toastBorder: s.toastKind === "error" ? "#F59E0B" : s.toastKind === "success" ? "#10B981" : "#2D3650",
+    };
+  }
+}
+</script>
+</body>
+</html>
