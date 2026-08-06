@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { useAppStore } from "@/lib/store";
 import { Sidebar } from "@/components/Sidebar";
 import { Topbar } from "@/components/Topbar";
@@ -22,7 +22,9 @@ export default function AppLayout({ children }) {
     <div className={styles.shell}>
       <Sidebar />
       <div className={styles.main}>
-        <Topbar />
+        <Suspense fallback={null}>
+          <Topbar />
+        </Suspense>
         <div className={styles.content}>
           {children}
           <PlayerBar />
