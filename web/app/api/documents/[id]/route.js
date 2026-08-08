@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getDocumentsCollection, toObjectId } from "@/lib/db";
+import { requireUser } from "@/lib/auth";
 import { deleteAudioFile } from "@/lib/audioStorage";
 import { toDocumentDetail } from "@/lib/documents";
 import { wordCount } from "@/lib/timing";
@@ -9,23 +10,29 @@ function notFound() {
 }
 
 export async function GET(request, { params }) {
+  const { user, unauthorized } = await requireUser();
+  if (unauthorized) return unauthorized;
+
   const { id } = await params;
   const _id = toObjectId(id);
   if (!_id) return notFound();
 
   const collection = await getDocumentsCollection();
-  const doc = await collection.findOne({ _id });
+  const doc = await collection.findOne({ _id, userId: user._id.toString() });
   if (!doc) return notFound();
   return NextResponse.json(toDocumentDetail(doc));
 }
 
 export async function PATCH(request, { params }) {
+  const { user, unauthorized } = await requireUser();
+  if (unauthorized) return unauthorized;
+
   const { id } = await params;
   const _id = toObjectId(id);
   if (!_id) return notFound();
 
   const collection = await getDocumentsCollection();
-  const existing = await collection.findOne({ _id });
+  const existing = await collection.findOne({ _id, userId: user._id.toString() });
   if (!existing) return notFound();
 
   const body = await request.json();
@@ -53,12 +60,15 @@ export async function PATCH(request, { params }) {
 }
 
 export async function DELETE(request, { params }) {
+  const { user, unauthorized } = await requireUser();
+  if (unauthorized) return unauthorized;
+
   const { id } = await params;
   const _id = toObjectId(id);
   if (!_id) return notFound();
 
   const collection = await getDocumentsCollection();
-  const existing = await collection.findOne({ _id });
+  const existing = await collection.findOne({ _id, userId: user._id.toString() });
   if (!existing) return notFound();
 
   await Promise.all((existing.segments || []).map((s) => deleteAudioFile(s.fileId)));

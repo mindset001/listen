@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
 import { getDocumentsCollection, toObjectId } from "@/lib/db";
+import { requireUser } from "@/lib/auth";
 
 export async function PUT(request) {
+  const { user, unauthorized } = await requireUser();
+  if (unauthorized) return unauthorized;
+
   const { documentId, position = 0, percentage = 0, sentenceIndex = 0 } = await request.json();
 
   const _id = toObjectId(documentId);
@@ -11,7 +15,7 @@ export async function PUT(request) {
 
   const collection = await getDocumentsCollection();
   const result = await collection.updateOne(
-    { _id },
+    { _id, userId: user._id.toString() },
     { $set: { position, percentage: Math.round(percentage), sentenceIndex, updatedAt: new Date() } }
   );
 

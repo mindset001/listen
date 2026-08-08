@@ -10,6 +10,7 @@ import styles from "./Dashboard.module.css";
 
 export default function DashboardPage() {
   const router = useRouter();
+  const user = useAppStore((s) => s.user);
   const documents = useAppStore((s) => s.documents);
   const currentDocument = useAppStore((s) => s.currentDocument);
   const timing = useAppStore((s) => s.timing);
@@ -37,7 +38,7 @@ export default function DashboardPage() {
 
   return (
     <div className={styles.wrap}>
-      <h1 className={styles.welcome}>Welcome back, myvoice</h1>
+      <h1 className={styles.welcome}>Welcome back, {user?.name}</h1>
       <p className={styles.welcomeSub}>
         Pick up where you left off, or start something new.
       </p>

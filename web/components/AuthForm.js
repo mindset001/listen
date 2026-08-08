@@ -3,11 +3,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Library, Clock, Disc3, LockKeyhole } from "lucide-react";
+import { Library, Clock, Disc3, LockKeyhole, Eye, EyeOff } from "lucide-react";
 import { Logo } from "./Logo";
-import { AppleMark, PlayStoreMark } from "./BrandIcons";
+import { AppleMark, GoogleMark, PlayStoreMark } from "./BrandIcons";
 import { ThemeToggle } from "./ThemeToggle";
 import { useToast } from "./ToastProvider";
+import { useAppStore } from "@/lib/store";
 import styles from "./AuthForm.module.css";
 
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
@@ -65,17 +66,23 @@ const AUTH_POINTS = [
 export function AuthForm({ mode }) {
   const router = useRouter();
   const toast = useToast();
+  const signup = useAppStore((s) => s.signup);
+  const login = useAppStore((s) => s.login);
   const copy = COPY[mode];
 
   const [formName, setFormName] = useState("");
   const [formEmail, setFormEmail] = useState("");
   const [formPass, setFormPass] = useState("");
+  const [formConfirmPass, setFormConfirmPass] = useState("");
   const [emailError, setEmailError] = useState(null);
+  const [confirmError, setConfirmError] = useState(null);
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const showPassword = mode !== "forgot";
   const showSocial = mode !== "forgot";
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     const email = formEmail.trim();
 
@@ -84,8 +91,7 @@ export function AuthForm({ mode }) {
       return setEmailError("That does not look like an email address");
 
     if (mode === "forgot") {
-      toast("Reset link sent to " + email, "success");
-      router.push("/login");
+      toast("Password reset isn't wired up yet — sign in directly for now.", "info");
       return;
     }
 
@@ -94,9 +100,27 @@ export function AuthForm({ mode }) {
       return;
     }
 
+    if (mode === "signup" && formConfirmPass !== formPass) {
+      return setConfirmError("Passwords do not match");
+    }
+
     setEmailError(null);
-    toast(mode === "signup" ? "Account created — welcome" : "Signed in", "success");
-    router.push("/dashboard");
+    setConfirmError(null);
+    setSubmitting(true);
+    try {
+      if (mode === "signup") {
+        await signup({ name: formName, email, password: formPass });
+        toast("Account created — welcome", "success");
+      } else {
+        await login({ email, password: formPass });
+        toast("Signed in", "success");
+      }
+      router.push("/dashboard");
+    } catch (err) {
+      toast(err.message || "Something went wrong. Try again.", "error");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -153,19 +177,58 @@ export function AuthForm({ mode }) {
                   </Link>
                 )}
               </span>
-              <input
-                type="password"
-                value={formPass}
-                onChange={(e) => setFormPass(e.target.value)}
-                placeholder={mode === "signup" ? "At least 8 characters" : "Your password"}
-                aria-label="Password"
-                className={styles.input}
-              />
+              <div className={styles.passwordWrap}>
+                <input
+                  type={passwordVisible ? "text" : "password"}
+                  value={formPass}
+                  onChange={(e) => setFormPass(e.target.value)}
+                  placeholder={mode === "signup" ? "At least 8 characters" : "Your password"}
+                  aria-label="Password"
+                  className={`${styles.input} ${styles.passwordInput}`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setPasswordVisible((v) => !v)}
+                  aria-label={passwordVisible ? "Hide password" : "Show password"}
+                  className={styles.passwordToggle}
+                >
+                  {passwordVisible ? <EyeOff size={16} aria-hidden="true" /> : <Eye size={16} aria-hidden="true" />}
+                </button>
+              </div>
             </label>
           )}
 
-          <button type="submit" className={styles.submit}>
-            {copy.cta}
+          {mode === "signup" && (
+            <label className={styles.field}>
+              <span className={styles.fieldLabel}>Confirm password</span>
+              <div className={styles.passwordWrap}>
+                <input
+                  type={passwordVisible ? "text" : "password"}
+                  value={formConfirmPass}
+                  onChange={(e) => {
+                    setFormConfirmPass(e.target.value);
+                    setConfirmError(null);
+                  }}
+                  placeholder="Type your password again"
+                  aria-label="Confirm password"
+                  className={`${styles.input} ${styles.passwordInput}`}
+                  style={confirmError ? { borderColor: "var(--caution)" } : undefined}
+                />
+                <button
+                  type="button"
+                  onClick={() => setPasswordVisible((v) => !v)}
+                  aria-label={passwordVisible ? "Hide password" : "Show password"}
+                  className={styles.passwordToggle}
+                >
+                  {passwordVisible ? <EyeOff size={16} aria-hidden="true" /> : <Eye size={16} aria-hidden="true" />}
+                </button>
+              </div>
+              {confirmError && <div className={styles.fieldError}>{confirmError}</div>}
+            </label>
+          )}
+
+          <button type="submit" className={styles.submit} disabled={submitting}>
+            {submitting ? "Please wait…" : copy.cta}
           </button>
         </form>
 
@@ -176,6 +239,10 @@ export function AuthForm({ mode }) {
               <span className={styles.dividerLabel}>or</span>
               <span />
             </div>
+            <a href="/api/auth/google" className={styles.social}>
+              <GoogleMark size={16} />
+              Continue with Google
+            </a>
             <button
               type="button"
               className={styles.social}

@@ -18,10 +18,11 @@ export default function SettingsPage() {
   const setMeasure = useAppStore((s) => s.setMeasure);
   const switches = useAppStore((s) => s.switches);
   const setSwitch = useAppStore((s) => s.setSwitch);
+  const user = useAppStore((s) => s.user);
   const logout = useAppStore((s) => s.logout);
 
-  function handleLogout() {
-    logout();
+  async function handleLogout() {
+    await logout();
     toast("Signed out", "info");
     router.push("/");
   }
@@ -111,10 +112,10 @@ export default function SettingsPage() {
 
       <div className={styles.sectionLabel}>Account</div>
       <div className={styles.accountCard}>
-        <div className={styles.accountAvatar}>m</div>
+        <div className={styles.accountAvatar}>{(user?.name || "?")[0].toUpperCase()}</div>
         <div className={styles.accountInfo}>
-          <div className={styles.accountName}>myvoice</div>
-          <div className={styles.accountEmail}>myvoice@example.com</div>
+          <div className={styles.accountName}>{user?.name}</div>
+          <div className={styles.accountEmail}>{user?.email}</div>
         </div>
         <button type="button" onClick={handleLogout} className={styles.logoutButton}>
           Log out

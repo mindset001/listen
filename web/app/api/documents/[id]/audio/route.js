@@ -11,12 +11,16 @@
 import { NextResponse } from "next/server";
 import { randomUUID } from "node:crypto";
 import { getDocumentsCollection, toObjectId } from "@/lib/db";
+import { requireUser } from "@/lib/auth";
 import { generateSpeech, resolveVoice, TTSError, CHAR_LIMIT, TTS_FRIENDLY_ERRORS } from "@/lib/tts";
 import { chunkDocument, splitSentences, createTiming } from "@/lib/timing";
 import { saveAudioFile, deleteAudioFile } from "@/lib/audioStorage";
 import { toDocumentDetail } from "@/lib/documents";
 
 export async function POST(request, { params }) {
+  const { user, unauthorized } = await requireUser();
+  if (unauthorized) return unauthorized;
+
   const { id } = await params;
   const _id = toObjectId(id);
   if (!_id) {
@@ -24,7 +28,7 @@ export async function POST(request, { params }) {
   }
 
   const collection = await getDocumentsCollection();
-  const doc = await collection.findOne({ _id });
+  const doc = await collection.findOne({ _id, userId: user._id.toString() });
   if (!doc) {
     return NextResponse.json({ error: "not_found", message: "Document not found." }, { status: 404 });
   }

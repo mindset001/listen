@@ -19,6 +19,7 @@ const ICONS = {
 export function Sidebar() {
   const pathname = usePathname();
   const documents = useAppStore((s) => s.documents);
+  const user = useAppStore((s) => s.user);
 
   const counts = {
     library: documents.filter((d) => !d.deleted).length,
@@ -58,9 +59,9 @@ export function Sidebar() {
       </nav>
 
       <div className={styles.sidebarFooter}>
-        <div className={styles.avatar}>m</div>
+        <div className={styles.avatar}>{(user?.name || "?")[0].toUpperCase()}</div>
         <div className={styles.userInfo}>
-          <div className={styles.userName}>myvoice</div>
+          <div className={styles.userName}>{user?.name}</div>
           <div className={styles.userPlan}>Free plan</div>
         </div>
         <Link href="/settings" aria-label="Settings" className={styles.transportBtn}>

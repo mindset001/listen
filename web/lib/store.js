@@ -35,6 +35,27 @@ async function api(url, options) {
 }
 
 export const useAppStore = create((set, get) => ({
+  // ---- auth ----
+  user: null,
+  authLoaded: false,
+
+  fetchMe: async () => {
+    try {
+      const user = await api("/api/auth/me");
+      set({ user, authLoaded: true });
+    } catch {
+      set({ user: null, authLoaded: true });
+    }
+  },
+  signup: async ({ name, email, password }) => {
+    const user = await api("/api/auth/signup", { method: "POST", body: JSON.stringify({ name, email, password }) });
+    set({ user, authLoaded: true });
+  },
+  login: async ({ email, password }) => {
+    const user = await api("/api/auth/login", { method: "POST", body: JSON.stringify({ email, password }) });
+    set({ user, authLoaded: true });
+  },
+
   // ---- library ----
   documents: [],
   documentsLoaded: false,
@@ -187,13 +208,18 @@ export const useAppStore = create((set, get) => ({
   setMeasure: (v) => set({ measure: v }),
   setSwitch: (key) => set((s) => ({ switches: { ...s.switches, [key]: !s.switches[key] } })),
 
-  logout: () =>
+  logout: async () => {
+    await api("/api/auth/logout", { method: "POST" }).catch(() => {});
     set({
+      user: null,
+      documents: [],
+      documentsLoaded: false,
       playing: false,
       currentDocument: null,
       sentences: [],
       timing: EMPTY_TIMING,
       elapsed: 0,
       switches: DEFAULT_SWITCHES,
-    }),
+    });
+  },
 }));

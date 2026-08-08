@@ -1,15 +1,22 @@
 import { NextResponse } from "next/server";
 import { getDocumentsCollection } from "@/lib/db";
+import { requireUser } from "@/lib/auth";
 import { wordCount } from "@/lib/timing";
 import { toDocumentSummary } from "@/lib/documents";
 
 export async function GET() {
+  const { user, unauthorized } = await requireUser();
+  if (unauthorized) return unauthorized;
+
   const collection = await getDocumentsCollection();
-  const docs = await collection.find({}).sort({ createdAt: -1 }).toArray();
+  const docs = await collection.find({ userId: user._id.toString() }).sort({ createdAt: -1 }).toArray();
   return NextResponse.json(docs.map(toDocumentSummary));
 }
 
 export async function POST(request) {
+  const { user, unauthorized } = await requireUser();
+  if (unauthorized) return unauthorized;
+
   const { title, content, tag } = await request.json();
 
   if (!content || !content.trim()) {
@@ -19,6 +26,7 @@ export async function POST(request) {
   const collection = await getDocumentsCollection();
   const now = new Date();
   const doc = {
+    userId: user._id.toString(),
     title: title?.trim() || "Untitled",
     content,
     wordCount: wordCount(content),

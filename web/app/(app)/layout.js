@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useAppStore } from "@/lib/store";
 import { Sidebar } from "@/components/Sidebar";
 import { Topbar } from "@/components/Topbar";
@@ -10,13 +11,29 @@ import { AudioEngine } from "@/components/AudioEngine";
 import styles from "@/components/AppShell.module.css";
 
 export default function AppLayout({ children }) {
+  const router = useRouter();
+  const user = useAppStore((s) => s.user);
+  const authLoaded = useAppStore((s) => s.authLoaded);
+  const fetchMe = useAppStore((s) => s.fetchMe);
   const fetchDocuments = useAppStore((s) => s.fetchDocuments);
   const fetchVoices = useAppStore((s) => s.fetchVoices);
 
   useEffect(() => {
-    fetchDocuments();
-    fetchVoices();
-  }, [fetchDocuments, fetchVoices]);
+    fetchMe();
+  }, [fetchMe]);
+
+  useEffect(() => {
+    if (authLoaded && !user) router.replace("/login");
+  }, [authLoaded, user, router]);
+
+  useEffect(() => {
+    if (user) {
+      fetchDocuments();
+      fetchVoices();
+    }
+  }, [user, fetchDocuments, fetchVoices]);
+
+  if (!user) return null;
 
   return (
     <div className={styles.shell}>

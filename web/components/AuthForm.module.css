@@ -117,6 +117,35 @@
   margin-top: 7px;
 }
 
+.passwordWrap {
+  position: relative;
+}
+
+.passwordInput {
+  padding-right: 44px;
+}
+
+.passwordToggle {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: var(--fg-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: var(--radius-button);
+  transition: color 150ms var(--ease-ui);
+}
+.passwordToggle:hover {
+  color: var(--fg-1);
+}
+
 .submit {
   max-width: 400px;
   padding: 14px;
