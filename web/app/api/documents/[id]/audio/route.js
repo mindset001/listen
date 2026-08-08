@@ -2,15 +2,15 @@
  * listen — POST /api/documents/:id/audio
  *
  * Generates speech for a document: splits it into provider-sized chunks,
- * calls the TTS provider once per chunk, saves each MP3 to local disk, and
- * records one `audio` row per segment. The provider returns audio only (no
- * timestamps), so segment duration is the same word-count estimate the
- * reader's sentence highlighting uses — see lib/timing.js.
+ * calls the TTS provider once per chunk, saves each MP3 to GridFS, and
+ * records one segment per chunk on the document. The provider returns audio
+ * only (no timestamps), so segment duration is the same word-count estimate
+ * the reader's sentence highlighting uses — see lib/timing.js.
  */
 
 import { NextResponse } from "next/server";
 import { randomUUID } from "node:crypto";
-import { db } from "@/lib/db";
+import { getDocumentsCollection, toObjectId } from "@/lib/db";
 import { generateSpeech, resolveVoice, TTSError, CHAR_LIMIT, TTS_FRIENDLY_ERRORS } from "@/lib/tts";
 import { chunkDocument, splitSentences, createTiming } from "@/lib/timing";
 import { saveAudioFile, deleteAudioFile } from "@/lib/audioStorage";
@@ -18,7 +18,13 @@ import { toDocumentDetail } from "@/lib/documents";
 
 export async function POST(request, { params }) {
   const { id } = await params;
-  const doc = db.prepare(`SELECT * FROM documents WHERE id = ?`).get(id);
+  const _id = toObjectId(id);
+  if (!_id) {
+    return NextResponse.json({ error: "not_found", message: "Document not found." }, { status: 404 });
+  }
+
+  const collection = await getDocumentsCollection();
+  const doc = await collection.findOne({ _id });
   if (!doc) {
     return NextResponse.json({ error: "not_found", message: "Document not found." }, { status: 404 });
   }
@@ -28,11 +34,8 @@ export async function POST(request, { params }) {
   let voiceName;
   try {
     voiceName = resolveVoice(voice);
-  } catch (err) {
-    return NextResponse.json(
-      { error: "voice", message: TTS_FRIENDLY_ERRORS.voice },
-      { status: 400 }
-    );
+  } catch {
+    return NextResponse.json({ error: "voice", message: TTS_FRIENDLY_ERRORS.voice }, { status: 400 });
   }
 
   const chunks = chunkDocument(doc.content, CHAR_LIMIT);
@@ -40,26 +43,22 @@ export async function POST(request, { params }) {
     return NextResponse.json({ error: "empty", message: TTS_FRIENDLY_ERRORS.empty }, { status: 400 });
   }
 
-  // Regenerating: drop the previous segments and their files first.
-  const previous = db.prepare(`SELECT file_path FROM audio WHERE document_id = ?`).all(id);
-  previous.forEach((a) => deleteAudioFile(a.file_path));
-  db.prepare(`DELETE FROM audio WHERE document_id = ?`).run(id);
+  // Regenerating: drop the previous segments' files first.
+  await Promise.all((doc.segments || []).map((s) => deleteAudioFile(s.fileId)));
 
-  const insertAudio = db.prepare(
-    `INSERT INTO audio (id, document_id, segment_index, voice, speed, url, file_path, duration)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
-  );
-
+  const segments = [];
   try {
     for (let i = 0; i < chunks.length; i++) {
       const { buffer } = await generateSpeech(chunks[i], voiceName, { rate: speed });
-      const { url, filePath } = saveAudioFile(buffer);
+      const { url, fileId } = await saveAudioFile(buffer);
       const duration = createTiming(splitSentences(chunks[i])).total;
 
-      insertAudio.run(randomUUID(), id, i, voiceName, speed, url, filePath, duration);
+      segments.push({ id: randomUUID(), segmentIndex: i, voice: voiceName, speed, url, fileId, duration });
     }
   } catch (err) {
     console.error("[/api/documents/:id/audio]", err);
+    // Any segments already saved this attempt are orphaned — clean them up.
+    await Promise.all(segments.map((s) => deleteAudioFile(s.fileId)));
     const code = err instanceof TTSError ? err.code : "upstream";
     return NextResponse.json(
       { error: code, message: TTS_FRIENDLY_ERRORS[code] || TTS_FRIENDLY_ERRORS.upstream },
@@ -67,13 +66,11 @@ export async function POST(request, { params }) {
     );
   }
 
-  db.prepare(`UPDATE documents SET voice = ?, speed = ?, tone = ?, updated_at = datetime('now') WHERE id = ?`).run(
-    voiceName,
-    speed,
-    tone || null,
-    id
+  await collection.updateOne(
+    { _id },
+    { $set: { voice: voiceName, speed, tone: tone || null, segments, updatedAt: new Date() } }
   );
 
-  const updated = db.prepare(`SELECT * FROM documents WHERE id = ?`).get(id);
+  const updated = await collection.findOne({ _id });
   return NextResponse.json(toDocumentDetail(updated));
 }

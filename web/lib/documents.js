@@ -1,73 +1,66 @@
 /**
  * listen — document read model (SERVER ONLY)
  *
- * Shapes SQLite rows into the JSON the frontend expects (same shape as the
- * former client-only mock data in lib/data.js).
+ * Shapes MongoDB documents into the JSON the frontend expects. Audio
+ * segments are embedded directly on the document (see lib/mongodb.js) —
+ * no join needed.
  */
 
-import { db } from "./db";
 import { formatTime } from "./timing";
 
 const PREVIEW_LENGTH = 160;
 
-function totalDuration(documentId) {
-  const row = db
-    .prepare(`SELECT COALESCE(SUM(duration), 0) AS total FROM audio WHERE document_id = ?`)
-    .get(documentId);
-  return row.total || 0;
-}
-
-function hasAudio(documentId) {
-  const row = db
-    .prepare(`SELECT COUNT(*) AS n FROM audio WHERE document_id = ?`)
-    .get(documentId);
-  return row.n > 0;
-}
-
-function relativeDate(iso) {
-  const then = new Date(iso.replace(" ", "T") + "Z");
-  const days = Math.floor((Date.now() - then.getTime()) / 86400000);
+function relativeDate(date) {
+  const days = Math.floor((Date.now() - date.getTime()) / 86400000);
   if (days <= 0) return "Today";
   if (days === 1) return "Yesterday";
-  return then.toLocaleDateString("en-US", { day: "numeric", month: "short" });
+  return date.toLocaleDateString("en-US", { day: "numeric", month: "short" });
 }
 
 /** Summary shape used by Dashboard / Library / Saved audio lists. */
-export function toDocumentSummary(row) {
+export function toDocumentSummary(doc) {
+  const segments = doc.segments || [];
+  const totalDuration = segments.reduce((sum, s) => sum + (s.duration || 0), 0);
+
   return {
-    id: row.id,
-    title: row.title,
-    preview: row.content.slice(0, PREVIEW_LENGTH),
-    pct: row.percentage,
-    duration: formatTime(totalDuration(row.id)),
-    date: relativeDate(row.created_at),
-    audio: hasAudio(row.id),
-    voice: row.voice,
-    tag: row.tag,
-    fav: !!row.fav,
+    id: doc._id.toString(),
+    title: doc.title,
+    preview: doc.content.slice(0, PREVIEW_LENGTH),
+    pct: doc.percentage || 0,
+    duration: formatTime(totalDuration),
+    date: relativeDate(doc.createdAt),
+    audio: segments.length > 0,
+    voice: doc.voice || null,
+    tag: doc.tag,
+    fav: !!doc.fav,
     deleted: false,
   };
 }
 
 /** Full shape used by the Reader / document detail views. */
-export function toDocumentDetail(row) {
-  const audio = db
-    .prepare(
-      `SELECT id, segment_index AS segmentIndex, voice, speed, url, duration
-       FROM audio WHERE document_id = ? ORDER BY segment_index ASC`
-    )
-    .all(row.id);
+export function toDocumentDetail(doc) {
+  const segments = (doc.segments || [])
+    .slice()
+    .sort((a, b) => a.segmentIndex - b.segmentIndex)
+    .map((s) => ({
+      id: s.id,
+      segmentIndex: s.segmentIndex,
+      voice: s.voice,
+      speed: s.speed,
+      url: s.url,
+      duration: s.duration,
+    }));
 
   return {
-    ...toDocumentSummary(row),
-    content: row.content,
-    wordCount: row.word_count,
-    charCount: row.char_count,
-    voice: row.voice,
-    speed: row.speed,
-    tone: row.tone,
-    position: row.position,
-    sentenceIndex: row.sentence_index,
-    segments: audio,
+    ...toDocumentSummary(doc),
+    content: doc.content,
+    wordCount: doc.wordCount,
+    charCount: doc.charCount,
+    voice: doc.voice || null,
+    speed: doc.speed || null,
+    tone: doc.tone || null,
+    position: doc.position || 0,
+    sentenceIndex: doc.sentenceIndex || 0,
+    segments,
   };
 }

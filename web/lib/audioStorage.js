@@ -1,31 +1,45 @@
 /**
- * listen — local-disk audio storage (SERVER ONLY)
+ * listen — GridFS audio storage (SERVER ONLY)
  *
- * Saves generated MP3s under /public/audio so Next.js serves them as static
- * files at the same relative URL. Fine for local dev / single-server
- * deployments; swap for an object-storage bucket (S3/R2) before scaling out
- * to multiple instances, since /public isn't shared across them.
+ * Generated MP3s are stored in MongoDB via GridFS (bucket "audio") and
+ * served back through GET /api/audio/:id. This works on serverless hosts
+ * like Vercel, where the app's own filesystem is read-only — a plain disk
+ * write (the previous approach) fails there.
  */
 
-import fs from "node:fs";
-import path from "node:path";
+import { GridFSBucket, ObjectId } from "mongodb";
 import { randomUUID } from "node:crypto";
+import { getDb } from "./mongodb";
 
-const AUDIO_DIR = path.join(process.cwd(), "public", "audio");
-
-fs.mkdirSync(AUDIO_DIR, { recursive: true });
+async function getBucket() {
+  const db = await getDb();
+  return new GridFSBucket(db, { bucketName: "audio" });
+}
 
 /**
  * @param {Buffer} buffer
- * @returns {{ url: string, filePath: string }}
+ * @returns {Promise<{ url: string, fileId: string }>}
  */
-export function saveAudioFile(buffer) {
+export async function saveAudioFile(buffer) {
+  const bucket = await getBucket();
   const filename = `${randomUUID()}.mp3`;
-  const filePath = path.join(AUDIO_DIR, filename);
-  fs.writeFileSync(filePath, buffer);
-  return { url: `/audio/${filename}`, filePath };
+
+  const fileId = await new Promise((resolve, reject) => {
+    const uploadStream = bucket.openUploadStream(filename, { contentType: "audio/mpeg" });
+    uploadStream.on("error", reject);
+    uploadStream.on("finish", () => resolve(uploadStream.id.toString()));
+    uploadStream.end(buffer);
+  });
+
+  return { url: `/api/audio/${fileId}`, fileId };
 }
 
-export function deleteAudioFile(filePath) {
-  fs.rm(filePath, { force: true }, () => {});
+export async function deleteAudioFile(fileId) {
+  if (!fileId) return;
+  try {
+    const bucket = await getBucket();
+    await bucket.delete(new ObjectId(fileId));
+  } catch {
+    // Already gone or an invalid id — nothing more to do.
+  }
 }

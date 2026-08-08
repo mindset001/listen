@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import { getDocumentsCollection, toObjectId } from "@/lib/db";
 import { deleteAudioFile } from "@/lib/audioStorage";
 import { toDocumentDetail } from "@/lib/documents";
 import { wordCount } from "@/lib/timing";
@@ -10,14 +10,22 @@ function notFound() {
 
 export async function GET(request, { params }) {
   const { id } = await params;
-  const row = db.prepare(`SELECT * FROM documents WHERE id = ?`).get(id);
-  if (!row) return notFound();
-  return NextResponse.json(toDocumentDetail(row));
+  const _id = toObjectId(id);
+  if (!_id) return notFound();
+
+  const collection = await getDocumentsCollection();
+  const doc = await collection.findOne({ _id });
+  if (!doc) return notFound();
+  return NextResponse.json(toDocumentDetail(doc));
 }
 
 export async function PATCH(request, { params }) {
   const { id } = await params;
-  const existing = db.prepare(`SELECT * FROM documents WHERE id = ?`).get(id);
+  const _id = toObjectId(id);
+  if (!_id) return notFound();
+
+  const collection = await getDocumentsCollection();
+  const existing = await collection.findOne({ _id });
   if (!existing) return notFound();
 
   const body = await request.json();
@@ -25,27 +33,35 @@ export async function PATCH(request, { params }) {
     title: body.title ?? existing.title,
     content: body.content ?? existing.content,
     tag: body.tag ?? existing.tag,
-    fav: body.fav === undefined ? existing.fav : body.fav ? 1 : 0,
+    fav: body.fav === undefined ? existing.fav : !!body.fav,
   };
 
-  db.prepare(
-    `UPDATE documents
-     SET title = ?, content = ?, tag = ?, fav = ?, word_count = ?, char_count = ?, updated_at = datetime('now')
-     WHERE id = ?`
-  ).run(next.title, next.content, next.tag, next.fav, wordCount(next.content), next.content.length, id);
+  await collection.updateOne(
+    { _id },
+    {
+      $set: {
+        ...next,
+        wordCount: wordCount(next.content),
+        charCount: next.content.length,
+        updatedAt: new Date(),
+      },
+    }
+  );
 
-  const row = db.prepare(`SELECT * FROM documents WHERE id = ?`).get(id);
-  return NextResponse.json(toDocumentDetail(row));
+  const updated = await collection.findOne({ _id });
+  return NextResponse.json(toDocumentDetail(updated));
 }
 
 export async function DELETE(request, { params }) {
   const { id } = await params;
-  const existing = db.prepare(`SELECT * FROM documents WHERE id = ?`).get(id);
+  const _id = toObjectId(id);
+  if (!_id) return notFound();
+
+  const collection = await getDocumentsCollection();
+  const existing = await collection.findOne({ _id });
   if (!existing) return notFound();
 
-  const audioRows = db.prepare(`SELECT file_path FROM audio WHERE document_id = ?`).all(id);
-  audioRows.forEach((a) => deleteAudioFile(a.file_path));
-
-  db.prepare(`DELETE FROM documents WHERE id = ?`).run(id);
+  await Promise.all((existing.segments || []).map((s) => deleteAudioFile(s.fileId)));
+  await collection.deleteOne({ _id });
   return NextResponse.json({ ok: true });
 }

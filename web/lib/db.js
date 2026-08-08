@@ -1,74 +1,47 @@
 /**
- * listen — SQLite persistence (SERVER ONLY)
+ * listen — documents collection (SERVER ONLY)
  *
- * Single-file, zero-setup database. No real auth exists yet, so every
- * document belongs to the one implicit demo user shown in the UI — see
- * README "Build order" step 9 for wiring real accounts later.
+ * No real auth exists yet, so every document belongs to the one implicit
+ * demo user shown in the UI — see README "Build order" step 9 for wiring
+ * real accounts later.
  */
 
-import Database from "better-sqlite3";
-import path from "node:path";
-import fs from "node:fs";
-import { randomUUID } from "node:crypto";
+import { ObjectId } from "mongodb";
+import { getDb } from "./mongodb";
 
-const DB_PATH = process.env.DATABASE_PATH || path.join(process.cwd(), "data", "listen.sqlite");
+const DAY_MS = 86400000;
 
-fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
+/** Parses a route param into an ObjectId, or returns null for a malformed id. */
+export function toObjectId(id) {
+  try {
+    return new ObjectId(id);
+  } catch {
+    return null;
+  }
+}
 
-const globalForDb = globalThis;
+let seeded = false;
 
-export const db = globalForDb.__listenDb || new Database(DB_PATH);
-if (process.env.NODE_ENV !== "production") globalForDb.__listenDb = db;
-
-db.pragma("journal_mode = WAL");
-db.pragma("foreign_keys = ON");
-
-db.exec(`
-  CREATE TABLE IF NOT EXISTS documents (
-    id             TEXT PRIMARY KEY,
-    title          TEXT NOT NULL,
-    content        TEXT NOT NULL,
-    word_count     INTEGER NOT NULL DEFAULT 0,
-    char_count     INTEGER NOT NULL DEFAULT 0,
-    tag            TEXT NOT NULL DEFAULT 'Document',
-    fav            INTEGER NOT NULL DEFAULT 0,
-    position       REAL NOT NULL DEFAULT 0,
-    percentage     INTEGER NOT NULL DEFAULT 0,
-    sentence_index INTEGER NOT NULL DEFAULT 0,
-    voice          TEXT,
-    speed          REAL,
-    tone           TEXT,
-    created_at     TEXT NOT NULL DEFAULT (datetime('now')),
-    updated_at     TEXT NOT NULL DEFAULT (datetime('now'))
-  );
-
-  CREATE TABLE IF NOT EXISTS audio (
-    id            TEXT PRIMARY KEY,
-    document_id   TEXT NOT NULL REFERENCES documents(id) ON DELETE CASCADE,
-    segment_index INTEGER NOT NULL,
-    voice         TEXT NOT NULL,
-    speed         REAL NOT NULL,
-    url           TEXT NOT NULL,
-    file_path     TEXT NOT NULL,
-    duration      REAL,
-    created_at    TEXT NOT NULL DEFAULT (datetime('now'))
-  );
-
-  CREATE INDEX IF NOT EXISTS idx_audio_document_id ON audio(document_id);
-`);
-
-seedDemoDocuments();
+export async function getDocumentsCollection() {
+  const db = await getDb();
+  const collection = db.collection("documents");
+  if (!seeded) {
+    seeded = true;
+    await seedDemoDocuments(collection);
+  }
+  return collection;
+}
 
 /** First-run only: populate a few sample documents so the app isn't empty. */
-function seedDemoDocuments() {
-  const { n } = db.prepare(`SELECT COUNT(*) AS n FROM documents`).get();
+async function seedDemoDocuments(collection) {
+  const n = await collection.countDocuments();
   if (n > 0) return;
 
   const SEED = [
     {
       title: "The quiet case for listening",
       tag: "Article",
-      fav: 1,
+      fav: true,
       percentage: 62,
       daysAgo: 0,
       content:
@@ -89,7 +62,7 @@ function seedDemoDocuments() {
     {
       title: "Attention and pacing — Q3 research notes",
       tag: "Research",
-      fav: 0,
+      fav: false,
       percentage: 24,
       daysAgo: 1,
       content:
@@ -100,7 +73,7 @@ function seedDemoDocuments() {
     {
       title: "Chapter 4 — Cellular respiration",
       tag: "Textbook",
-      fav: 0,
+      fav: false,
       percentage: 100,
       daysAgo: 9,
       content:
@@ -112,7 +85,7 @@ function seedDemoDocuments() {
     {
       title: "Onboarding email drafts v3",
       tag: "Draft",
-      fav: 1,
+      fav: true,
       percentage: 0,
       daysAgo: 13,
       content:
@@ -123,7 +96,7 @@ function seedDemoDocuments() {
     {
       title: "Lease agreement — 14 Marlow St",
       tag: "Document",
-      fav: 0,
+      fav: false,
       percentage: 88,
       daysAgo: 16,
       content:
@@ -134,7 +107,7 @@ function seedDemoDocuments() {
     {
       title: "Field notes — coastal erosion survey",
       tag: "Research",
-      fav: 0,
+      fav: false,
       percentage: 41,
       daysAgo: 19,
       content:
@@ -144,28 +117,26 @@ function seedDemoDocuments() {
     },
   ];
 
-  const insert = db.prepare(
-    `INSERT INTO documents (id, title, content, word_count, char_count, tag, fav, percentage, created_at, updated_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now', ?), datetime('now', ?))`
-  );
-
-  const insertMany = db.transaction((docs) => {
-    for (const d of docs) {
-      const offset = `-${d.daysAgo} days`;
-      insert.run(
-        randomUUID(),
-        d.title,
-        d.content,
-        d.content.trim().split(/\s+/).length,
-        d.content.length,
-        d.tag,
-        d.fav,
-        d.percentage,
-        offset,
-        offset
-      );
-    }
+  const docs = SEED.map((d) => {
+    const createdAt = new Date(Date.now() - d.daysAgo * DAY_MS);
+    return {
+      title: d.title,
+      content: d.content,
+      wordCount: d.content.trim().split(/\s+/).length,
+      charCount: d.content.length,
+      tag: d.tag,
+      fav: d.fav,
+      position: 0,
+      percentage: d.percentage,
+      sentenceIndex: 0,
+      voice: null,
+      speed: null,
+      tone: null,
+      segments: [],
+      createdAt,
+      updatedAt: createdAt,
+    };
   });
 
-  insertMany(SEED);
+  await collection.insertMany(docs);
 }
