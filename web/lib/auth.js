@@ -13,6 +13,7 @@ import { randomBytes } from "node:crypto";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { getUsersCollection, getSessionsCollection, toObjectId } from "./db";
+import { withRetry } from "./mongodb";
 
 const SESSION_COOKIE = "listen_session";
 const SESSION_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
@@ -30,18 +31,20 @@ export function verifyPassword(password, hash) {
  * account with the same address), or creates one — Google-only accounts
  * have no passwordHash, so they can only sign in via Google. */
 export async function findOrCreateGoogleUser({ googleId, email, name }) {
-  const users = await getUsersCollection();
-  const existing = await users.findOne({ email });
-  if (existing) {
-    if (!existing.googleId) {
-      await users.updateOne({ _id: existing._id }, { $set: { googleId } });
+  return withRetry(async () => {
+    const users = await getUsersCollection();
+    const existing = await users.findOne({ email });
+    if (existing) {
+      if (!existing.googleId) {
+        await users.updateOne({ _id: existing._id }, { $set: { googleId } });
+      }
+      return existing;
     }
-    return existing;
-  }
 
-  const doc = { name: name || email.split("@")[0], email, googleId, createdAt: new Date() };
-  const { insertedId } = await users.insertOne(doc);
-  return { ...doc, _id: insertedId };
+    const doc = { name: name || email.split("@")[0], email, googleId, createdAt: new Date() };
+    const { insertedId } = await users.insertOne(doc);
+    return { ...doc, _id: insertedId };
+  });
 }
 
 /** Never send passwordHash to the client. */
@@ -50,10 +53,12 @@ export function toPublicUser(user) {
 }
 
 export async function createSession(userId) {
-  const sessions = await getSessionsCollection();
   const token = randomBytes(32).toString("hex");
   const expiresAt = new Date(Date.now() + SESSION_TTL_MS);
-  await sessions.insertOne({ _id: token, userId, createdAt: new Date(), expiresAt });
+  await withRetry(async () => {
+    const sessions = await getSessionsCollection();
+    await sessions.insertOne({ _id: token, userId, createdAt: new Date(), expiresAt });
+  });
 
   const cookieStore = await cookies();
   cookieStore.set(SESSION_COOKIE, token, {
@@ -69,8 +74,10 @@ export async function destroySession() {
   const cookieStore = await cookies();
   const token = cookieStore.get(SESSION_COOKIE)?.value;
   if (token) {
-    const sessions = await getSessionsCollection();
-    await sessions.deleteOne({ _id: token });
+    await withRetry(async () => {
+      const sessions = await getSessionsCollection();
+      await sessions.deleteOne({ _id: token });
+    });
   }
   cookieStore.delete(SESSION_COOKIE);
 }
@@ -81,12 +88,14 @@ export async function getCurrentUser() {
   const token = cookieStore.get(SESSION_COOKIE)?.value;
   if (!token) return null;
 
-  const sessions = await getSessionsCollection();
-  const session = await sessions.findOne({ _id: token });
-  if (!session) return null;
+  return withRetry(async () => {
+    const sessions = await getSessionsCollection();
+    const session = await sessions.findOne({ _id: token });
+    if (!session) return null;
 
-  const users = await getUsersCollection();
-  return users.findOne({ _id: toObjectId(session.userId) });
+    const users = await getUsersCollection();
+    return users.findOne({ _id: toObjectId(session.userId) });
+  });
 }
 
 /**

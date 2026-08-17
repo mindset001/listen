@@ -11,6 +11,7 @@
 import { NextResponse } from "next/server";
 import { randomUUID } from "node:crypto";
 import { getDocumentsCollection, toObjectId } from "@/lib/db";
+import { withRetry } from "@/lib/mongodb";
 import { requireUser } from "@/lib/auth";
 import { generateSpeech, resolveVoice, TTSError, CHAR_LIMIT, TTS_FRIENDLY_ERRORS } from "@/lib/tts";
 import { chunkDocument, splitSentences, createTiming } from "@/lib/timing";
@@ -27,8 +28,19 @@ export async function POST(request, { params }) {
     return NextResponse.json({ error: "not_found", message: "Document not found." }, { status: 404 });
   }
 
-  const collection = await getDocumentsCollection();
-  const doc = await collection.findOne({ _id, userId: user._id.toString() });
+  let doc;
+  try {
+    doc = await withRetry(async () => {
+      const collection = await getDocumentsCollection();
+      return collection.findOne({ _id, userId: user._id.toString() });
+    });
+  } catch (err) {
+    console.error("[POST /api/documents/:id/audio]", err);
+    return NextResponse.json(
+      { error: "unavailable", message: "Could not reach the database. Try again in a moment." },
+      { status: 503 }
+    );
+  }
   if (!doc) {
     return NextResponse.json({ error: "not_found", message: "Document not found." }, { status: 404 });
   }
@@ -70,11 +82,24 @@ export async function POST(request, { params }) {
     );
   }
 
-  await collection.updateOne(
-    { _id },
-    { $set: { voice: voiceName, speed, tone: tone || null, segments, updatedAt: new Date() } }
-  );
-
-  const updated = await collection.findOne({ _id });
-  return NextResponse.json(toDocumentDetail(updated));
+  try {
+    const updated = await withRetry(async () => {
+      const collection = await getDocumentsCollection();
+      await collection.updateOne(
+        { _id },
+        { $set: { voice: voiceName, speed, tone: tone || null, segments, updatedAt: new Date() } }
+      );
+      return collection.findOne({ _id });
+    });
+    return NextResponse.json(toDocumentDetail(updated));
+  } catch (err) {
+    console.error("[POST /api/documents/:id/audio]", err);
+    // The audio itself generated fine and is already saved — only the DB
+    // write to record it failed. Not worth deleting the freshly-made files
+    // over; surface it as a retryable failure instead.
+    return NextResponse.json(
+      { error: "unavailable", message: "Audio generated, but saving it failed. Try again." },
+      { status: 503 }
+    );
+  }
 }

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getUsersCollection } from "@/lib/db";
+import { withRetry } from "@/lib/mongodb";
 import { hashPassword, createSession, toPublicUser } from "@/lib/auth";
 
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
@@ -21,24 +22,37 @@ export async function POST(request) {
     );
   }
 
-  const users = await getUsersCollection();
-  const existing = await users.findOne({ email: trimmedEmail });
-  if (existing) {
+  try {
+    const passwordHash = await hashPassword(password);
+    const doc = {
+      name: name?.trim() || trimmedEmail.split("@")[0],
+      email: trimmedEmail,
+      passwordHash,
+      createdAt: new Date(),
+    };
+
+    const insertedId = await withRetry(async () => {
+      const users = await getUsersCollection();
+      const existing = await users.findOne({ email: trimmedEmail });
+      if (existing) throw Object.assign(new Error("email_taken"), { code: "email_taken" });
+
+      const { insertedId } = await users.insertOne(doc);
+      return insertedId;
+    });
+
+    await createSession(insertedId.toString());
+    return NextResponse.json(toPublicUser({ ...doc, _id: insertedId }), { status: 201 });
+  } catch (err) {
+    if (err.code === "email_taken") {
+      return NextResponse.json(
+        { error: "email_taken", message: "An account with that email already exists." },
+        { status: 409 }
+      );
+    }
+    console.error("[/api/auth/signup]", err);
     return NextResponse.json(
-      { error: "email_taken", message: "An account with that email already exists." },
-      { status: 409 }
+      { error: "unavailable", message: "Could not reach the database. Try again in a moment." },
+      { status: 503 }
     );
   }
-
-  const doc = {
-    name: name?.trim() || trimmedEmail.split("@")[0],
-    email: trimmedEmail,
-    passwordHash: await hashPassword(password),
-    createdAt: new Date(),
-  };
-
-  const { insertedId } = await users.insertOne(doc);
-  await createSession(insertedId.toString());
-
-  return NextResponse.json(toPublicUser({ ...doc, _id: insertedId }), { status: 201 });
 }

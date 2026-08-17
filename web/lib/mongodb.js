@@ -48,3 +48,36 @@ export async function getDb() {
 
   return client.db(process.env.MONGODB_DB || "listen");
 }
+
+const TRANSIENT_ERROR_NAMES = new Set([
+  "MongoNetworkError",
+  "MongoServerSelectionError",
+  "MongoNetworkTimeoutError",
+  "MongoTopologyClosedError",
+]);
+
+function isTransient(err) {
+  return (
+    TRANSIENT_ERROR_NAMES.has(err?.name) ||
+    TRANSIENT_ERROR_NAMES.has(err?.cause?.name) ||
+    (typeof err?.hasErrorLabel === "function" &&
+      (err.hasErrorLabel("RetryableError") || err.hasErrorLabel("ResetPool")))
+  );
+}
+
+/**
+ * Retries a DB operation once on a transient connection error (a dropped
+ * socket, a server-selection timeout) before giving up. The driver retries
+ * some operations internally already, but not all of them surface that —
+ * this is what turns a one-off network blip into a graceful retry instead
+ * of a raw 500 for the request that hit it.
+ */
+export async function withRetry(fn) {
+  try {
+    return await fn();
+  } catch (err) {
+    if (!isTransient(err)) throw err;
+    await new Promise((resolve) => setTimeout(resolve, 250));
+    return fn();
+  }
+}
