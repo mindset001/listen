@@ -49,7 +49,21 @@ export async function findOrCreateGoogleUser({ googleId, email, name }) {
 
 /** Never send passwordHash to the client. */
 export function toPublicUser(user) {
-  return { id: user._id.toString(), name: user.name, email: user.email };
+  return {
+    id: user._id.toString(),
+    name: user.name,
+    email: user.email,
+    hasPassword: !!user.passwordHash,
+  };
+}
+
+/** Deletes every session for a user — used on password change ("log out
+ * everywhere") and account deletion. */
+export async function revokeAllSessions(userId) {
+  await withRetry(async () => {
+    const sessions = await getSessionsCollection();
+    await sessions.deleteMany({ userId });
+  });
 }
 
 export async function createSession(userId) {

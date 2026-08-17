@@ -161,6 +161,127 @@
   background: var(--bg-raised);
 }
 
+.formCard {
+  border-radius: var(--radius-card);
+  border: 1px solid var(--line-quiet);
+  background: var(--bg-elevated);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.formNote {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--fg-3);
+  margin: -4px 0 4px;
+}
+
+.field {
+  display: block;
+}
+.fieldLabel {
+  display: block;
+  font-size: 13px;
+  color: var(--fg-2);
+  margin-bottom: 7px;
+}
+.fieldError {
+  font-size: 13px;
+  color: var(--caution);
+  margin-top: 7px;
+}
+
+.passwordWrap {
+  position: relative;
+}
+.passwordInput {
+  padding-right: 44px;
+}
+.passwordToggle {
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: var(--fg-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: var(--radius-button);
+  transition: color 150ms var(--ease-ui);
+}
+.passwordToggle:hover {
+  color: var(--fg-1);
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.dangerCard {
+  border-radius: var(--radius-card);
+  border: 1px solid var(--line-quiet);
+  background: var(--bg-elevated);
+  padding: 20px;
+  margin-bottom: 32px;
+}
+.dangerCardOpen {
+  border-color: var(--danger);
+}
+
+.dangerHead {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.dangerInfo {
+  flex: 1;
+  min-width: 0;
+}
+.dangerTitle {
+  font-size: 15px;
+  font-weight: 500;
+}
+.dangerNote {
+  font-size: 13px;
+  color: var(--fg-3);
+  line-height: 1.5;
+  margin-top: 3px;
+}
+
+.dangerConfirm {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line-quiet);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dangerButton {
+  padding: 10px 16px;
+  border-radius: var(--radius-button);
+  border: none;
+  background: var(--danger);
+  color: #fff;
+  font-family: var(--font-body), sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  flex: none;
+  transition: opacity 150ms var(--ease-ui);
+}
+.dangerButton:hover {
+  opacity: 0.85;
+}
+
 @keyframes fadeUp {
   from {
     opacity: 0;

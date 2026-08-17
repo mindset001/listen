@@ -55,6 +55,34 @@ export const useAppStore = create((set, get) => ({
     const user = await api("/api/auth/login", { method: "POST", body: JSON.stringify({ email, password }) });
     set({ user, authLoaded: true });
   },
+  updateProfile: async ({ name, email, currentPassword }) => {
+    const user = await api("/api/auth/profile", {
+      method: "PATCH",
+      body: JSON.stringify({ name, email, currentPassword }),
+    });
+    set({ user });
+  },
+  changePassword: async ({ currentPassword, newPassword }) => {
+    const user = await api("/api/auth/password", {
+      method: "POST",
+      body: JSON.stringify({ currentPassword, newPassword }),
+    });
+    set({ user });
+  },
+  deleteAccount: async ({ password }) => {
+    await api("/api/auth/me", { method: "DELETE", body: JSON.stringify({ password }) });
+    set({
+      user: null,
+      documents: [],
+      documentsLoaded: false,
+      playing: false,
+      currentDocument: null,
+      sentences: [],
+      timing: EMPTY_TIMING,
+      elapsed: 0,
+      switches: DEFAULT_SWITCHES,
+    });
+  },
 
   // ---- library ----
   documents: [],
