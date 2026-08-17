@@ -1,4 +1,4 @@
-import { Inter, Inter_Tight, JetBrains_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import Script from "next/script";
 import "./globals.css";
 import { ToastProvider } from "@/components/ToastProvider";
@@ -11,22 +11,27 @@ const THEME_INIT_SCRIPT = `(function () {
   } catch (e) {}
 })();`;
 
-const interBody = Inter({
+// Self-hosted (not next/font/google): this sandbox's network hit repeated,
+// genuine failures reaching fonts.gstatic.com/googleapis.com at build and
+// dev-server-compile time, which next/font/google depends on live. Each
+// file below is a variable font — one file covers the whole weight range
+// used, no separate download per weight. See app/fonts/README.md.
+const interBody = localFont({
+  src: "./fonts/Inter.woff2",
   variable: "--font-body",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: "400 600",
 });
 
-const interTight = Inter_Tight({
+const interTight = localFont({
+  src: "./fonts/InterTight.woff2",
   variable: "--font-display",
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  weight: "500 700",
 });
 
-const jetBrainsMono = JetBrains_Mono({
+const jetBrainsMono = localFont({
+  src: "./fonts/JetBrainsMono.woff2",
   variable: "--font-mono",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: "400 600",
 });
 
 export const metadata = {
