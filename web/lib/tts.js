@@ -41,6 +41,32 @@ export class TTSError extends Error {
 }
 
 /**
+ * One retry after a short delay for a dropped connection or a transient
+ * 5xx from the provider — not for 4xx, which a retry won't fix. This
+ * network has shown real, intermittent failures reaching outside hosts
+ * (confirmed live: `fetch failed` reaching ttsreader.com, resolved on the
+ * next attempt), so a single blip shouldn't fail the whole generation.
+ */
+async function fetchWithRetry(url, options, attempts = 2) {
+  let lastErr;
+  for (let i = 0; i < attempts; i++) {
+    try {
+      const res = await fetch(url, options);
+      if (res.status >= 500 && i < attempts - 1) {
+        await new Promise((resolve) => setTimeout(resolve, 400));
+        continue;
+      }
+      return res;
+    } catch (cause) {
+      lastErr = cause;
+      if (i === attempts - 1) throw cause;
+      await new Promise((resolve) => setTimeout(resolve, 400));
+    }
+  }
+  throw lastErr;
+}
+
+/**
  * Generate speech for one chunk of text.
  * @returns {Promise<{ buffer: Buffer, contentType: string, voice: string, rate: number }>}
  */
@@ -61,7 +87,7 @@ export async function generateSpeech(text, voice, options = {}) {
 
   let res;
   try {
-    res = await fetch(`${API_URL}/ttsSync`, {
+    res = await fetchWithRetry(`${API_URL}/ttsSync`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${API_KEY}`,
