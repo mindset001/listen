@@ -2,7 +2,6 @@ import SwiftUI
 
 enum Route: Hashable {
     case reader
-    case auth
 }
 
 struct UploadPrefill: Equatable {
@@ -14,6 +13,7 @@ struct RootView: View {
     @Environment(PlayerStore.self) private var player
     @Environment(LibraryStore.self) private var library
     @Environment(ToastCenter.self) private var toast
+    @Environment(AuthStore.self) private var auth
 
     @State private var showSplash = true
     @State private var path = NavigationPath()
@@ -26,20 +26,30 @@ struct RootView: View {
             if showSplash {
                 SplashView(onFinish: { withAnimation { showSplash = false } })
                     .transition(.opacity)
+            } else if auth.user == nil {
+                NavigationStack {
+                    AuthView(onDone: { Task { await loadLibraryAfterSignIn() } })
+                }
+                .tint(Theme.accent)
+                .preferredColorScheme(.dark)
+                .transition(.opacity)
             } else {
                 NavigationStack(path: $path) {
                     MainTabView(
                         openNewReading: { newReadingPrefill = nil; showNewReading = true },
                         openUpload: { showUpload = true },
-                        openReader: { doc in player.loadDocument(doc); path.append(Route.reader) },
+                        openReader: { doc in
+                            Task {
+                                await player.loadDocument(doc)
+                                path.append(Route.reader)
+                            }
+                        },
                         pushReader: { path.append(Route.reader) }
                     )
                     .navigationDestination(for: Route.self) { route in
                         switch route {
                         case .reader:
                             ReaderView()
-                        case .auth:
-                            AuthView(onDone: { path.removeLast(path.count) })
                         }
                     }
                 }
@@ -51,6 +61,10 @@ struct RootView: View {
         }
         .background(Theme.bgBase)
         .preferredColorScheme(.dark)
+        .task {
+            await auth.refresh()
+            if auth.user != nil { await loadLibraryAfterSignIn() }
+        }
         .sheet(isPresented: $showNewReading) {
             NewReadingView(prefill: newReadingPrefill, onGenerated: {
                 showNewReading = false
@@ -64,6 +78,12 @@ struct RootView: View {
                 showNewReading = true
             })
         }
+    }
+
+    private func loadLibraryAfterSignIn() async {
+        async let docs: () = library.refresh()
+        async let voices: () = library.loadVoices()
+        _ = await (docs, voices)
     }
 }
 

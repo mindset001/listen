@@ -1,12 +1,6 @@
 //
 //  LibraryStore.swift
-//  listen — document library (mock persistence layer)
-//
-//  Stands in for the README's Document / Audio / ReadingProgress / Favourite
-//  tables until a real backend exists. Persisted locally via UserDefaults so
-//  "remember where you stopped" works across app relaunches. Swapping in a
-//  real API means replacing the body of these methods — the shape (Document
-//  record, percentage/sentenceIndex progress) already matches the API contract.
+//  listen — document library, backed by web/app/api/documents/**
 //
 
 import Foundation
@@ -14,16 +8,21 @@ import Observation
 
 @Observable
 final class LibraryStore {
-    private(set) var documents: [Document]
-    private let defaultsKey = "listen-library"
-    private var nextId = 5
+    private(set) var documents: [Document] = []
+    private(set) var voices: [Voice] = []
+    private(set) var isLoading = false
 
-    init() {
-        if let data = UserDefaults.standard.data(forKey: "listen-library"),
-           let decoded = try? JSONDecoder().decode([Document].self, from: data) {
-            self.documents = decoded
-        } else {
-            self.documents = MockData.seedDocuments()
+    func refresh() async {
+        isLoading = true
+        defer { isLoading = false }
+        if let docs: [Document] = try? await APIClient.shared.request("/api/documents") {
+            documents = docs
+        }
+    }
+
+    func loadVoices() async {
+        if let v: [Voice] = try? await APIClient.shared.request("/api/voices") {
+            voices = v
         }
     }
 
@@ -31,51 +30,85 @@ final class LibraryStore {
         documents.first { $0.id == id }
     }
 
+    /// Full content + segments — the list only carries a preview.
+    func fetchDetail(id: String) async throws -> Document {
+        try await APIClient.shared.request("/api/documents/\(id)")
+    }
+
     @discardableResult
-    func addDocument(title: String, content: String, voice: String, tone: String, speed: Double) -> Document {
-        let doc = Document(
-            id: "doc-\(nextId)", title: title.isEmpty ? "Untitled" : title, content: content,
-            voice: voice, tone: tone, speed: speed, favourite: false,
-            percentage: 0, sentenceIndex: 0, elapsed: 0, duration: "—",
-            updatedLabel: "Today", createdAt: Date(), updatedAt: Date()
+    func createDocument(title: String, content: String, tag: String = "Document") async throws -> Document {
+        struct Body: Encodable { let title: String; let content: String; let tag: String }
+        let doc: Document = try await APIClient.shared.request(
+            "/api/documents", method: "POST", body: Body(title: title, content: content, tag: tag)
         )
-        nextId += 1
         documents.insert(doc, at: 0)
-        persist()
         return doc
     }
 
-    func update(id: String, _ mutate: (inout Document) -> Void) {
+    @discardableResult
+    func generateAudio(id: String, voice: String, speed: Double, tone: String) async throws -> Document {
+        struct Body: Encodable { let voice: String; let speed: Double; let tone: String }
+        let updated: Document = try await APIClient.shared.request(
+            "/api/documents/\(id)/audio", method: "POST", body: Body(voice: voice, speed: speed, tone: tone)
+        )
+        replace(updated)
+        return updated
+    }
+
+    func toggleFavourite(id: String) async {
         guard let idx = documents.firstIndex(where: { $0.id == id }) else { return }
-        mutate(&documents[idx])
-        documents[idx].updatedAt = Date()
-        persist()
-    }
+        let newValue = !documents[idx].fav
+        documents[idx].fav = newValue // optimistic
 
-    func delete(id: String) {
-        documents.removeAll { $0.id == id }
-        persist()
-    }
-
-    func rename(id: String, title: String) {
-        update(id: id) { $0.title = title }
-    }
-
-    func toggleFavourite(id: String) {
-        update(id: id) { $0.favourite.toggle() }
-    }
-
-    func setProgress(id: String, percentage: Double, sentenceIndex: Int, elapsed: Double) {
-        update(id: id) {
-            $0.percentage = Int(percentage.rounded())
-            $0.sentenceIndex = sentenceIndex
-            $0.elapsed = elapsed
-            $0.updatedLabel = "Today"
+        struct Body: Encodable { let fav: Bool }
+        do {
+            let updated: Document = try await APIClient.shared.request(
+                "/api/documents/\(id)", method: "PATCH", body: Body(fav: newValue)
+            )
+            replace(updated)
+        } catch {
+            if let i = documents.firstIndex(where: { $0.id == id }) { documents[i].fav = !newValue }
         }
     }
 
-    private func persist() {
-        guard let data = try? JSONEncoder().encode(documents) else { return }
-        UserDefaults.standard.set(data, forKey: defaultsKey)
+    func rename(id: String, title: String) async {
+        struct Body: Encodable { let title: String }
+        if let updated: Document = try? await APIClient.shared.request(
+            "/api/documents/\(id)", method: "PATCH", body: Body(title: title)
+        ) {
+            replace(updated)
+        }
+    }
+
+    func delete(id: String) async {
+        documents.removeAll { $0.id == id } // optimistic
+        _ = try? await APIClient.shared.request("/api/documents/\(id)", method: "DELETE") as OKResponse
+    }
+
+    func setProgress(id: String, position: Double, percentage: Double, sentenceIndex: Int) async {
+        struct Body: Encodable {
+            let documentId: String
+            let position: Double
+            let percentage: Double
+            let sentenceIndex: Int
+        }
+        _ = try? await APIClient.shared.request(
+            "/api/reading-progress", method: "PUT",
+            body: Body(documentId: id, position: position, percentage: percentage, sentenceIndex: sentenceIndex)
+        ) as OKResponse
+
+        if let idx = documents.firstIndex(where: { $0.id == id }) {
+            documents[idx].pct = Int(percentage.rounded())
+            documents[idx].position = position
+            documents[idx].sentenceIndex = sentenceIndex
+        }
+    }
+
+    private func replace(_ doc: Document) {
+        if let idx = documents.firstIndex(where: { $0.id == doc.id }) {
+            documents[idx] = doc
+        } else {
+            documents.insert(doc, at: 0)
+        }
     }
 }

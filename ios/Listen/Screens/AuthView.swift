@@ -24,6 +24,7 @@ private let emailRegex = #"^[^@\s]+@[^@\s]+\.[^@\s]+$"#
 
 struct AuthView: View {
     @Environment(ToastCenter.self) private var toast
+    @Environment(AuthStore.self) private var auth
     let onDone: () -> Void
 
     @State private var mode: AuthMode = .login
@@ -31,6 +32,7 @@ struct AuthView: View {
     @State private var email = ""
     @State private var password = ""
     @State private var emailError = ""
+    @State private var submitting = false
 
     private var c: AuthCopy { copy(for: mode) }
 
@@ -66,7 +68,8 @@ struct AuthView: View {
                     field("Password", text: $password, isSecure: true)
                 }
 
-                PrimaryButton(label: c.cta, action: submit).padding(.top, Theme.Space.sm)
+                PrimaryButton(label: submitting ? "Please wait…" : c.cta, disabled: submitting, loading: submitting, action: submit)
+                    .padding(.top, Theme.Space.sm)
 
                 if mode != .forgot {
                     Button(action: { toast.show(.info, "Sign-in provider not connected in this preview") }) {
@@ -139,8 +142,7 @@ struct AuthView: View {
         emailError = ""
 
         if mode == .forgot {
-            toast.show(.success, "Check your email for a reset link")
-            mode = .login
+            toast.show(.info, "Password reset isn't wired up yet — sign in directly for now.")
             return
         }
 
@@ -149,6 +151,22 @@ struct AuthView: View {
             return
         }
 
-        onDone()
+        guard !submitting else { return }
+        submitting = true
+        Task {
+            defer { submitting = false }
+            do {
+                if mode == .signup {
+                    try await auth.signup(name: name, email: trimmed, password: password)
+                    toast.show(.success, "Account created — welcome")
+                } else {
+                    try await auth.login(email: trimmed, password: password)
+                    toast.show(.success, "Signed in")
+                }
+                onDone()
+            } catch {
+                toast.show(.error, error.localizedDescription)
+            }
+        }
     }
 }

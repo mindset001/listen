@@ -2,6 +2,7 @@ import SwiftUI
 
 struct NewReadingView: View {
     @Environment(PlayerStore.self) private var player
+    @Environment(LibraryStore.self) private var library
     @Environment(ToastCenter.self) private var toast
     @Environment(\.dismiss) private var dismiss
 
@@ -10,7 +11,7 @@ struct NewReadingView: View {
 
     @State private var title = ""
     @State private var text = ""
-    @State private var voice = MockData.voices[0].id
+    @State private var voice = ""
     @State private var speedIndex = Timing.speeds.firstIndex(of: 1) ?? 2
     @State private var tone = MockData.tones[0]
 
@@ -61,7 +62,7 @@ struct NewReadingView: View {
 
                         sectionLabel("Voice")
                         VStack(spacing: 6) {
-                            ForEach(MockData.voices) { v in
+                            ForEach(library.voices) { v in
                                 Button(action: { voice = v.id }) {
                                     HStack(spacing: 10) {
                                         ZStack {
@@ -150,6 +151,9 @@ struct NewReadingView: View {
                 if let prefill {
                     title = prefill.title
                     text = prefill.text
+                }
+                if voice.isEmpty, let first = library.voices.first {
+                    voice = first.id
                 }
             }
         }

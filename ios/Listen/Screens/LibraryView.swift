@@ -14,15 +14,15 @@ struct LibraryView: View {
     private var filtered: [Document] {
         var list = library.documents
         switch filter {
-        case "Favourites": list = list.filter { $0.favourite }
-        case "In progress": list = list.filter { $0.percentage > 0 && $0.percentage < 100 }
-        case "Completed": list = list.filter { $0.percentage >= 100 }
-        case "Recent": list = list.sorted { $0.updatedAt > $1.updatedAt }
+        case "Favourites": list = list.filter { $0.fav }
+        case "In progress": list = list.filter { $0.pct > 0 && $0.pct < 100 }
+        case "Completed": list = list.filter { $0.pct >= 100 }
+        case "Recent": list = list.filter { $0.date == "Today" || $0.date == "Yesterday" }
         default: break
         }
         if !query.trimmingCharacters(in: .whitespaces).isEmpty {
             let q = query.lowercased()
-            list = list.filter { $0.title.lowercased().contains(q) || $0.content.lowercased().contains(q) }
+            list = list.filter { $0.title.lowercased().contains(q) || $0.displayText.lowercased().contains(q) }
         }
         return list
     }
@@ -66,9 +66,9 @@ struct LibraryView: View {
                     VStack(spacing: 12) {
                         ForEach(filtered) { doc in
                             LibraryCard(doc: doc, onListen: { openReader(doc) },
-                                        onFavourite: { library.toggleFavourite(id: doc.id) },
+                                        onFavourite: { Task { await library.toggleFavourite(id: doc.id) } },
                                         onRename: { renamingDoc = doc; renameText = doc.title },
-                                        onDelete: { library.delete(id: doc.id) })
+                                        onDelete: { Task { await library.delete(id: doc.id) } })
                         }
                     }
                     .padding(Theme.Space.base)
@@ -81,7 +81,7 @@ struct LibraryView: View {
             TextField("Title", text: $renameText)
             Button("Cancel", role: .cancel) {}
             Button("Save") {
-                if let doc = renamingDoc { library.rename(id: doc.id, title: renameText) }
+                if let doc = renamingDoc { Task { await library.rename(id: doc.id, title: renameText) } }
             }
         }
     }
@@ -95,12 +95,12 @@ private struct LibraryCard: View {
     let onDelete: () -> Void
 
     private var buttonLabel: String {
-        doc.percentage >= 100 ? "Listen again" : (doc.percentage > 0 ? "Continue from \(doc.percentage)%" : "Listen")
+        doc.pct >= 100 ? "Listen again" : (doc.pct > 0 ? "Continue from \(doc.pct)%" : "Listen")
     }
 
     private var status: (String, Color) {
-        if doc.percentage >= 100 { return ("Completed", Theme.success) }
-        if doc.percentage > 0 { return ("In progress \(doc.percentage)%", Theme.fg2) }
+        if doc.pct >= 100 { return ("Completed", Theme.success) }
+        if doc.pct > 0 { return ("In progress \(doc.pct)%", Theme.fg2) }
         return ("Not started", Theme.fg3)
     }
 
@@ -111,14 +111,14 @@ private struct LibraryCard: View {
                 Spacer()
                 Icon(name: .audioLines, size: 16, color: Theme.accent)
                 Button(action: onFavourite) {
-                    Icon(name: .heart, size: 16, color: doc.favourite ? Theme.accent : Theme.fg3, filled: doc.favourite)
+                    Icon(name: .heart, size: 16, color: doc.fav ? Theme.accent : Theme.fg3, filled: doc.fav)
                 }
                 .buttonStyle(.plain)
             }
             Text(doc.title).font(.inter(16, weight: .semibold)).foregroundStyle(Theme.fg1).lineLimit(1)
-            Text(doc.content).font(.inter(13)).foregroundStyle(Theme.fg2).lineLimit(3)
+            Text(doc.displayText).font(.inter(13)).foregroundStyle(Theme.fg2).lineLimit(3)
             Text(status.0).font(.inter(13, weight: .medium)).foregroundStyle(status.1)
-            Text("\(doc.duration) · \(doc.updatedLabel)").font(.mono(12)).foregroundStyle(Theme.fg3)
+            Text("\(doc.duration) · \(doc.date)").font(.mono(12)).foregroundStyle(Theme.fg3)
 
             HStack(spacing: 8) {
                 PrimaryButton(label: buttonLabel, action: onListen)

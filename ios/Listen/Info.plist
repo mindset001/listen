@@ -32,6 +32,11 @@
 		<string>JetBrainsMono-Medium.ttf</string>
 		<string>JetBrainsMono-SemiBold.ttf</string>
 	</array>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+	</dict>
 	<key>UILaunchScreen</key>
 	<dict/>
 	<key>UISupportedInterfaceOrientations</key>

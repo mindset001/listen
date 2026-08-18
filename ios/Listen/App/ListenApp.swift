@@ -2,6 +2,7 @@ import SwiftUI
 
 @main
 struct ListenApp: App {
+    @State private var auth = AuthStore()
     @State private var library: LibraryStore
     @State private var toast = ToastCenter()
     @State private var player: PlayerStore
@@ -15,6 +16,7 @@ struct ListenApp: App {
     var body: some Scene {
         WindowGroup {
             RootView()
+                .environment(auth)
                 .environment(library)
                 .environment(player)
                 .environment(toast)

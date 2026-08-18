@@ -2,11 +2,12 @@ import SwiftUI
 
 struct ReaderView: View {
     @Environment(PlayerStore.self) private var player
+    @Environment(LibraryStore.self) private var library
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private var activeIndex: Int { player.timing.indexAt(player.elapsed) }
-    private var voiceName: String { MockData.voices.first { $0.id == player.voice }?.name ?? player.voice }
+    private var voiceName: String { library.voices.first { $0.id == player.voice }?.name ?? player.voice }
 
     var body: some View {
         VStack(spacing: 0) {

@@ -41,6 +41,8 @@ enum IconName: String {
     case heart
     case mail
     case user
+    case eye
+    case eyeOff = "eye-off"
 
     var symbolName: String {
         switch self {
@@ -81,6 +83,8 @@ enum IconName: String {
         case .heart: return "heart"
         case .mail: return "envelope"
         case .user: return "person"
+        case .eye: return "eye"
+        case .eyeOff: return "eye.slash"
         }
     }
 }

@@ -2,12 +2,13 @@ import SwiftUI
 
 struct DashboardView: View {
     @Environment(LibraryStore.self) private var library
+    @Environment(AuthStore.self) private var auth
     let openNewReading: () -> Void
     let openUpload: () -> Void
     let openReader: (Document) -> Void
 
     private var continueDoc: Document? {
-        library.documents.first { $0.percentage > 0 && $0.percentage < 100 } ?? library.documents.first
+        library.documents.first { $0.pct > 0 && $0.pct < 100 } ?? library.documents.first
     }
 
     private var recent: [Document] { Array(library.documents.prefix(3)) }
@@ -15,7 +16,7 @@ struct DashboardView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
-                Text("Welcome back, Sam")
+                Text("Welcome back, \(auth.user?.name ?? "")")
                     .font(.interTight(26))
                     .foregroundStyle(Theme.fg1)
                 Text("Pick up where you left off, or start something new.")
@@ -75,7 +76,7 @@ struct DashboardView: View {
                         }
                         VStack(alignment: .leading, spacing: 2) {
                             Text("Continue reading").font(.inter(15, weight: .semibold)).foregroundStyle(.white)
-                            Text("\(doc.title) · \(doc.percentage)% through")
+                            Text("\(doc.title) · \(doc.pct)% through")
                                 .font(.inter(13)).foregroundStyle(.white.opacity(0.75)).lineLimit(1)
                         }
                         Spacer()
@@ -170,13 +171,13 @@ private struct RecentReadCard: View {
                 HStack {
                     Text(doc.title).font(.inter(15, weight: .semibold)).foregroundStyle(Theme.fg1).lineLimit(1)
                     Spacer()
-                    if doc.favourite {
+                    if doc.fav {
                         Icon(name: .heart, size: 14, color: Theme.accent, filled: true)
                     }
                 }
-                Text(doc.content).font(.inter(13)).foregroundStyle(Theme.fg2).lineLimit(2)
-                ProgressBarView(value: Double(doc.percentage))
-                Text("\(doc.percentage)% · \(doc.duration) · \(doc.updatedLabel)")
+                Text(doc.displayText).font(.inter(13)).foregroundStyle(Theme.fg2).lineLimit(2)
+                ProgressBarView(value: Double(doc.pct))
+                Text("\(doc.pct)% · \(doc.duration) · \(doc.date)")
                     .font(.mono(12)).foregroundStyle(Theme.fg3)
             }
             .padding(Theme.Space.base)

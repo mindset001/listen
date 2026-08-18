@@ -6,6 +6,31 @@ options:
   createIntermediateGroups: true
 
 targets:
+  ListenUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: ListenUITests
+    dependencies:
+      - target: Listen
+    settings:
+      base:
+        SWIFT_VERSION: "5.0"
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET_NAME: Listen
+
+  ListenSmokeTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: ListenSmokeTests
+    dependencies:
+      - target: Listen
+    settings:
+      base:
+        SWIFT_VERSION: "5.0"
+        GENERATE_INFOPLIST_FILE: YES
+
   Listen:
     type: application
     platform: iOS
@@ -30,6 +55,8 @@ targets:
         UIUserInterfaceStyle: Dark
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
+        NSAppTransportSecurity:
+          NSAllowsLocalNetworking: true
         UIAppFonts:
           - Inter-Regular.ttf
           - Inter-Medium.ttf
@@ -40,3 +67,15 @@ targets:
           - JetBrainsMono-Regular.ttf
           - JetBrainsMono-Medium.ttf
           - JetBrainsMono-SemiBold.ttf
+
+schemes:
+  Listen:
+    build:
+      targets:
+        Listen: all
+        ListenSmokeTests: [test]
+        ListenUITests: [test]
+    test:
+      targets:
+        - ListenSmokeTests
+        - ListenUITests
