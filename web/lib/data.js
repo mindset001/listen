@@ -1,14 +1,5 @@
 /** listen — static UI config (voices/documents now come from the backend). */
 
-export const CHART = [12, 26, 0, 18, 34, 41, 22, 8, 0, 29, 47, 38, 55, 31];
-
-export const STATS = [
-  { value: "14", label: "Documents" },
-  { value: "6h 42m", label: "Listening time" },
-  { value: "9", label: "Completed" },
-  { value: "128", label: "Pages read" },
-];
-
 export const TONES = [
   "Professional",
   "Friendly",

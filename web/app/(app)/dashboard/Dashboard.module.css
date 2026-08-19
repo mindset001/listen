@@ -119,17 +119,6 @@
   font-weight: 500;
 }
 
-.columns {
-  display: grid;
-  gap: 32px;
-  grid-template-columns: 1fr;
-}
-@media (min-width: 960px) {
-  .columns {
-    grid-template-columns: 1.5fr 1fr;
-  }
-}
-
 .colHeader {
   display: flex;
   align-items: baseline;
@@ -234,59 +223,6 @@
   align-items: center;
   justify-content: center;
   flex: none;
-}
-
-.statsGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.statValue {
-  font-family: var(--font-mono), monospace;
-  font-size: 24px;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-}
-@media (min-width: 720px) {
-  .statValue {
-    font-size: 26px;
-  }
-}
-.statLabel {
-  font-size: 13px;
-  color: var(--fg-2);
-  margin-top: 5px;
-}
-
-.chartCaption {
-  font-size: 13px;
-  color: var(--fg-2);
-  margin-bottom: 16px;
-}
-.chartBars {
-  display: flex;
-  align-items: flex-end;
-  gap: 5px;
-  height: 64px;
-}
-@media (min-width: 720px) {
-  .chartBars {
-    height: 88px;
-  }
-}
-.chartBar {
-  flex: 1;
-  border-radius: 3px;
-}
-.chartAxis {
-  display: flex;
-  justify-content: space-between;
-  font-family: var(--font-mono), monospace;
-  font-size: 11px;
-  color: var(--fg-3);
-  margin-top: 10px;
 }
 
 @keyframes fadeUp {

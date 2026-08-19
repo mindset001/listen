@@ -34,20 +34,6 @@ struct DashboardView: View {
                         RecentReadCard(doc: doc) { openReader(doc) }
                     }
                 }
-                .padding(.bottom, Theme.Space.xl)
-
-                Text("Statistics")
-                    .font(.interTight(18))
-                    .foregroundStyle(Theme.fg1)
-                    .padding(.bottom, Theme.Space.md)
-                statsGrid
-                    .padding(.bottom, Theme.Space.xl)
-
-                Text("Minutes listened, last 14 days")
-                    .font(.interTight(18))
-                    .foregroundStyle(Theme.fg1)
-                    .padding(.bottom, Theme.Space.md)
-                chart
             }
             .padding(.horizontal, Theme.Space.base)
             .padding(.top, Theme.Space.lg)
@@ -94,34 +80,6 @@ struct DashboardView: View {
             }
         }
     }
-
-    private var statsGrid: some View {
-        LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible())], spacing: 12) {
-            StatCard(value: "\(MockData.Stats.documents)", label: "Documents")
-            StatCard(value: MockData.Stats.listeningTime, label: "Listening time")
-            StatCard(value: "\(MockData.Stats.completed)", label: "Completed")
-            StatCard(value: "\(MockData.Stats.pagesRead)", label: "Pages read")
-        }
-    }
-
-    private var chart: some View {
-        let maxVal = MockData.chartData.max() ?? 1
-        return VStack(alignment: .leading, spacing: 8) {
-            HStack(alignment: .bottom, spacing: 5) {
-                ForEach(Array(MockData.chartData.enumerated()), id: \.offset) { idx, v in
-                    RoundedRectangle(cornerRadius: 3)
-                        .fill(idx == MockData.chartData.count - 1 ? Theme.accent : (v == 0 ? Theme.lineQuiet : Theme.lineStrong))
-                        .frame(height: max(4, CGFloat(v / maxVal) * 64))
-                }
-            }
-            .frame(height: 64, alignment: .bottom)
-            HStack {
-                Text("14 days ago").font(.inter(11)).foregroundStyle(Theme.fg3)
-                Spacer()
-                Text("Today").font(.inter(11)).foregroundStyle(Theme.fg3)
-            }
-        }
-    }
 }
 
 private struct QuickCard: View {
@@ -142,22 +100,6 @@ private struct QuickCard: View {
             .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.card))
         }
         .buttonStyle(.plain)
-    }
-}
-
-private struct StatCard: View {
-    let value: String
-    let label: String
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(value).font(.mono(24, weight: .semibold)).foregroundStyle(Theme.fg1)
-            Text(label).font(.inter(12)).foregroundStyle(Theme.fg2)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(Theme.Space.base)
-        .background(Theme.bgElevated)
-        .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.card))
     }
 }
 
