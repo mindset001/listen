@@ -1,8 +1,10 @@
 //
 //  APIClient.swift
-//  listen — thin networking layer over the real backend (web/app/api/**)
+//  listen — thin networking layer over the real backend (backend/app/api/**,
+//  a standalone service — see backend/README or web/next.config.mjs's
+//  rewrites() for how the web app reaches the same backend)
 //
-//  Sessions are cookie-based (see web/lib/auth.js) — URLSession's default
+//  Sessions are cookie-based (see backend/lib/auth.js) — URLSession's default
 //  configuration handles Set-Cookie/Cookie automatically via
 //  HTTPCookieStorage, the same way a browser does, so no token plumbing
 //  is needed here.
@@ -11,11 +13,17 @@
 import Foundation
 
 enum APIConfig {
+    #if DEBUG
     /// The iOS Simulator shares the host Mac's network namespace, so
-    /// "localhost" reaches the same `npm run dev` server the web app uses.
-    /// A physical device needs the Mac's LAN IP instead — swap this one
-    /// line, nothing else changes.
-    static let baseURL = URL(string: "http://localhost:3000")!
+    /// "localhost" reaches the same `npm run dev` server (backend/, port
+    /// 4000) the web app proxies to. A physical device needs the Mac's LAN
+    /// IP instead — swap this one line, nothing else changes.
+    static let baseURL = URL(string: "http://localhost:4000")!
+    #else
+    /// TODO: fill in once the backend is deployed — see backend/render.yaml.
+    /// This is the standalone backend's own Render URL, not the web app's.
+    static let baseURL = URL(string: "https://REPLACE-ME.onrender.com")!
+    #endif
 }
 
 struct APIClientError: LocalizedError {

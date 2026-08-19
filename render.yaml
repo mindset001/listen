@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: listen-backend
+    runtime: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: FRONTEND_URL
+        sync: false
+      - key: TTS_API_KEY
+        sync: false
+      - key: TTS_API_URL
+        sync: false
+      - key: TTS_DEFAULT_LANG
+        sync: false
+      - key: TTS_QUALITY
+        sync: false
+      - key: MONGODB_URI
+        sync: false
+      - key: MONGODB_DB
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false

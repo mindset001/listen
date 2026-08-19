@@ -3,9 +3,13 @@
  *
  * Starts the Google OAuth flow: stashes a random CSRF `state` value in a
  * short-lived cookie, then redirects to Google's consent screen. The
- * redirect_uri is derived from the current request's own origin, so it
- * works unchanged in both local dev and production — just make sure both
- * are registered as authorized redirect URIs in Google Cloud Console.
+ * redirect_uri is built from FRONTEND_URL (the web app's own domain), not
+ * this request's origin — this backend is a separate service with no pages
+ * of its own, so the OAuth round trip needs to land back on the frontend
+ * (which proxies /api/* through to here — see web/next.config.mjs — so the
+ * browser's session cookie stays scoped to the frontend's domain
+ * throughout). Register FRONTEND_URL + "/api/auth/google/callback" as the
+ * authorized redirect URI in Google Cloud Console.
  */
 
 import { randomBytes } from "node:crypto";
@@ -13,9 +17,10 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { OAUTH_STATE_COOKIE } from "@/lib/auth";
 
-export async function GET(request) {
+export async function GET() {
   const clientId = process.env.GOOGLE_CLIENT_ID;
-  if (!clientId) {
+  const frontendUrl = process.env.FRONTEND_URL;
+  if (!clientId || !frontendUrl) {
     return NextResponse.json(
       { error: "config", message: "Google sign-in is not configured." },
       { status: 500 }
@@ -32,7 +37,7 @@ export async function GET(request) {
     maxAge: 600, // 10 minutes — just long enough to complete the redirect round trip
   });
 
-  const redirectUri = `${new URL(request.url).origin}/api/auth/google/callback`;
+  const redirectUri = `${frontendUrl}/api/auth/google/callback`;
   const authUrl = new URL("https://accounts.google.com/o/oauth2/v2/auth");
   authUrl.searchParams.set("client_id", clientId);
   authUrl.searchParams.set("redirect_uri", redirectUri);

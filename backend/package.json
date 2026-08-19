@@ -1,19 +1,21 @@
 {
-  "name": "web",
+  "name": "backend",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 4000",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p ${PORT:-4000}",
     "lint": "eslint"
   },
   "dependencies": {
-    "lucide-react": "*",
+    "bcryptjs": "^3.0.3",
+    "mammoth": "^1.12.0",
+    "mongodb": "^7.5.0",
     "next": "16.3.0",
+    "pdf-parse": "^2.4.5",
     "react": "19.2.8",
-    "react-dom": "19.2.8",
-    "zustand": "^5.0.14"
+    "react-dom": "19.2.8"
   },
   "devDependencies": {
     "eslint": "^9",
