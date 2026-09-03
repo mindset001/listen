@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Check, AudioLines, Clock, Focus, ChevronDown, ChevronUp } from "lucide-react";
+import { Check, AudioLines, Clock, Focus, ChevronDown, ChevronUp, List, AlignCenter } from "lucide-react";
 import { useAppStore } from "@/lib/store";
 import { formatTime } from "@/lib/timing";
 import { PLAYBACK_TOGGLES } from "@/lib/data";
+import { SentenceTracker } from "@/components/SentenceTracker";
 import styles from "./Reader.module.css";
 
 export default function ReaderPage() {
@@ -17,6 +18,7 @@ export default function ReaderPage() {
   const voices = useAppStore((s) => s.voices);
   const timing = useAppStore((s) => s.timing);
   const currentSegmentIndex = useAppStore((s) => s.currentSegmentIndex);
+  const segmentStartOffsets = useAppStore((s) => s.segmentStartOffsets);
   const fontSize = useAppStore((s) => s.fontSize);
   const lineHeight = useAppStore((s) => s.lineHeight);
   const measure = useAppStore((s) => s.measure);
@@ -24,12 +26,12 @@ export default function ReaderPage() {
   const setLineHeight = useAppStore((s) => s.setLineHeight);
   const setMeasure = useAppStore((s) => s.setMeasure);
   const seekToSentence = useAppStore((s) => s.seekToSentence);
+  const seekToElapsed = useAppStore((s) => s.seekToElapsed);
   const toggleFocus = useAppStore((s) => s.toggleFocus);
   const switches = useAppStore((s) => s.switches);
   const setSwitch = useAppStore((s) => s.setSwitch);
-
-  const activeRef = useRef(null);
-  const lastIdxRef = useRef(-1);
+  const trackingMode = useAppStore((s) => s.trackingMode);
+  const setTrackingMode = useAppStore((s) => s.setTrackingMode);
 
   // Text size / line spacing / width are set once and rarely touched again —
   // collapsed by default so they don't permanently eat a column; remembers
@@ -64,15 +66,6 @@ export default function ReaderPage() {
   const segments = currentDocument?.segments || [];
   const voiceName = (voices.find((v) => v.id === voice) || {}).name || voice;
 
-  useEffect(() => {
-    if (idx !== lastIdxRef.current) {
-      lastIdxRef.current = idx;
-      if (playing && activeRef.current) {
-        activeRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
-      }
-    }
-  }, [idx, playing]);
-
   if (!currentDocument) return null;
 
   return (
@@ -83,32 +76,16 @@ export default function ReaderPage() {
           {segments.length > 0 && ` · Segment ${currentSegmentIndex + 1} of ${segments.length}`}
         </div>
         <h1 className={styles.title}>{currentDocument.title}</h1>
-        <div className={styles.sentences}>
-          {timing.sentences.map((text, i) => {
-            const active = i === idx;
-            const read = i < idx;
-            return (
-              <div
-                key={i}
-                ref={active ? activeRef : null}
-                onClick={() => seekToSentence(i)}
-                className={styles.sentence}
-                style={{
-                  fontSize,
-                  lineHeight,
-                  color: active ? "var(--fg-1)" : read ? "var(--fg-3)" : "var(--fg-2)",
-                  background: active ? "var(--accent-wash)" : "transparent",
-                }}
-              >
-                <span
-                  className={styles.sentenceBar}
-                  style={{ background: active ? "var(--accent)" : "transparent" }}
-                />
-                {text}
-              </div>
-            );
-          })}
-        </div>
+        <SentenceTracker
+          sentences={timing.sentences}
+          activeIndex={idx}
+          mode={trackingMode}
+          fontSize={fontSize}
+          lineHeight={lineHeight}
+          measure={measure}
+          onSeek={seekToSentence}
+          autoScroll={trackingMode === "list" && playing}
+        />
       </div>
 
       <div className={styles.panel}>
@@ -130,6 +107,29 @@ export default function ReaderPage() {
           </button>
           {displayOpen && (
             <div className={styles.sliderRow} style={{ marginTop: 16 }}>
+              <div>
+                <div className={styles.sliderHeadLabel} style={{ marginBottom: 8 }}>
+                  Line tracking
+                </div>
+                <div className={styles.modeToggle}>
+                  <button
+                    type="button"
+                    onClick={() => setTrackingMode("list")}
+                    className={`${styles.modeButton} ${trackingMode === "list" ? styles.modeButtonActive : ""}`}
+                  >
+                    <List size={13} aria-hidden="true" />
+                    List
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setTrackingMode("line")}
+                    className={`${styles.modeButton} ${trackingMode === "line" ? styles.modeButtonActive : ""}`}
+                  >
+                    <AlignCenter size={13} aria-hidden="true" />
+                    Current line
+                  </button>
+                </div>
+              </div>
               <div>
                 <div className={styles.sliderHead}>
                   <span className={styles.sliderHeadLabel}>Text size</span>
@@ -196,9 +196,10 @@ export default function ReaderPage() {
                 return (
                   <div
                     key={seg.id || i}
+                    onClick={() => seekToElapsed(segmentStartOffsets[i] || 0, true)}
                     className={styles.segmentRow}
                     style={{
-                      background: state === "current" ? "var(--accent-wash)" : "transparent",
+                      background: state === "current" ? "var(--accent-wash)" : undefined,
                       borderColor: state === "current" ? "var(--accent)" : "var(--line-quiet)",
                     }}
                   >

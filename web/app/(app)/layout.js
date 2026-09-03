@@ -23,6 +23,15 @@ export default function AppLayout({ children }) {
   }, [fetchMe]);
 
   useEffect(() => {
+    try {
+      const stored = localStorage.getItem("listen:trackingMode");
+      if (stored === "list" || stored === "line") {
+        useAppStore.setState({ trackingMode: stored });
+      }
+    } catch {}
+  }, []);
+
+  useEffect(() => {
     if (authLoaded && !user) router.replace("/login");
   }, [authLoaded, user, router]);
 

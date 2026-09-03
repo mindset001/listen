@@ -120,12 +120,15 @@ export function PlayerBar() {
           type="button"
           onClick={() => {
             const url = segments[currentSegmentIndex]?.url;
-            if (url) {
-              const a = document.createElement("a");
-              a.href = url;
-              a.download = "";
-              a.click();
+            if (!url) {
+              toast("Audio isn't ready yet", "error");
+              return;
             }
+            const suffix = segments.length > 1 ? ` (part ${currentSegmentIndex + 1})` : "";
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `${currentDocument.title || "audio"}${suffix}.mp3`;
+            a.click();
             toast("Audio saved to your downloads", "success");
           }}
           aria-label="Download audio"

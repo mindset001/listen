@@ -147,6 +147,17 @@ export const useAppStore = create((set, get) => ({
   measure: 680,
   switches: DEFAULT_SWITCHES,
 
+  // "list" (full scrolling sentence list) or "line" (just the active
+  // sentence, with prev/next for context) — shared by the reader screen and
+  // Focus mode. Persisted locally so it survives navigation and reloads.
+  trackingMode: "list",
+  setTrackingMode: (mode) => {
+    set({ trackingMode: mode });
+    try {
+      localStorage.setItem("listen:trackingMode", mode);
+    } catch {}
+  },
+
   openDocument: async (id) => {
     const doc = await api(`/api/documents/${id}`);
     const sentences = splitSentences(doc.content);

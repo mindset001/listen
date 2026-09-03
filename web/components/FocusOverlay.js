@@ -1,18 +1,24 @@
 "use client";
 
-import { X } from "lucide-react";
+import { X, Play, Pause, SkipBack, SkipForward } from "lucide-react";
 import { useAppStore } from "@/lib/store";
+import { SentenceTracker } from "@/components/SentenceTracker";
 import styles from "./AppShell.module.css";
 
 export function FocusOverlay() {
   const focus = useAppStore((s) => s.focus);
   const elapsed = useAppStore((s) => s.elapsed);
+  const playing = useAppStore((s) => s.playing);
   const timing = useAppStore((s) => s.timing);
   const fontSize = useAppStore((s) => s.fontSize);
   const lineHeight = useAppStore((s) => s.lineHeight);
   const measure = useAppStore((s) => s.measure);
+  const trackingMode = useAppStore((s) => s.trackingMode);
   const toggleFocus = useAppStore((s) => s.toggleFocus);
   const seekToSentence = useAppStore((s) => s.seekToSentence);
+  const togglePlay = useAppStore((s) => s.togglePlay);
+  const prev = useAppStore((s) => s.prev);
+  const next = useAppStore((s) => s.next);
 
   if (!focus) return null;
 
@@ -20,30 +26,36 @@ export function FocusOverlay() {
 
   return (
     <div className={styles.focusOverlay}>
-      <button
-        type="button"
-        onClick={toggleFocus}
-        aria-label="Exit focus mode"
-        className={styles.focusExit}
-      >
+      <button type="button" onClick={toggleFocus} aria-label="Exit focus mode" className={styles.focusExit}>
         <X size={17} aria-hidden="true" />
       </button>
-      <div className={styles.focusList} style={{ maxWidth: measure }}>
-        {timing.sentences.map((text, i) => (
-          <div
-            key={i}
-            onClick={() => seekToSentence(i)}
-            className={styles.focusLine}
-            style={{
-              fontSize,
-              lineHeight,
-              color: i === idx ? "var(--fg-1)" : i < idx ? "var(--fg-3)" : "var(--fg-2)",
-              background: i === idx ? "var(--accent-wash)" : "transparent",
-            }}
-          >
-            {text}
-          </div>
-        ))}
+
+      <SentenceTracker
+        sentences={timing.sentences}
+        activeIndex={idx}
+        mode={trackingMode}
+        fontSize={fontSize}
+        lineHeight={lineHeight}
+        measure={measure}
+        onSeek={seekToSentence}
+        autoScroll={false}
+      />
+
+      <div className={styles.focusControls}>
+        <button type="button" onClick={prev} aria-label="Previous sentence" className={styles.transportBtn}>
+          <SkipBack size={18} aria-hidden="true" />
+        </button>
+        <button
+          type="button"
+          onClick={togglePlay}
+          aria-label={playing ? "Pause" : "Play"}
+          className={styles.playBtn}
+        >
+          {playing ? <Pause size={19} aria-hidden="true" /> : <Play size={19} aria-hidden="true" />}
+        </button>
+        <button type="button" onClick={next} aria-label="Next sentence" className={styles.transportBtn}>
+          <SkipForward size={18} aria-hidden="true" />
+        </button>
       </div>
     </div>
   );

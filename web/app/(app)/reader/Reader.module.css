@@ -46,30 +46,6 @@
   }
 }
 
-.sentences {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.sentence {
-  position: relative;
-  padding: 8px 12px 8px 18px;
-  border-radius: var(--radius-input);
-  cursor: pointer;
-  transition: background 200ms cubic-bezier(0.4, 0, 0.2, 1), color 200ms;
-  text-wrap: pretty;
-}
-
-.sentenceBar {
-  position: absolute;
-  left: 0;
-  top: 8px;
-  bottom: 8px;
-  width: 2px;
-  border-radius: 2px;
-}
-
 .panel {
   width: 100%;
   flex: none;
@@ -143,6 +119,40 @@
   accent-color: var(--accent);
 }
 
+.modeToggle {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--radius-button);
+  border: 1px solid var(--line-quiet);
+  background: var(--bg-raised);
+  width: 100%;
+  box-sizing: border-box;
+}
+.modeButton {
+  flex: 1;
+  padding: 7px 10px;
+  border-radius: calc(var(--radius-button) - 2px);
+  border: none;
+  background: transparent;
+  color: var(--fg-2);
+  font-family: var(--font-body), sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: background 150ms var(--ease-ui), color 150ms var(--ease-ui);
+}
+.modeButton:hover {
+  color: var(--fg-1);
+}
+.modeButtonActive {
+  background: var(--accent-wash);
+  color: var(--fg-1);
+}
+
 .segmentList {
   display: flex;
   flex-direction: column;
@@ -155,6 +165,12 @@
   padding: 9px 11px;
   border-radius: var(--radius-button);
   border: 1px solid;
+  background: transparent;
+  cursor: pointer;
+  transition: background 150ms var(--ease-ui);
+}
+.segmentRow:hover {
+  background: var(--bg-raised);
 }
 .segmentLabel {
   flex: 1;
