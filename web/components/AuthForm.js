@@ -115,7 +115,7 @@ export function AuthForm({ mode }) {
         await login({ email, password: formPass });
         toast("Signed in", "success");
       }
-      router.push("/dashboard");
+      router.push("/library");
     } catch (err) {
       toast(err.message || "Something went wrong. Try again.", "error");
     } finally {

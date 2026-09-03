@@ -7,7 +7,7 @@ import { formatTime } from "@/lib/timing";
 import { useToast } from "./ToastProvider";
 import styles from "./AppShell.module.css";
 
-const VISIBLE_ON = ["/dashboard", "/reader", "/audio"];
+const VISIBLE_ON = ["/library", "/new", "/reader"];
 
 export function PlayerBar() {
   const pathname = usePathname();

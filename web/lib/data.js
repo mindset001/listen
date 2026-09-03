@@ -9,15 +9,9 @@ export const TONES = [
   "Educational",
 ];
 
-export const LIBRARY_FILTERS = ["All", "Recent", "Favourites", "In progress", "Completed"];
+export const LIBRARY_FILTERS = ["All", "Recent", "Favourites", "In progress", "Completed", "Audio"];
 
-export const NAV_ITEMS = [
-  { key: "dashboard", href: "/dashboard", label: "Dashboard", icon: "layout-dashboard" },
-  { key: "library", href: "/library", label: "My library", icon: "library" },
-  { key: "audio", href: "/audio", label: "Saved audio", icon: "disc-3" },
-  { key: "upload", href: "/upload", label: "Upload", icon: "file-up" },
-  { key: "settings", href: "/settings", label: "Settings", icon: "settings" },
-];
+export const NAV_ITEMS = [{ key: "library", href: "/library", label: "My library", icon: "library" }];
 
 export const PLAYBACK_TOGGLES = [
   {

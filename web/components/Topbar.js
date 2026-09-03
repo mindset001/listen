@@ -1,21 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Search, FileUp } from "lucide-react";
+import { Search } from "lucide-react";
 import { useAppStore } from "@/lib/store";
 import styles from "./AppShell.module.css";
-import shared from "./shared.module.css";
 
 const TITLES = {
-  "/dashboard": "Dashboard",
-  "/new": "New reading",
+  "/new": "Update text",
   "/reader": "",
   "/library": "My library",
-  "/audio": "Saved audio",
-  "/settings": "Settings",
-  "/upload": "Upload document",
 };
 
 export function Topbar() {
@@ -56,10 +50,6 @@ export function Topbar() {
           className={styles.searchInput}
         />
       </div>
-      <Link href="/upload" className={shared.btnOutline}>
-        <FileUp size={15} aria-hidden="true" />
-        Upload
-      </Link>
     </div>
   );
 }

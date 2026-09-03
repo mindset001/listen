@@ -16,6 +16,7 @@ function LibraryContent() {
   const query = (searchParams.get("q") || "").trim().toLowerCase();
 
   const documents = useAppStore((s) => s.documents);
+  const voices = useAppStore((s) => s.voices);
   const openDocument = useAppStore((s) => s.openDocument);
   const toggleFavorite = useAppStore((s) => s.toggleFavorite);
   const removeDocument = useAppStore((s) => s.removeDocument);
@@ -29,6 +30,7 @@ function LibraryContent() {
     if (filter === "Completed") return d.pct === 100;
     if (filter === "In progress") return d.pct > 0 && d.pct < 100;
     if (filter === "Recent") return ["Today", "Yesterday"].includes(d.date);
+    if (filter === "Audio") return d.audio;
     return true;
   });
 
@@ -60,6 +62,7 @@ function LibraryContent() {
               doc.pct === 0 ? "Not started" : doc.pct === 100 ? "Completed" : `In progress ${doc.pct}%`;
             const statusColor =
               doc.pct === 100 ? "var(--success)" : doc.pct === 0 ? "var(--fg-3)" : "var(--fg-2)";
+            const voiceName = doc.audio ? (voices.find((v) => v.id === doc.voice) || {}).name || doc.voice : null;
             return (
               <div key={doc.id} className={styles.card}>
                 <div className={styles.cardTop}>
@@ -83,6 +86,12 @@ function LibraryContent() {
                   <span style={{ color: statusColor }}>{statusLabel}</span>
                   <span>·</span>
                   <span>{doc.duration}</span>
+                  {voiceName && (
+                    <>
+                      <span>·</span>
+                      <span>{voiceName}</span>
+                    </>
+                  )}
                 </div>
                 <div className={styles.cardActions}>
                   <button type="button" onClick={() => open(doc)} className={shared.btnOutline} style={{ flex: 1 }}>

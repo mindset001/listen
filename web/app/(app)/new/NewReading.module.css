@@ -22,6 +22,38 @@
   min-width: 0;
 }
 
+.modeToggle {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--radius-button);
+  border: 1px solid var(--line-quiet);
+  background: var(--bg-elevated);
+  margin-bottom: 16px;
+}
+
+.modeButton {
+  padding: 8px 14px;
+  border-radius: calc(var(--radius-button) - 2px);
+  border: none;
+  background: transparent;
+  color: var(--fg-2);
+  font-family: var(--font-body), sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: background 150ms var(--ease-ui), color 150ms var(--ease-ui);
+}
+.modeButton:hover {
+  color: var(--fg-1);
+}
+.modeButtonActive {
+  background: var(--accent-wash);
+  color: var(--fg-1);
+}
+
 .titleInput {
   width: 100%;
   box-sizing: border-box;

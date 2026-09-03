@@ -89,10 +89,6 @@ export const useAppStore = create((set, get) => ({
   documentsLoaded: false,
   voices: [],
 
-  // Text handed off from the Upload screen to New reading; consumed once.
-  uploadedDraft: null,
-  setUploadedDraft: (draft) => set({ uploadedDraft: draft }),
-
   fetchDocuments: async () => {
     const documents = await api("/api/documents");
     set({ documents, documentsLoaded: true });
@@ -101,6 +97,14 @@ export const useAppStore = create((set, get) => ({
     const voices = await api("/api/voices");
     set({ voices });
     if (!get().voice && voices[0]) set({ voice: voices[0].id });
+  },
+  // Optimistic patch so list views (Dashboard, Library) reflect live playback
+  // progress on the same cadence as the persisted save, instead of only after
+  // an explicit fetchDocuments() refetch.
+  syncDocumentProgress: (id, { pct, position }) => {
+    set((s) => ({
+      documents: s.documents.map((d) => (d.id === id ? { ...d, pct, position } : d)),
+    }));
   },
   toggleFavorite: async (id) => {
     const doc = get().documents.find((d) => d.id === id);

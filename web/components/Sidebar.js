@@ -2,28 +2,23 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { PenLine, LayoutDashboard, Library, Disc3, FileUp, Settings } from "lucide-react";
+import { PenLine, Library } from "lucide-react";
 import { Logo } from "./Logo";
 import { useAppStore } from "@/lib/store";
 import { NAV_ITEMS } from "@/lib/data";
+import { AccountMenu } from "./AccountMenu";
 import styles from "./AppShell.module.css";
 
 const ICONS = {
-  "layout-dashboard": LayoutDashboard,
   library: Library,
-  "disc-3": Disc3,
-  "file-up": FileUp,
-  settings: Settings,
 };
 
 export function Sidebar() {
   const pathname = usePathname();
   const documents = useAppStore((s) => s.documents);
-  const user = useAppStore((s) => s.user);
 
   const counts = {
     library: documents.filter((d) => !d.deleted).length,
-    audio: documents.filter((d) => d.audio && !d.deleted).length,
   };
 
   return (
@@ -58,16 +53,7 @@ export function Sidebar() {
         })}
       </nav>
 
-      <div className={styles.sidebarFooter}>
-        <div className={styles.avatar}>{(user?.name || "?")[0].toUpperCase()}</div>
-        <div className={styles.userInfo}>
-          <div className={styles.userName}>{user?.name}</div>
-          <div className={styles.userPlan}>Free plan</div>
-        </div>
-        <Link href="/settings" aria-label="Settings" className={styles.transportBtn}>
-          <Settings size={15} aria-hidden="true" />
-        </Link>
-      </div>
+      <AccountMenu />
     </aside>
   );
 }

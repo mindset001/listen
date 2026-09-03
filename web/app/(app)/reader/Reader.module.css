@@ -150,6 +150,63 @@
   color: var(--fg-3);
 }
 
+.toggleList {
+  display: flex;
+  flex-direction: column;
+}
+.toggleRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 0;
+  border: none;
+  border-bottom: 1px solid var(--line-quiet);
+  background: transparent;
+  color: var(--fg-1);
+  text-align: left;
+  cursor: pointer;
+}
+.toggleRow:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+.toggleRow:first-child {
+  padding-top: 0;
+}
+
+.toggleInfo {
+  flex: 1;
+  min-width: 0;
+}
+.toggleLabel {
+  font-size: 13px;
+}
+.toggleNote {
+  font-size: 12px;
+  color: var(--fg-3);
+  line-height: 1.4;
+  margin-top: 2px;
+}
+
+.track {
+  width: 38px;
+  height: 22px;
+  border-radius: var(--radius-pill);
+  padding: 2px;
+  box-sizing: border-box;
+  flex: none;
+  display: flex;
+  transition: background 150ms var(--ease-ui);
+}
+.knob {
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-pill);
+  background: #fff;
+}
+
 .focusButton {
   padding: 11px;
   border-radius: var(--radius-button);

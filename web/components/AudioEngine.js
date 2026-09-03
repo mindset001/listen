@@ -8,6 +8,7 @@ const PROGRESS_SAVE_INTERVAL_MS = 5000;
 function saveProgress(documentId, elapsed, timing) {
   if (!documentId) return;
   const pct = timing.total ? Math.round((elapsed / timing.total) * 100) : 0;
+  useAppStore.getState().syncDocumentProgress(documentId, { pct, position: elapsed });
   fetch("/api/reading-progress", {
     method: "PUT",
     headers: { "Content-Type": "application/json" },

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Check, AudioLines, Clock, Focus } from "lucide-react";
 import { useAppStore } from "@/lib/store";
 import { formatTime } from "@/lib/timing";
+import { PLAYBACK_TOGGLES } from "@/lib/data";
 import styles from "./Reader.module.css";
 
 export default function ReaderPage() {
@@ -24,12 +25,14 @@ export default function ReaderPage() {
   const setMeasure = useAppStore((s) => s.setMeasure);
   const seekToSentence = useAppStore((s) => s.seekToSentence);
   const toggleFocus = useAppStore((s) => s.toggleFocus);
+  const switches = useAppStore((s) => s.switches);
+  const setSwitch = useAppStore((s) => s.setSwitch);
 
   const activeRef = useRef(null);
   const lastIdxRef = useRef(-1);
 
   useEffect(() => {
-    if (!currentDocument) router.replace("/dashboard");
+    if (!currentDocument) router.replace("/library");
   }, [currentDocument, router]);
 
   const idx = timing.indexAt(elapsed);
@@ -174,6 +177,37 @@ export default function ReaderPage() {
             </div>
           </div>
         )}
+
+        <div className={styles.panelCard}>
+          <div className={styles.panelLabel}>Playback</div>
+          <div className={styles.toggleList}>
+            {PLAYBACK_TOGGLES.map((t) => {
+              const on = switches[t.key];
+              return (
+                <button
+                  key={t.key}
+                  type="button"
+                  onClick={() => setSwitch(t.key)}
+                  className={styles.toggleRow}
+                >
+                  <div className={styles.toggleInfo}>
+                    <div className={styles.toggleLabel}>{t.label}</div>
+                    <div className={styles.toggleNote}>{t.note}</div>
+                  </div>
+                  <div
+                    className={styles.track}
+                    style={{
+                      background: on ? "var(--accent)" : "var(--line-strong)",
+                      justifyContent: on ? "flex-end" : "flex-start",
+                    }}
+                  >
+                    <div className={styles.knob} />
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
 
         <button type="button" onClick={toggleFocus} className={styles.focusButton}>
           <Focus size={15} aria-hidden="true" />

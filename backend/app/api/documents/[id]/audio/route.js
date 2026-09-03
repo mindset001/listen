@@ -65,7 +65,10 @@ export async function POST(request, { params }) {
   const segments = [];
   try {
     for (let i = 0; i < chunks.length; i++) {
-      const { buffer } = await generateSpeech(chunks[i], voiceName, { rate: speed });
+      // Always generate at nominal pace — speed is applied client-side via
+      // playbackRate (AudioEngine.js), so sentence timing estimates (which
+      // assume nominal pace) stay valid at every speed.
+      const { buffer } = await generateSpeech(chunks[i], voiceName, { rate: 1 });
       const { url, fileId } = await saveAudioFile(buffer);
       const duration = createTiming(splitSentences(chunks[i])).total;
 

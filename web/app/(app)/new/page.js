@@ -1,15 +1,15 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Copy, Save, Trash2, Layers, Check, Play, AudioLines, Loader2 } from "lucide-react";
+import { Copy, Save, Trash2, Layers, Check, Play, AudioLines, Loader2, PenLine, FileUp } from "lucide-react";
 import { useAppStore, SPEEDS } from "@/lib/store";
+import { chunkDocument } from "@/lib/timing";
 import { TONES } from "@/lib/data";
 import { useToast } from "@/components/ToastProvider";
+import { UploadPanel } from "@/components/UploadPanel";
 import shared from "@/components/shared.module.css";
 import styles from "./NewReading.module.css";
-
-const CHUNK_THRESHOLD = 900;
 
 export default function NewReadingPage() {
   const router = useRouter();
@@ -27,26 +27,26 @@ export default function NewReadingPage() {
   const openDocument = useAppStore((s) => s.openDocument);
   const fetchDocuments = useAppStore((s) => s.fetchDocuments);
 
+  const [mode, setMode] = useState("paste"); // "paste" | "upload"
   const [docTitle, setDocTitle] = useState("");
   const [text, setText] = useState("");
   const [generating, setGenerating] = useState(false);
   const [genPct, setGenPct] = useState(0);
   const progressTimer = useRef(null);
 
-  // Pick up text handed off from the Upload screen, if any.
-  useEffect(() => {
-    const draft = useAppStore.getState().uploadedDraft;
-    if (draft) {
-      setDocTitle(draft.title || "");
-      setText(draft.text || "");
-      useAppStore.getState().setUploadedDraft(null);
-    }
-  }, []);
+  function handleExtracted({ title, text: extracted }) {
+    setDocTitle(title || "");
+    setText(extracted || "");
+    setMode("paste");
+  }
 
   const chars = text.length;
   const words = text.trim() ? text.trim().split(/\s+/).length : 0;
-  const willChunk = chars > CHUNK_THRESHOLD;
-  const chunkCount = Math.max(2, Math.ceil(chars / CHUNK_THRESHOLD));
+  // Same chunker (and default limit) the backend actually runs at generation
+  // time — see backend/lib/tts.js CHAR_LIMIT — so this notice can't diverge
+  // from what generation actually produces.
+  const chunkCount = text.trim() ? chunkDocument(text).length : 0;
+  const willChunk = chunkCount > 1;
 
   function startFakeProgress() {
     clearInterval(progressTimer.current);
@@ -94,59 +94,88 @@ export default function NewReadingPage() {
   return (
     <div className={styles.wrap}>
       <div className={styles.editorCol}>
-        <input
-          value={docTitle}
-          onChange={(e) => setDocTitle(e.target.value)}
-          placeholder="Enter document title"
-          className={styles.titleInput}
-        />
-        <textarea
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="Paste or type the text you want read aloud."
-          className={styles.textarea}
-        />
-        <div className={styles.counterRow}>
-          <div className={`${styles.counter} tabularNums`}>
-            {chars.toLocaleString()} characters · {words.toLocaleString()} words
-          </div>
+        <div className={styles.modeToggle} role="tablist" aria-label="Text source">
           <button
             type="button"
-            onClick={() => {
-              navigator.clipboard?.writeText(text).catch(() => {});
-              toast("Text copied", "success");
-            }}
-            className={shared.btnGhost}
+            role="tab"
+            aria-selected={mode === "paste"}
+            onClick={() => setMode("paste")}
+            className={`${styles.modeButton} ${mode === "paste" ? styles.modeButtonActive : ""}`}
           >
-            <Copy size={14} aria-hidden="true" />
-            Copy
-          </button>
-          <button type="button" onClick={saveDraft} className={shared.btnGhost}>
-            <Save size={14} aria-hidden="true" />
-            Save
+            <PenLine size={14} aria-hidden="true" />
+            Paste text
           </button>
           <button
             type="button"
-            onClick={() => {
-              setText("");
-              toast("Editor cleared", "info");
-            }}
-            className={shared.btnGhost}
+            role="tab"
+            aria-selected={mode === "upload"}
+            onClick={() => setMode("upload")}
+            className={`${styles.modeButton} ${mode === "upload" ? styles.modeButtonActive : ""}`}
           >
-            <Trash2 size={14} aria-hidden="true" />
-            Clear
+            <FileUp size={14} aria-hidden="true" />
+            Upload file
           </button>
         </div>
 
-        {willChunk && (
-          <div className={styles.chunkNotice}>
-            <Layers size={16} aria-hidden="true" style={{ color: "var(--fg-2)", flex: "none", marginTop: 2 }} />
-            <div className={styles.chunkNoticeText}>
-              This text is longer than one request allows. It will be split into{" "}
-              <strong>{chunkCount} segments</strong> at paragraph breaks and played back as one
-              continuous session.
+        {mode === "upload" ? (
+          <UploadPanel onExtracted={handleExtracted} />
+        ) : (
+          <>
+            <input
+              value={docTitle}
+              onChange={(e) => setDocTitle(e.target.value)}
+              placeholder="Enter document title"
+              className={styles.titleInput}
+            />
+            <textarea
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              placeholder="Paste or type the text you want read aloud."
+              className={styles.textarea}
+            />
+            <div className={styles.counterRow}>
+              <div className={`${styles.counter} tabularNums`}>
+                {chars.toLocaleString()} characters · {words.toLocaleString()} words
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  navigator.clipboard?.writeText(text).catch(() => {});
+                  toast("Text copied", "success");
+                }}
+                className={shared.btnGhost}
+              >
+                <Copy size={14} aria-hidden="true" />
+                Copy
+              </button>
+              <button type="button" onClick={saveDraft} className={shared.btnGhost}>
+                <Save size={14} aria-hidden="true" />
+                Save
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setText("");
+                  toast("Editor cleared", "info");
+                }}
+                className={shared.btnGhost}
+              >
+                <Trash2 size={14} aria-hidden="true" />
+                Clear
+              </button>
             </div>
-          </div>
+
+            {willChunk && (
+              <div className={styles.chunkNotice}>
+                <Layers size={16} aria-hidden="true" style={{ color: "var(--fg-2)", flex: "none", marginTop: 2 }} />
+                <div className={styles.chunkNoticeText}>
+                  This text is longer than one request allows. It will be split into{" "}
+                  <strong>{chunkCount} segments</strong> at paragraph breaks and played back as one
+                  continuous session.
+                </div>
+              </div>
+            )}
+          </>
         )}
       </div>
 
