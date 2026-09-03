@@ -102,6 +102,22 @@
   margin-bottom: 16px;
 }
 
+.panelLabelToggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  color: var(--fg-3);
+  transition: color 150ms var(--ease-ui);
+}
+.panelLabelToggle:hover {
+  color: var(--fg-1);
+}
+
 .sliderRow {
   display: flex;
   flex-direction: column;

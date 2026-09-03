@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Check, AudioLines, Clock, Focus } from "lucide-react";
+import { Check, AudioLines, Clock, Focus, ChevronDown, ChevronUp } from "lucide-react";
 import { useAppStore } from "@/lib/store";
 import { formatTime } from "@/lib/timing";
 import { PLAYBACK_TOGGLES } from "@/lib/data";
@@ -30,6 +30,31 @@ export default function ReaderPage() {
 
   const activeRef = useRef(null);
   const lastIdxRef = useRef(-1);
+
+  // Text size / line spacing / width are set once and rarely touched again —
+  // collapsed by default so they don't permanently eat a column; remembers
+  // the user's choice locally if they do open it. This page's panel JSX
+  // only ever renders once currentDocument has loaded (client-fetched, so
+  // never during SSR), so reading localStorage in the initializer can't
+  // cause a hydration mismatch — it just needs the typeof guard so the
+  // (always-null-output) server render doesn't crash.
+  const [displayOpen, setDisplayOpen] = useState(() => {
+    if (typeof window === "undefined") return false;
+    try {
+      return localStorage.getItem("listen:displayPanelOpen") === "1";
+    } catch {
+      return false;
+    }
+  });
+  function toggleDisplayOpen() {
+    setDisplayOpen((v) => {
+      const next = !v;
+      try {
+        localStorage.setItem("listen:displayPanelOpen", next ? "1" : "0");
+      } catch {}
+      return next;
+    });
+  }
 
   useEffect(() => {
     if (!currentDocument) router.replace("/library");
@@ -88,59 +113,75 @@ export default function ReaderPage() {
 
       <div className={styles.panel}>
         <div className={styles.panelCard}>
-          <div className={styles.panelLabel}>Display</div>
-          <div className={styles.sliderRow}>
-            <div>
-              <div className={styles.sliderHead}>
-                <span className={styles.sliderHeadLabel}>Text size</span>
-                <span className={`${styles.sliderHeadValue} tabularNums`}>{fontSize}px</span>
+          <button
+            type="button"
+            onClick={toggleDisplayOpen}
+            className={styles.panelLabelToggle}
+            aria-expanded={displayOpen}
+          >
+            <span className={styles.panelLabel} style={{ marginBottom: 0 }}>
+              Display
+            </span>
+            {displayOpen ? (
+              <ChevronUp size={14} aria-hidden="true" />
+            ) : (
+              <ChevronDown size={14} aria-hidden="true" />
+            )}
+          </button>
+          {displayOpen && (
+            <div className={styles.sliderRow} style={{ marginTop: 16 }}>
+              <div>
+                <div className={styles.sliderHead}>
+                  <span className={styles.sliderHeadLabel}>Text size</span>
+                  <span className={`${styles.sliderHeadValue} tabularNums`}>{fontSize}px</span>
+                </div>
+                <input
+                  type="range"
+                  min={15}
+                  max={26}
+                  step={1}
+                  value={fontSize}
+                  onChange={(e) => setFontSize(+e.target.value)}
+                  aria-label="Text size"
+                  className={styles.slider}
+                />
               </div>
-              <input
-                type="range"
-                min={15}
-                max={26}
-                step={1}
-                value={fontSize}
-                onChange={(e) => setFontSize(+e.target.value)}
-                aria-label="Text size"
-                className={styles.slider}
-              />
-            </div>
-            <div>
-              <div className={styles.sliderHead}>
-                <span className={styles.sliderHeadLabel}>Line spacing</span>
-                <span className={`${styles.sliderHeadValue} tabularNums`}>
-                  {lineHeight.toFixed(2)}
-                </span>
+              <div>
+                <div className={styles.sliderHead}>
+                  <span className={styles.sliderHeadLabel}>Line spacing</span>
+                  <span className={`${styles.sliderHeadValue} tabularNums`}>
+                    {lineHeight.toFixed(2)}
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  min={140}
+                  max={220}
+                  step={5}
+                  value={Math.round(lineHeight * 100)}
+                  onChange={(e) => setLineHeight(+e.target.value / 100)}
+                  aria-label="Line spacing"
+                  className={styles.slider}
+                />
               </div>
-              <input
-                type="range"
-                min={140}
-                max={220}
-                step={5}
-                value={Math.round(lineHeight * 100)}
-                onChange={(e) => setLineHeight(+e.target.value / 100)}
-                aria-label="Line spacing"
-                className={styles.slider}
-              />
-            </div>
-            <div>
-              <div className={styles.sliderHead}>
-                <span className={styles.sliderHeadLabel}>Reading width</span>
-                <span className={`${styles.sliderHeadValue} tabularNums`}>{measure}px</span>
+              <div>
+                <div className={styles.sliderHead}>
+                  <span className={styles.sliderHeadLabel}>Reading width</span>
+                  <span className={`${styles.sliderHeadValue} tabularNums`}>{measure}px</span>
+                </div>
+                <input
+                  type="range"
+                  min={520}
+                  max={880}
+                  step={20}
+                  value={measure}
+                  onChange={(e) => setMeasure(+e.target.value)}
+                  aria-label="Reading width"
+                  className={styles.slider}
+                />
               </div>
-              <input
-                type="range"
-                min={520}
-                max={880}
-                step={20}
-                value={measure}
-                onChange={(e) => setMeasure(+e.target.value)}
-                aria-label="Reading width"
-                className={styles.slider}
-              />
             </div>
-          </div>
+          )}
         </div>
 
         {segments.length > 0 && (
